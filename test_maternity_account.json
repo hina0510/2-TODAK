@@ -1,0 +1,71 @@
+{
+  "account": {
+    "id": "USER_001",
+    "username": "test_maternity_001",
+    "email": "test.maternity@example.com",
+    "password_hash": "hashed_password_placeholder",
+    "phone": "010-1234-5678",
+    "status": "active",
+    "role": "maternity_member",
+    "created_at": "2026-06-23T12:00:00Z",
+    "updated_at": "2026-06-23T12:00:00Z"
+  },
+  "profile": {
+    "name": "김산모",
+    "age": 32,
+    "date_of_birth": "1994-02-15",
+    "gender": "F"
+  },
+  "maternity_info": {
+    "expected_due_date": "2026-10-15",
+    "weeks_of_pregnancy": 22,
+    "first_time_parent": true,
+    "hospital_name": "서울 모자 병원",
+    "doctor_name": "이의사",
+    "contact_person": "김남편",
+    "contact_phone": "010-9876-5432"
+  },
+  "preferences": {
+    "language": "ko",
+    "notification_enabled": true,
+    "email_subscription": true
+  },
+  "home_screen": {
+    "pregnancy_nickname": "토닥이",
+    "birth_status": false,
+    "character_image": "image/preg3.png",
+    "pregnancy_week": 22,
+    "due_date": "2026-10-15",
+    "days_until_due": 114,
+    "current_stage": "태동기",
+    "stage_number": 3,
+    "stage_range": "20 ~ 27주",
+    "stage_description": "아기의 움직임을 느끼기 시작하는 신비로운 시간",
+    "stage_tip": "이 시기에는 엄마의 정서 상태가 아기에게 전달될 수 있어요. 편안한 마음으로 지내세요.",
+    "todays_todak": [
+      {
+        "id": 1,
+        "title": "물 마시기",
+        "emoji": "💧",
+        "completed": true,
+        "timestamp": "2026-06-23T09:30:00Z"
+      },
+      {
+        "id": 2,
+        "title": "산책하기",
+        "emoji": "🚶‍♀️",
+        "completed": false,
+        "timestamp": null
+      },
+      {
+        "id": 3,
+        "title": "명상하기",
+        "emoji": "🧘‍♀️",
+        "completed": true,
+        "timestamp": "2026-06-23T14:15:00Z"
+      }
+    ],
+    "todak_completion_status": "진행 중 (2/3 완료)",
+    "completion_percentage": 66.67
+  }
+}

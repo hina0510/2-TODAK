@@ -124,6 +124,7 @@
   --color-border-neutral: #e9edf2;        /* 미선택 카드 뉴트럴 보더 */
   --color-bg-icon-lavender: #f4f0fd;      /* 보호자 아이콘 원형 배경 */
   --color-navy-button: #1a3558;           /* 다크 네이비 CTA 버튼 */
+  --color-toggle-bg: #F1F3F7;             /* 토글 배경색 */
 
   /* Typography — 누락 토큰 보완 */
   --font-size-display: 32px;              /* 브랜드 로고 텍스트 */

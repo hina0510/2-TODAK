@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Record Section Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Square:wght@400;700;800&family=Be+Vietnam+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/color.css">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { margin: 0; padding: 0; background: #f5f5f5; }
+    #app { max-width: 430px; margin: 0 auto; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <section id="record-section" class="section record-section">
+      <header class="record-header">
+        <img src="image/logo.png" alt="TODAK" class="record-logo">
+      </header>
+      <main class="record-content">
+        <div class="record-calendar">
+          <div class="record-calendar__header">
+            <button class="record-calendar__month-btn">
+              2024년 5월
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="record-calendar__weekdays">
+            <div class="record-calendar__weekday">일</div>
+            <div class="record-calendar__weekday">월</div>
+            <div class="record-calendar__weekday">화</div>
+            <div class="record-calendar__weekday">수</div>
+            <div class="record-calendar__weekday">목</div>
+            <div class="record-calendar__weekday">금</div>
+            <div class="record-calendar__weekday">토</div>
+          </div>
+          <div class="record-calendar__grid">
+            <div class="record-calendar__day record-calendar__day--empty"></div>
+            <div class="record-calendar__day record-calendar__day--empty"></div>
+            <div class="record-calendar__day record-calendar__day--empty"></div>
+            <div class="record-calendar__day">1</div>
+            <div class="record-calendar__day">2</div>
+            <div class="record-calendar__day">3</div>
+            <div class="record-calendar__day">4</div>
+            <div class="record-calendar__day">5</div>
+            <div class="record-calendar__day">6</div>
+            <div class="record-calendar__day">7</div>
+            <div class="record-calendar__day">8</div>
+            <div class="record-calendar__day">9</div>
+            <div class="record-calendar__day">10</div>
+            <div class="record-calendar__day">11</div>
+            <div class="record-calendar__day">12</div>
+            <div class="record-calendar__day">13</div>
+            <div class="record-calendar__day">14</div>
+            <div class="record-calendar__day record-calendar__day--active">15</div>
+            <div class="record-calendar__day">16</div>
+            <div class="record-calendar__day">17</div>
+            <div class="record-calendar__day">18</div>
+            <div class="record-calendar__day">19</div>
+            <div class="record-calendar__day">20</div>
+            <div class="record-calendar__day">21</div>
+            <div class="record-calendar__day">22</div>
+            <div class="record-calendar__day">23</div>
+            <div class="record-calendar__day">24</div>
+            <div class="record-calendar__day">25</div>
+            <div class="record-calendar__day">26</div>
+            <div class="record-calendar__day">27</div>
+            <div class="record-calendar__day">28</div>
+            <div class="record-calendar__day">29</div>
+            <div class="record-calendar__day">30</div>
+            <div class="record-calendar__day">31</div>
+            <div class="record-calendar__day record-calendar__day--empty"></div>
+          </div>
+        </div>
+        <div class="record-date-section">
+          <div class="record-date-header">
+            <h2 class="record-date-title">5월 15일의 기록</h2>
+            <button class="record-date-edit">기록 수정</button>
+          </div>
+          <div class="record-cards-container">
+            <div class="record-cards">
+              <div class="record-card">
+                <div class="record-card__icon">❤️</div>
+                <h3 class="record-card__title">매우 즐거움</h3>
+                <p class="record-card__subtitle">태동이 활발해요</p>
+                <div class="record-card__meta">3/3 완료</div>
+              </div>
+              <div class="record-card">
+                <div class="record-card__icon">🫐</div>
+                <h3 class="record-card__title">영양제</h3>
+                <p class="record-card__subtitle">철분, 엽산, 비타민</p>
+                <div class="record-card__meta">3/3 완료</div>
+              </div>
+            </div>
+          </div>
+          <div class="record-items">
+            <div class="record-item">
+              <div class="record-item__header">
+                <span class="record-item__time">오전 08:30</span>
+                <div class="record-item__dot"></div>
+              </div>
+              <div class="record-item__content">
+                <h4 class="record-item__title">가버운 아침 산책</h4>
+                <p class="record-item__desc">늘기가 좋아서 집 앞 공원을 20분 정도 거었어요.</p>
+              </div>
+            </div>
+            <div class="record-item">
+              <div class="record-item__header">
+                <span class="record-item__time">오후 02:15</span>
+                <div class="record-item__dot"></div>
+              </div>
+              <div class="record-item__content">
+                <h4 class="record-item__title">영양 균형 잠심 식사</h4>
+                <p class="record-item__desc">다려진 쌀죽이 몸과 함께 맛있게 먹었어요. 소화가 잘 된다.</p>
+                <div class="record-item__images">
+                  <img src="https://via.placeholder.com/88/FFD9E8/FFD9E8?text=🥗" alt="식사 사진 1" class="record-item__image">
+                  <img src="https://via.placeholder.com/88/FFD9E8/FFD9E8?text=🍲" alt="식사 사진 2" class="record-item__image">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="record-report">
+            <div class="record-report__header">
+              <h3 class="record-report__title">5월 리포트 미리보기</h3>
+              <button class="record-report__edit">기록 수정</button>
+            </div>
+            <div class="record-report__content">
+              <div class="record-report__stat">
+                <span class="record-report__number">12</span>
+                <span class="record-report__label">일 연속 기록 중!</span>
+              </div>
+              <p class="record-report__message">토닥이와 함께한 소중한 순간들이 빛이 되어<br>아이와 함께 자라고 있어요.</p>
+            </div>
+          </div>
+        </div>
+      </main>
+      <button type="button" class="fab" aria-label="기록 추가">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="fab__text">기록하기</span>
+      </button>
+      <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">
+        <button type="button" class="bottom-nav__item">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          <span class="bottom-nav__label">홈</span>
+        </button>
+        <button type="button" class="bottom-nav__item">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+          </svg>
+          <span class="bottom-nav__label">토닥</span>
+        </button>
+        <button type="button" class="bottom-nav__item">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+          </svg>
+          <span class="bottom-nav__label">가이드</span>
+        </button>
+        <button type="button" class="bottom-nav__item active">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <span class="bottom-nav__label">기록</span>
+        </button>
+        <button type="button" class="bottom-nav__item">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <span class="bottom-nav__label">마이</span>
+        </button>
+      </nav>
+    </section>
+  </div>
+</body>
+</html>

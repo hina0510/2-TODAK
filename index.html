@@ -6,6 +6,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" type="image/png" href="image/logo.png">
   <title>TODAK - 토닥</title>
 
   <!-- Google Fonts: NanumSquare (한글), Be Vietnam Pro (소셜 버튼) -->
@@ -662,35 +663,1413 @@
 
 
     <!-- =====================================================
-         HOME SECTION (Phase 5에서 구현)
+         HOME SECTION (Phase 5 - Figma 디자인 반영)
          ===================================================== -->
-    <section id="home-section" class="section hidden">
-      <div class="section-placeholder">홈 화면 (준비 중)</div>
+    <section id="home-section" class="section home-section hidden">
+
+      <!-- 로고 헤더 -->
+      <header class="home-header">
+        <img src="image/logo.png" alt="TODAK" class="home-logo">
+      </header>
+
+      <!-- 메인 컨텐츠 -->
+      <div class="home-content">
+
+        <!-- 상단 정보 카드 -->
+        <div class="info-card-top" id="header-card">
+          <div class="info-card-top__content">
+            <div class="info-card-top__label" id="header-label">아이와 함께하는 날</div>
+            <h2 class="info-card-top__title" id="header-title">건강하게 자라고 있는 다은이</h2>
+            <p class="info-card-top__dday" id="header-dday">D-120</p>
+          </div>
+          <div class="info-card-top__icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#D94F8A"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 임신/출산 토글 -->
+        <div class="pregnancy-birth-toggle">
+          <div class="toggle-group">
+            <button type="button" class="toggle-btn active">임신</button>
+            <button type="button" class="toggle-btn">출산</button>
+          </div>
+        </div>
+
+        <!-- Birth Registration Modal Overlay -->
+        <div class="modal-overlay" id="birth-registration-overlay">
+          <div class="modal" role="dialog" aria-modal="true" aria-labelledby="birth-modal-title">
+
+            <!-- 모달 핸들 -->
+            <div class="modal__handle"></div>
+
+            <!-- 모달 제목 -->
+            <h2 class="modal__title" id="birth-modal-title">출산 정보 등록</h2>
+
+            <!-- 모달 본문 -->
+            <div class="modal__body" style="gap: 20px;">
+
+              <!-- 아이 이름 -->
+              <div class="input-group">
+                <div class="input-label-pad">
+                  <label class="input-label input-label--form" for="birth-child-name">아이 이름</label>
+                </div>
+                <input
+                  type="text"
+                  id="birth-child-name"
+                  class="input-field input-field--card"
+                  placeholder="예: 다온이"
+                  autocomplete="off"
+                >
+              </div>
+
+              <!-- 성별 -->
+              <div class="input-group">
+                <div class="input-label-pad">
+                  <span class="input-label input-label--form">성별</span>
+                </div>
+                <div class="btn-radio-group" role="group" aria-label="성별 선택">
+                  <button
+                    type="button"
+                    class="btn-radio"
+                    data-gender="boy"
+                    aria-pressed="false"
+                  >
+                    왕자님
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-radio"
+                    data-gender="girl"
+                    aria-pressed="false"
+                  >
+                    공주님
+                  </button>
+                </div>
+              </div>
+
+              <!-- 태어난 날짜 및 시간 -->
+              <div class="input-group">
+                <div class="input-label-pad">
+                  <label class="input-label input-label--form" for="birth-datetime">태어난 날짜 및 시간</label>
+                </div>
+                <div class="input-wrapper">
+                  <input
+                    type="datetime-local"
+                    id="birth-datetime"
+                    class="input-field input-field--card"
+                  >
+                  <span class="input-wrapper__icon" aria-hidden="true">
+                    <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
+                      <rect x="1" y="3" width="16" height="16" rx="3" stroke="#DCBFC7" stroke-width="1.5"/>
+                      <path d="M5 1V5M13 1V5" stroke="#DCBFC7" stroke-width="1.5" stroke-linecap="round"/>
+                      <path d="M1 8H17" stroke="#DCBFC7" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+
+              <!-- 태어날 때 키 -->
+              <div class="input-group">
+                <div class="input-label-pad">
+                  <label class="input-label input-label--form" for="birth-height">태어날 때 키</label>
+                </div>
+                <div class="input-wrapper">
+                  <input
+                    type="number"
+                    id="birth-height"
+                    class="input-field input-field--card"
+                    placeholder="cm"
+                    step="0.1"
+                    min="0"
+                    autocomplete="off"
+                  >
+                  <span class="input-wrapper__icon" style="pointer-events: auto; color: var(--color-text-warm); font-weight: var(--font-weight-semibold);">cm</span>
+                </div>
+              </div>
+
+              <!-- 태어날 때 몸무게 -->
+              <div class="input-group">
+                <div class="input-label-pad">
+                  <label class="input-label input-label--form" for="birth-weight">태어날 때 몸무게</label>
+                </div>
+                <div class="input-wrapper">
+                  <input
+                    type="number"
+                    id="birth-weight"
+                    class="input-field input-field--card"
+                    placeholder="kg"
+                    step="0.1"
+                    min="0"
+                    autocomplete="off"
+                  >
+                  <span class="input-wrapper__icon" style="pointer-events: auto; color: var(--color-text-warm); font-weight: var(--font-weight-semibold);">kg</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 모달 푸터 -->
+            <div class="modal__footer" style="padding: 0 20px 24px;">
+              <button
+                type="button"
+                class="btn btn--primary w-full"
+                id="birth-register-btn"
+              >
+                성장 기록 시작하기
+              </button>
+            </div>
+
+          </div>
+        </div>
+        <!-- /#birth-registration-overlay -->
+
+        <!-- Growth Stage Modal Overlay -->
+        <div class="modal-overlay" id="growth-stage-overlay">
+          <div class="modal" role="dialog" aria-modal="true" aria-labelledby="growth-stage-title">
+
+            <!-- 상단 제목 + 닫기 버튼 -->
+            <div class="growth-stage-header">
+              <h2 class="modal__title" id="growth-stage-title">성장 단계 정보</h2>
+              <button type="button" class="growth-stage-close-btn" aria-label="닫기">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- 모달 본문 -->
+            <div class="growth-stage-content">
+
+              <!-- 캐릭터 + 현재 주차 배지 -->
+              <div class="growth-stage-character">
+                <div class="growth-stage-character-ring">
+                  <img src="image/preg3.png" alt="캐릭터" class="growth-stage-character-img" id="growth-stage-char-img">
+                </div>
+                <div class="growth-stage-badge" id="growth-stage-badge">22주차</div>
+              </div>
+
+              <!-- 현재 단계 레이블 -->
+              <div class="growth-stage-label">CURRENT STAGE</div>
+
+              <!-- 현재 단계 제목 -->
+              <h3 class="growth-stage-stage-name" id="growth-stage-stage-name">태동기</h3>
+
+              <!-- 단계 설명 -->
+              <p class="growth-stage-description" id="growth-stage-description">
+                아이의 움직임이 왕발하게 되고 왕발하지는 위마와의 교감이 가장 깊어지는 소중한 시기입니다.
+              </p>
+
+              <!-- 아이의 상태 -->
+              <div class="growth-stage-info-section growth-stage-info-section--pink">
+                <h4 class="growth-stage-info-title">아이의 상태</h4>
+                <p class="growth-stage-info-text" id="growth-stage-baby-status">
+                  눈을 뜨고 감을 수 있으며, 소리에 반응하여 태동을 보냅니다. 피부의 지방층이 생성되기 시작해요.
+                </p>
+              </div>
+
+              <!-- 엄마의 변화 -->
+              <div class="growth-stage-info-section growth-stage-info-section--lavender">
+                <h4 class="growth-stage-info-title">엄마의 변화</h4>
+                <p class="growth-stage-info-text" id="growth-stage-mom-status">
+                  배가 눈에 띄게 불러오며 허리 통증이 생길 수 있습니다. 가벼운 스트레칭과 명상이 도움이 돼요.
+                </p>
+              </div>
+
+              <!-- 다음 단계 예고 -->
+              <div class="growth-stage-info-section growth-stage-info-section--gray">
+                <div class="growth-stage-next-header">
+                  <div class="growth-stage-next-title-wrap">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="color: var(--color-primary-navy);">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                    </svg>
+                    <h4 class="growth-stage-next-title">다음 단계 예고</h4>
+                  </div>
+                  <div class="growth-stage-dday-badge" id="growth-stage-dday-badge">D-45</div>
+                </div>
+                <p class="growth-stage-info-text growth-stage-next-stage" id="growth-stage-next-stage">
+                  폭증 성장기 (28주~)
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </p>
+              </div>
+
+            </div>
+            <!-- /.growth-stage-content -->
+
+            <!-- 모달 푸터 (기록하기 버튼) -->
+            <div class="growth-stage-footer">
+              <button type="button" class="btn btn--primary w-full">기록하기</button>
+            </div>
+
+          </div>
+        </div>
+        <!-- /#growth-stage-overlay -->
+
+        <!-- 캐릭터 영역 (마젠타 링 포함) - 좌측/우측 사이드 카드 포함 -->
+        <div class="character-area" id="character-area">
+          <!-- 좌측 사이드 카드 -->
+          <div class="side-info-card side-info-card--left">
+            <p class="side-info-card__title" id="left-card-title">주차</p>
+            <p class="side-info-card__value" id="left-card-value">22</p>
+            <p class="side-info-card__desc" id="left-card-desc">태동기</p>
+          </div>
+
+          <!-- 중앙 캐릭터 -->
+          <div class="character-ring">
+            <div class="character-ring__outer"></div>
+            <div class="character-ring__inner">
+              <img
+                src="image/preg3.png"
+                alt="캐릭터"
+                class="character-image"
+                id="character-image"
+              >
+            </div>
+          </div>
+
+          <!-- 우측 사이드 카드 -->
+          <div class="side-info-card side-info-card--right">
+            <p class="side-info-card__title" id="right-card-title">태명</p>
+            <p class="side-info-card__value" id="right-card-value">다은이</p>
+          </div>
+
+          <!-- 하단 상태 카드 -->
+          <div class="stage-info-card" id="stage-info-card">
+            <div class="stage-info-badge">
+              <span class="stage-info-number" id="stage-info-number">22</span>
+            </div>
+            <span class="stage-info-text" id="stage-info-text">현재 22주차: 태동기</span>
+          </div>
+        </div>
+
+        <!-- 오늘의 토닥 미션 -->
+        <div class="todak-mission-section" id="todak-mission-section">
+          <div class="todak-mission-header">
+            <h3 class="todak-mission-title">오늘의 토닥 미션</h3>
+            <div class="todak-mission-status" id="mission-status">진행중 1/3</div>
+          </div>
+
+          <div class="todak-mission-list" id="mission-list">
+            <!-- 동적으로 채워짐 -->
+          </div>
+        </div>
+
+        <!-- Quick Action Cards -->
+        <div class="quick-action-cards" id="quick-action-cards">
+          <!-- 동적으로 채워짐 -->
+        </div>
+
+        <!-- Recommendation Card -->
+        <div class="recommendation-card" id="recommendation-card">
+          <div class="recommendation-card__badge">EDITOR'S PICK</div>
+          <h3 class="recommendation-card__title" id="rec-title">임신 가이드</h3>
+          <p class="recommendation-card__desc" id="rec-desc">임신 중 건강한 생활을 위한 팁</p>
+          <button type="button" class="recommendation-card__btn">기록하기</button>
+        </div>
+
+        <!-- 여백 (콘텐츠 밑줄) -->
+        <div style="height: 20px;"></div>
+
+      </div>
+      <!-- /.home-content -->
+
+      <!-- 플로팅 액션 버튼 -->
+      <button type="button" class="fab" aria-label="기록 추가">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="fab__text">기록하기</span>
+      </button>
+
+      <!-- 하단 네비게이션 -->
+      <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">
+        <button type="button" class="bottom-nav__item active" data-goto="home-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          <span class="bottom-nav__label">홈</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="todak-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+          </svg>
+          <span class="bottom-nav__label">토닥</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="guide-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+          </svg>
+          <span class="bottom-nav__label">가이드</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="record-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <span class="bottom-nav__label">기록</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="mypage-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <span class="bottom-nav__label">마이</span>
+        </button>
+      </nav>
+      <!-- /.bottom-nav -->
+
+    </section>
+    <!-- /#home-section -->
+
+
+    <!-- =====================================================
+         TODAK SECTION (오늘의 토닥)
+         ===================================================== -->
+    <section id="todak-section" class="section todak-section hidden">
+
+      <!-- 로고 헤더 -->
+      <header class="todak-header">
+        <img src="image/logo.png" alt="TODAK" class="todak-logo">
+      </header>
+
+      <!-- 메인 콘텐츠 -->
+      <main class="page-content todak-content">
+
+        <!-- 날짜 표시 -->
+        <div class="todak-date">
+          <span class="todak-date__text" id="todak-date-text">오늘</span>
+          <span class="todak-date__separator">·</span>
+          <span class="todak-date__full" id="todak-date-full">2026년 6월 24일</span>
+        </div>
+
+        <!-- 구분선 -->
+        <div class="todak-divider"></div>
+
+        <!-- 제목 및 설명 -->
+        <div class="todak-title-section">
+          <h1 class="todak-page-title">오늘의 토닥</h1>
+          <p class="todak-page-description">오늘 하루를 소중한 순간으로 기록해보세요</p>
+        </div>
+
+        <!-- 진행률 섹션 -->
+        <div class="todak-progress-section">
+          <div class="todak-progress-header">
+            <h2 class="todak-progress-title">진행률</h2>
+            <span class="todak-progress-count" id="todak-progress-count">0/6</span>
+          </div>
+          <div class="todak-progress-bar">
+            <div class="todak-progress-fill" id="todak-progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- 아이를 위해 카테고리 -->
+        <div class="todak-category">
+          <div class="todak-category-header">
+            <div class="todak-category-left">
+              <span class="todak-category-icon">🎈</span>
+              <h3 class="todak-category-title">아이를 위해</h3>
+            </div>
+            <span class="todak-category-badge" id="category-child-badge">0/2 완료</span>
+          </div>
+          <div class="todak-missions-list" id="todak-category-child">
+            <!-- 동적으로 채워짐 -->
+          </div>
+        </div>
+
+        <!-- 나를 위해 카테고리 -->
+        <div class="todak-category">
+          <div class="todak-category-header">
+            <div class="todak-category-left">
+              <span class="todak-category-icon">💝</span>
+              <h3 class="todak-category-title">나를 위해</h3>
+            </div>
+            <span class="todak-category-badge" id="category-self-badge">0/2 완료</span>
+          </div>
+          <div class="todak-missions-list" id="todak-category-self">
+            <!-- 동적으로 채워짐 -->
+          </div>
+        </div>
+
+        <!-- 함께하는 이를 위해 카테고리 -->
+        <div class="todak-category">
+          <div class="todak-category-header">
+            <div class="todak-category-left">
+              <span class="todak-category-icon">👨‍👩‍👧</span>
+              <h3 class="todak-category-title">함께하는 이를 위해</h3>
+            </div>
+            <span class="todak-category-badge" id="category-family-badge">0/2 완료</span>
+          </div>
+          <div class="todak-missions-list" id="todak-category-family">
+            <!-- 동적으로 채워짐 -->
+          </div>
+        </div>
+
+        <!-- 명언 카드 -->
+        <div class="todak-quote-card">
+          <p class="todak-quote-icon todak-quote-icon--left">"</p>
+          <p class="todak-quote-text">당신의 따뜻한 마음이</p>
+          <p class="todak-quote-highlight">아이에게 고스란히 전달되고 있어요</p>
+          <p class="todak-quote-icon todak-quote-icon--right">"</p>
+        </div>
+
+        <!-- 하단 여백 -->
+        <div style="height: 20px;"></div>
+
+      </main>
+
+      <!-- 플로팅 액션 버튼 -->
+      <button type="button" class="fab" aria-label="기록 추가">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="fab__text">기록하기</span>
+      </button>
+
+      <!-- 하단 네비게이션 -->
+      <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">
+        <button type="button" class="bottom-nav__item" data-goto="home-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          <span class="bottom-nav__label">홈</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item active" data-goto="todak-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+          </svg>
+          <span class="bottom-nav__label">토닥</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="guide-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+          </svg>
+          <span class="bottom-nav__label">가이드</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="record-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <span class="bottom-nav__label">기록</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="mypage-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <span class="bottom-nav__label">마이</span>
+        </button>
+      </nav>
+
+    </section>
+    <!-- /#todak-section -->
+
+
+    <!-- =====================================================
+         GROWTH DETAIL SECTION (성장 기록 상세)
+         ===================================================== -->
+    <section id="growth-detail-section" class="section record-section hidden">
+
+      <!-- 로고 헤더 -->
+      <header class="record-header">
+        <img src="image/logo.png" alt="TODAK" class="record-logo">
+        <button class="growth-detail-back" aria-label="캘린더 보기">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="1" y="3" width="22" height="20" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M1 7H23" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M6 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M18 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </header>
+
+      <!-- 메인 콘텐츠 -->
+      <main class="growth-detail-content">
+
+        <!-- 헤더 -->
+        <div class="growth-detail-hero">
+          <h1 class="growth-detail-title">성장 기록</h1>
+          <p class="growth-detail-subtitle">우리 아이의 소중한 순간들을 기록하세요.</p>
+        </div>
+
+        <!-- 요약 카드 2개 -->
+        <div class="growth-summary-grid">
+          <!-- 마지막 측정 -->
+          <div class="card growth-summary-card">
+            <p class="growth-summary-label">마지막 측정</p>
+            <h3 class="growth-summary-value">7.2kg / 65cm</h3>
+            <p class="growth-summary-desc">성향 124일</p>
+          </div>
+
+          <!-- 오늘의 수유 -->
+          <div class="card growth-summary-card growth-summary-card--lavender">
+            <p class="growth-summary-label">오늘의 수유</p>
+            <h3 class="growth-summary-value">840ml</h3>
+            <p class="growth-summary-desc">총 5회 진행</p>
+          </div>
+        </div>
+
+        <!-- 최근 일지 섹션 -->
+        <div class="growth-records-section">
+          <div class="growth-records-header">
+            <h2 class="growth-records-title">최근 일지</h2>
+            <button class="growth-records-link">전체보기</button>
+          </div>
+
+          <!-- 기록 카드 (수평 스크롤) -->
+          <div class="growth-records-container">
+            <div class="growth-records-scroll">
+
+              <!-- 기록 1 -->
+              <div class="card growth-record-card">
+                <div class="growth-record-date">2024.05.20</div>
+                <div class="growth-record-image">
+                  <img src="https://via.placeholder.com/160/FFE8F0/FFE8F0?text=👶" alt="성장 기록 사진">
+                </div>
+                <div class="growth-record-info">
+                  <div class="growth-record-metrics">
+                    <span class="growth-metric">65.2cm</span>
+                    <span class="growth-metric">7.2kg</span>
+                  </div>
+                  <p class="growth-record-time">오전 10:30</p>
+                </div>
+                <p class="growth-record-text">"오늘 처음으로 터잡기를 성공했다! 나뭄 놓고 기특한 순간 ☀"</p>
+              </div>
+
+              <!-- 기록 2 -->
+              <div class="card growth-record-card">
+                <div class="growth-record-date">2024.05.18</div>
+                <div class="growth-record-image">
+                  <img src="https://via.placeholder.com/160/FFE8F0/FFE8F0?text=😊" alt="성장 기록 사진">
+                </div>
+                <div class="growth-record-info">
+                  <div class="growth-record-metrics">
+                    <span class="growth-metric">65.0cm</span>
+                    <span class="growth-metric">7.1kg</span>
+                  </div>
+                  <p class="growth-record-time">오후 02:15</p>
+                </div>
+                <p class="growth-record-text">"첫 미소를 지었어요. 가장 소중한 순간입니다."</p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 성장 분석 섹션 -->
+        <div class="card growth-analysis-section">
+          <div class="growth-analysis-header">
+            <h2 class="growth-analysis-title">성장 분석</h2>
+            <p class="growth-analysis-subtitle">지난 1개월간의 변화</p>
+          </div>
+
+          <!-- 그래프 -->
+          <div class="growth-analysis-chart">
+            <div class="growth-chart-bars">
+              <div class="growth-chart-bar">
+                <div class="growth-chart-fill" style="height: 40%;"></div>
+                <span class="growth-chart-label">2월</span>
+              </div>
+              <div class="growth-chart-bar">
+                <div class="growth-chart-fill" style="height: 60%;"></div>
+                <span class="growth-chart-label">3월</span>
+              </div>
+              <div class="growth-chart-bar">
+                <div class="growth-chart-fill" style="height: 80%;"></div>
+                <span class="growth-chart-label">4월</span>
+              </div>
+              <div class="growth-chart-bar">
+                <div class="growth-chart-fill growth-chart-fill--active" style="height: 100%;"></div>
+                <span class="growth-chart-label">현재</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 인사이트 -->
+          <div class="growth-analysis-insight">
+            <svg class="growth-insight-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" fill="currentColor"/>
+            </svg>
+            <p class="growth-insight-text">또래 아이들보다 <strong>5% 더 빨르게</strong> 성장 하고 있어요. 아주 건강한 성장입니다!</p>
+          </div>
+        </div>
+
+        <!-- 하단 여백 -->
+        <div style="height: 20px;"></div>
+
+      </main>
+
+    </section>
+    <!-- /#growth-detail-section -->
+
+
+    <!-- =====================================================
+         RECORD SECTION (Figma Design - Phase 6)
+         ===================================================== -->
+    <section id="record-section" class="section record-section hidden">
+
+      <!-- 로고 헤더 -->
+      <header class="record-header">
+        <img src="image/logo.png" alt="TODAK" class="record-logo">
+      </header>
+
+      <!-- 메인 콘텐츠 -->
+      <main class="record-content">
+
+        <!-- 캘린더 영역 -->
+        <div class="record-calendar">
+
+          <!-- 월/년도 선택 -->
+          <div class="record-calendar__header">
+            <button class="record-calendar__month-btn">
+              2024년 5월
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- 요일 행 -->
+          <div class="record-calendar__weekdays">
+            <div class="record-calendar__weekday">일</div>
+            <div class="record-calendar__weekday">월</div>
+            <div class="record-calendar__weekday">화</div>
+            <div class="record-calendar__weekday">수</div>
+            <div class="record-calendar__weekday">목</div>
+            <div class="record-calendar__weekday">금</div>
+            <div class="record-calendar__weekday">토</div>
+          </div>
+
+          <!-- 날짜 그리드 -->
+          <div class="record-calendar__grid">
+            <!-- Week 1 -->
+            <div class="record-calendar__day record-calendar__day--empty"></div>
+            <div class="record-calendar__day record-calendar__day--empty"></div>
+            <div class="record-calendar__day record-calendar__day--empty"></div>
+            <div class="record-calendar__day">1</div>
+            <div class="record-calendar__day">2</div>
+            <div class="record-calendar__day">3</div>
+            <div class="record-calendar__day">4</div>
+
+            <!-- Week 2 -->
+            <div class="record-calendar__day">5</div>
+            <div class="record-calendar__day">6</div>
+            <div class="record-calendar__day">7</div>
+            <div class="record-calendar__day">8</div>
+            <div class="record-calendar__day">9</div>
+            <div class="record-calendar__day">10</div>
+            <div class="record-calendar__day">11</div>
+
+            <!-- Week 3 -->
+            <div class="record-calendar__day">12</div>
+            <div class="record-calendar__day">13</div>
+            <div class="record-calendar__day">14</div>
+            <div class="record-calendar__day record-calendar__day--active">15</div>
+            <div class="record-calendar__day">16</div>
+            <div class="record-calendar__day">17</div>
+            <div class="record-calendar__day">18</div>
+
+            <!-- Week 4 -->
+            <div class="record-calendar__day">19</div>
+            <div class="record-calendar__day">20</div>
+            <div class="record-calendar__day">21</div>
+            <div class="record-calendar__day">22</div>
+            <div class="record-calendar__day">23</div>
+            <div class="record-calendar__day">24</div>
+            <div class="record-calendar__day">25</div>
+
+            <!-- Week 5 -->
+            <div class="record-calendar__day">26</div>
+            <div class="record-calendar__day">27</div>
+            <div class="record-calendar__day">28</div>
+            <div class="record-calendar__day">29</div>
+            <div class="record-calendar__day">30</div>
+            <div class="record-calendar__day">31</div>
+            <div class="record-calendar__day record-calendar__day--empty"></div>
+          </div>
+
+        </div>
+        <!-- /.record-calendar -->
+
+        <!-- 기록 날짜 섹션 -->
+        <div class="record-date-section">
+          <div class="record-date-header">
+            <h2 class="record-date-title">5월 15일의 기록</h2>
+            <button class="record-date-edit">기록 수정</button>
+          </div>
+
+          <!-- 기록 카드 (수평 스크롤) -->
+          <div class="record-cards-container">
+            <div class="record-cards">
+
+              <!-- 카드 1: 매우 즐거움 -->
+              <div class="record-card">
+                <div class="record-card__icon">❤️</div>
+                <h3 class="record-card__title">매우 즐거움</h3>
+                <p class="record-card__subtitle">태동이 활발해요</p>
+                <div class="record-card__meta">3/3 완료</div>
+              </div>
+
+              <!-- 카드 2: 영양제 -->
+              <div class="record-card">
+                <div class="record-card__icon">🫐</div>
+                <h3 class="record-card__title">영양제</h3>
+                <p class="record-card__subtitle">철분, 엽산, 비타민</p>
+                <div class="record-card__meta">3/3 완료</div>
+              </div>
+
+            </div>
+          </div>
+          <!-- /.record-cards-container -->
+
+          <!-- 기록 항목 리스트 -->
+          <div class="record-items">
+
+            <!-- 기록 항목 1 -->
+            <div class="record-item">
+              <div class="record-item__header">
+                <span class="record-item__time">오전 08:30</span>
+                <div class="record-item__dot"></div>
+              </div>
+              <div class="record-item__content">
+                <h4 class="record-item__title">가버운 아침 산책</h4>
+                <p class="record-item__desc">늘기가 좋아서 집 앞 공원을 20분 정도 거었어요.</p>
+              </div>
+            </div>
+
+            <!-- 기록 항목 2 -->
+            <div class="record-item">
+              <div class="record-item__header">
+                <span class="record-item__time">오후 02:15</span>
+                <div class="record-item__dot"></div>
+              </div>
+              <div class="record-item__content">
+                <h4 class="record-item__title">영양 균형 잠심 식사</h4>
+                <p class="record-item__desc">다려진 쌀죽이 몸과 함께 맛있게 먹었어요. 소화가 잘 된다.</p>
+                <div class="record-item__images">
+                  <img src="https://via.placeholder.com/88/FFD9E8/FFD9E8?text=🥗" alt="식사 사진 1" class="record-item__image">
+                  <img src="https://via.placeholder.com/88/FFD9E8/FFD9E8?text=🍲" alt="식사 사진 2" class="record-item__image">
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- /.record-items -->
+
+          <!-- 5월 리포트 미리보기 섹션 -->
+          <div class="record-report">
+            <div class="record-report__header">
+              <h3 class="record-report__title">5월 리포트 미리보기</h3>
+              <button class="record-report__edit">기록 수정</button>
+            </div>
+            <div class="record-report__content">
+              <div class="record-report__stat">
+                <span class="record-report__number">12</span>
+                <span class="record-report__label">일 연속 기록 중!</span>
+              </div>
+              <p class="record-report__message">토닥이와 함께한 소중한 순간들이 빛이 되어<br>아이와 함께 자라고 있어요.</p>
+            </div>
+          </div>
+          <!-- /.record-report -->
+
+        </div>
+        <!-- /.record-date-section -->
+
+      </main>
+      <!-- /.record-content -->
+
+      <!-- 기록 생성 모달 -->
+      <div class="modal-overlay" id="record-create-overlay">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="record-create-title">
+
+          <!-- 모달 핸들 -->
+          <div class="modal__handle"></div>
+
+          <!-- 헤더 -->
+          <div class="record-create-header">
+            <h2 class="record-create-title" id="record-create-title">성장 기록하기</h2>
+            <button type="button" class="record-create-close-btn" aria-label="닫기">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- 모달 본문 (스크롤 가능) -->
+          <div class="modal__body record-create-body">
+
+            <!-- 날짜 -->
+            <div class="record-create-date">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="1" y="3" width="22" height="20" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M1 7H23" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M6 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M18 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <span class="record-create-date-text">2024년 5월 24일 금요일</span>
+            </div>
+
+            <!-- 아이 사진 -->
+            <div class="input-group">
+              <div class="input-label-pad">
+                <label class="input-label input-label--form">아이 사진</label>
+              </div>
+              <div class="record-create-photo-area">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p class="record-create-photo-text">오늘의 예뻐 모습을 남겨주세요</p>
+              </div>
+            </div>
+
+            <!-- 성장 정보 (키, 몸무게) -->
+            <div class="record-create-growth-inputs">
+              <div class="input-group">
+                <div class="input-label-pad">
+                  <label class="input-label input-label--form" for="record-height">키 (cm)</label>
+                </div>
+                <input type="number" id="record-height" class="input-field input-field--card" placeholder="00.0" step="0.1">
+              </div>
+              <div class="input-group">
+                <div class="input-label-pad">
+                  <label class="input-label input-label--form" for="record-weight">몸무게 (kg)</label>
+                </div>
+                <input type="number" id="record-weight" class="input-field input-field--card" placeholder="0.00" step="0.1">
+              </div>
+            </div>
+
+            <!-- 수유 기록 -->
+            <div class="input-group">
+              <div class="input-label-pad">
+                <span class="input-label input-label--form">수유 기록</span>
+              </div>
+              <div class="record-create-feeding-options" role="group">
+                <button type="button" class="btn btn--pill record-create-feeding-btn" data-feeding="breast">
+                  <span>👶</span>
+                  모유
+                </button>
+                <button type="button" class="btn btn--pill record-create-feeding-btn selected" data-feeding="formula">
+                  <span>🍼</span>
+                  분유
+                </button>
+                <button type="button" class="btn btn--pill record-create-feeding-btn" data-feeding="pump">
+                  <span>💧</span>
+                  유축
+                </button>
+              </div>
+            </div>
+
+            <!-- 분유량 -->
+            <div class="input-group">
+              <div class="input-label-pad">
+                <label class="input-label input-label--form" for="record-amount">분유량</label>
+              </div>
+              <div class="record-create-amount-input">
+                <input type="number" id="record-amount" class="input-field input-field--card" placeholder="120" min="0">
+                <span class="record-create-amount-unit">ml</span>
+              </div>
+            </div>
+
+            <!-- 이유식 종류 -->
+            <div class="input-group">
+              <div class="input-label-pad">
+                <span class="input-label input-label--form">이유식 종류</span>
+              </div>
+              <div class="record-create-baby-food-tags">
+                <button type="button" class="record-create-baby-food-tag">초기 미음</button>
+                <button type="button" class="record-create-baby-food-tag">채소 죽</button>
+                <button type="button" class="record-create-baby-food-tag">소고기 미음</button>
+                <button type="button" class="record-create-baby-food-add" aria-label="이유식 종류 추가">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- 오늘의 메모 -->
+            <div class="input-group">
+              <div class="input-label-pad">
+                <label class="input-label input-label--form" for="record-memo">오늘의 메모</label>
+              </div>
+              <div class="record-create-memo-wrapper">
+                <textarea id="record-memo" class="record-create-memo-textarea" placeholder="오늘 하루는 어떠셨나요? 소중한 순간들을 기록해주세요" maxlength="200"></textarea>
+                <div class="record-create-memo-count">0 / 200</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 모달 푸터 -->
+          <div class="modal__footer">
+            <button type="button" class="btn btn--primary w-full record-create-save-btn">저장하기</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 플로팅 액션 버튼 -->
+      <button type="button" class="fab" aria-label="기록 추가" id="record-fab">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="fab__text">기록하기</span>
+      </button>
+
+      <!-- 하단 네비게이션 -->
+      <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">
+        <button type="button" class="bottom-nav__item" data-goto="home-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          <span class="bottom-nav__label">홈</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="todak-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+          </svg>
+          <span class="bottom-nav__label">토닥</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="guide-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+          </svg>
+          <span class="bottom-nav__label">가이드</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item active" data-goto="record-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <span class="bottom-nav__label">기록</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="mypage-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <span class="bottom-nav__label">마이</span>
+        </button>
+      </nav>
+
+    </section>
+    <!-- /#record-section -->
+
+
+    <!-- =====================================================
+         GUIDE SECTION
+         ===================================================== -->
+    <section id="guide-section" class="section guide-section hidden">
+
+      <!-- 로고 헤더 -->
+      <header class="guide-header">
+        <img src="image/logo.png" alt="TODAK" class="guide-logo">
+      </header>
+
+      <!-- 메인 콘텐츠 -->
+      <main class="guide-content">
+
+        <!-- 주차 정보 카드 -->
+        <div class="guide-week-card">
+          <div class="guide-week-card__info">
+            <p class="guide-week-card__label">우리 아기를 만난지</p>
+            <div class="guide-week-card__main">
+              <span class="guide-week-card__number">20</span>
+              <span class="guide-week-card__unit">주차 4일</span>
+            </div>
+          </div>
+          <div class="guide-week-card__avatar">
+            <div class="guide-week-card__avatar-circle">
+              <span class="guide-week-card__avatar-emoji">👶</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 시기별 가이드 섹션 -->
+        <div class="guide-period-section">
+          <div class="guide-period-label">시기별 가이드</div>
+          <div class="guide-period-link">20주차 맞춤 가이드</div>
+
+          <!-- 주간 카드 (좌우 스크롤) -->
+          <div class="guide-step-cards">
+
+            <!-- CURRENT (20주차) -->
+            <div class="guide-step-card guide-step-card--current">
+              <div class="guide-step-badge">CURRENT</div>
+              <div class="guide-step-number">20주차</div>
+              <div class="guide-step-title">가이드</div>
+            </div>
+
+            <!-- NEXT (21주차) -->
+            <div class="guide-step-card guide-step-card--next">
+              <div class="guide-step-badge">NEXT</div>
+              <div class="guide-step-number">21주차</div>
+              <div class="guide-step-title">가이드</div>
+            </div>
+
+            <!-- UPCOMING (22주차) -->
+            <div class="guide-step-card guide-step-card--upcoming">
+              <div class="guide-step-badge">UPCOMING</div>
+              <div class="guide-step-number">22주차</div>
+              <div class="guide-step-title">가이드</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 가이드 상세 섹션 -->
+        <div class="guide-detail-section">
+          <div class="guide-detail-container">
+            <div class="guide-detail-text">
+              <div class="guide-detail-dday">D-100</div>
+              <h2 class="guide-detail-title">출산 준비</h2>
+              <p class="guide-detail-desc">병원 가방 리스트부터 마음 가짐까지</p>
+            </div>
+            <div class="guide-detail-image-wrapper">
+              <div class="guide-detail-image">🏥</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 상세 가이드 카드 그리드 -->
+        <div class="guide-cards-grid">
+
+          <!-- 육아 가이드 -->
+          <div class="guide-detail-card">
+            <div class="guide-detail-card__icon">👶</div>
+            <h3 class="guide-detail-card__title">육아 가이드</h3>
+            <p class="guide-detail-card__desc">초보 맘들을 위한 실전 육아 스킬</p>
+          </div>
+
+          <!-- 예방접종 -->
+          <div class="guide-detail-card">
+            <div class="guide-detail-card__icon">💉</div>
+            <h3 class="guide-detail-card__title">예방접종</h3>
+            <p class="guide-detail-card__desc">놓치기 쉬운 우리 아이 접종 일정</p>
+          </div>
+
+          <!-- 정부 지원금 (큰 카드) -->
+          <div class="guide-detail-card guide-detail-card--large">
+            <div class="guide-detail-card__image-section">
+              <div class="guide-detail-card__image">💰</div>
+            </div>
+            <div class="guide-detail-card__text-section">
+              <h3 class="guide-detail-card__title">정부 지원금</h3>
+              <p class="guide-detail-card__desc">2024년 새로워진 부모 금혜와 아동수당 정보를 확인하세요.</p>
+            </div>
+          </div>
+
+          <!-- 신생아 관리 -->
+          <div class="guide-detail-card">
+            <div class="guide-detail-card__icon">🍼</div>
+            <h3 class="guide-detail-card__title">신생아 관리</h3>
+            <p class="guide-detail-card__desc">배냇짓과 첫 돌까지의 성장 과정</p>
+          </div>
+
+        </div>
+
+        <!-- 인기 가이드 섹션 -->
+        <div class="guide-popular-section">
+          <div class="guide-popular-header">
+            <h3 class="guide-popular-title">이번 주 인기 가이드</h3>
+            <a href="#" class="guide-popular-link">전체보기</a>
+          </div>
+
+          <!-- 가이드 카드 1 -->
+          <div class="guide-popular-card">
+            <div class="guide-popular-card__image">👨‍👩‍👧</div>
+            <div class="guide-popular-card__content">
+              <div class="guide-popular-card__badge">PARENTING TIP</div>
+              <h4 class="guide-popular-card__title">밤에 잠들정하는 아이 달래기</h4>
+              <p class="guide-popular-card__meta">⏱ 5분 읽기</p>
+            </div>
+          </div>
+
+          <!-- 가이드 카드 2 -->
+          <div class="guide-popular-card">
+            <div class="guide-popular-card__image">🥗</div>
+            <div class="guide-popular-card__content">
+              <div class="guide-popular-card__badge">NUTRITION</div>
+              <h4 class="guide-popular-card__title">초기 이유식 시작 가이드라인</h4>
+              <p class="guide-popular-card__meta">⏱ 8분 읽기</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 하단 여백 -->
+        <div style="height: 20px;"></div>
+
+      </main>
+
+      <!-- 플로팅 액션 버튼 -->
+      <button type="button" class="fab" aria-label="기록 추가">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="fab__text">기록하기</span>
+      </button>
+
+      <!-- 하단 네비게이션 -->
+      <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">
+        <button type="button" class="bottom-nav__item" data-goto="home-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          <span class="bottom-nav__label">홈</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="todak-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+          </svg>
+          <span class="bottom-nav__label">토닥</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item active" data-goto="guide-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+          </svg>
+          <span class="bottom-nav__label">가이드</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="record-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <span class="bottom-nav__label">기록</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="mypage-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <span class="bottom-nav__label">마이</span>
+        </button>
+      </nav>
+
     </section>
 
 
     <!-- =====================================================
-         RECORD SECTION (Phase 6에서 구현)
+         MYPAGE SECTION (My Page - 마이페이지)
          ===================================================== -->
-    <section id="record-section" class="section hidden">
-      <div class="section-placeholder">기록 화면 (준비 중)</div>
+    <section id="mypage-section" class="section mypage-section hidden">
+
+      <!-- 로고 헤더 -->
+      <header class="mypage-header">
+        <img src="image/logo.png" alt="TODAK" class="mypage-logo">
+      </header>
+
+      <!-- 메인 콘텐츠 -->
+      <main class="mypage-content">
+
+        <!-- ========================================
+             프로필 섹션 (Profile Section)
+             ======================================== -->
+        <div class="card mypage-profile-card">
+          <div class="mypage-profile-avatar">
+            <img src="https://via.placeholder.com/72/FFD9E8/FFD9E8?text=👩" alt="프로필 사진">
+          </div>
+          <div class="mypage-profile-info">
+            <h2 class="mypage-profile-name">김지은 님</h2>
+            <p class="mypage-profile-email">jieun.kim@example.com</p>
+          </div>
+          <button class="btn btn--sm btn--secondary">프로필 수정</button>
+        </div>
+
+        <!-- ========================================
+             우리 아이 정보 섹션 (Child Information)
+             ======================================== -->
+        <h3 class="mypage-section-title">우리 아이 정보</h3>
+
+        <div class="card mypage-child-card">
+          <!-- 자녀 상단: 이름 + D+ 배지 + 화살표 -->
+          <div class="mypage-child-header-row">
+            <div class="mypage-child-avatar">
+              <span class="mypage-child-icon">😊</span>
+            </div>
+            <div class="mypage-child-header-content">
+              <h4 class="mypage-child-name">토닥이</h4>
+              <span class="mypage-child-dday">D+45</span>
+            </div>
+            <svg class="mypage-child-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <!-- 구분선 -->
+          <div class="mypage-child-divider"></div>
+
+          <!-- 자녀 하단: 생년월일 + 성별 -->
+          <div class="mypage-child-footer-row">
+            <span class="mypage-child-meta-label">생년월일</span>
+            <span class="mypage-child-meta-value">2023.12.15</span>
+            <span class="mypage-child-meta-divider">•</span>
+            <span class="mypage-child-meta-label">성별</span>
+            <span class="mypage-child-meta-value">여아</span>
+          </div>
+        </div>
+
+        <!-- ========================================
+             공동 양육자 초대 섹션 (Family Invitation)
+             ======================================== -->
+        <div class="card mypage-invitation-card">
+          <h3 class="mypage-invitation-title">공동 양육자 초대하기</h3>
+          <p class="mypage-invitation-desc">배우자나 가족을 초대하여 아이의 성장을 함께 기록하세요.</p>
+          <button class="btn btn--secondary btn--sm">초대 코드 생성하기</button>
+        </div>
+
+        <!-- ========================================
+             연결된 가족 섹션 (Connected Family)
+             ======================================== -->
+        <h3 class="mypage-section-title">연결된 가족</h3>
+
+        <div class="card mypage-family-card">
+          <!-- 가족 구성원 1 -->
+          <div class="mypage-family-item">
+            <div class="mypage-family-info">
+              <div class="mypage-family-name-row">
+                <h4 class="mypage-family-name">박현우</h4>
+                <span class="mypage-family-role">아빠</span>
+              </div>
+              <p class="mypage-family-access">최근 접근: 2시간 전</p>
+            </div>
+            <button class="mypage-family-menu" aria-label="설정">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                <circle cx="19" cy="12" r="2" fill="currentColor"/>
+                <circle cx="5" cy="12" r="2" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- 가족 구성원 구분선 -->
+          <div class="mypage-family-divider"></div>
+
+          <!-- 가족 구성원 2 -->
+          <div class="mypage-family-item">
+            <div class="mypage-family-info">
+              <div class="mypage-family-name-row">
+                <h4 class="mypage-family-name">이준지</h4>
+                <span class="mypage-family-role">엄마니</span>
+              </div>
+              <p class="mypage-family-access">이제</p>
+            </div>
+            <button class="mypage-family-menu" aria-label="설정">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                <circle cx="19" cy="12" r="2" fill="currentColor"/>
+                <circle cx="5" cy="12" r="2" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ========================================
+             설정 섹션 (Settings Section)
+             ======================================== -->
+        <div class="card mypage-settings-card">
+          <button class="mypage-settings-item">
+            <span>알림 설정</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="mypage-settings-divider"></div>
+
+          <button class="mypage-settings-item">
+            <span>개인정보 보호</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="mypage-settings-divider"></div>
+
+          <button class="mypage-settings-item">
+            <span>고객 센터</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- ========================================
+             로그아웃 섹션 (Logout Section)
+             ======================================== -->
+        <button class="mypage-logout-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M17 16L21 12M21 12L17 8M21 12H9M13 2H7C5.9 2 5 2.9 5 4V20C5 21.1 5.9 22 7 22H13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>로그아웃</span>
+        </button>
+
+        <!-- 하단 여백 -->
+        <div style="height: 20px;"></div>
+
+      </main>
+      <!-- /.mypage-content -->
+
+      <!-- 플로팅 액션 버튼 -->
+      <button type="button" class="fab" aria-label="기록 추가">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="fab__text">기록하기</span>
+      </button>
+
+      <!-- 하단 네비게이션 -->
+      <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">
+        <button type="button" class="bottom-nav__item" data-goto="home-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          <span class="bottom-nav__label">홈</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="todak-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+          </svg>
+          <span class="bottom-nav__label">토닥</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="guide-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+          </svg>
+          <span class="bottom-nav__label">가이드</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="record-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <span class="bottom-nav__label">기록</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item active" data-goto="mypage-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <span class="bottom-nav__label">마이</span>
+        </button>
+      </nav>
+
     </section>
-
-
-    <!-- =====================================================
-         GUIDE SECTION (Phase 7에서 구현)
-         ===================================================== -->
-    <section id="guide-section" class="section hidden">
-      <div class="section-placeholder">가이드 화면 (준비 중)</div>
-    </section>
-
-
-    <!-- =====================================================
-         MYPAGE SECTION (Phase 8에서 구현)
-         ===================================================== -->
-    <section id="mypage-section" class="section hidden">
-      <div class="section-placeholder">마이페이지 (준비 중)</div>
-    </section>
+    <!-- /#mypage-section -->
 
 
   </div><!-- /#app -->

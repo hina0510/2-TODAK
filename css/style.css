@@ -744,3 +744,233 @@
   margin-top: auto;
   padding: 24px 24px 32px;
 }
+
+
+/* ==========================================
+   TODAK SECTION (오늘의 토닥)
+   ========================================== */
+
+.todak-section {
+  background-color: var(--color-bg-beige);
+}
+
+/* 로고 헤더 */
+.todak-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  flex-shrink: 0;
+  background-color: var(--color-bg-beige);
+}
+
+.todak-logo {
+  width: 41px;
+  height: 36px;
+  object-fit: contain;
+}
+
+/* 메인 콘텐츠 영역 */
+.todak-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 0 100px 0;
+}
+
+/* 날짜 표시 */
+.todak-date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 20px 12px;
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+}
+
+.todak-date__text {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.todak-date__separator {
+  opacity: 0.5;
+}
+
+.todak-date__full {
+  font-size: var(--font-size-small);
+}
+
+/* 구분선 */
+.todak-divider {
+  height: 1px;
+  background-color: var(--color-border-light);
+  margin: 0;
+}
+
+/* 제목 및 설명 섹션 */
+.todak-title-section {
+  padding: 20px 24px 24px;
+}
+
+.todak-page-title {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+  line-height: var(--line-height-tight);
+}
+
+.todak-page-description {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+/* 진행률 섹션 */
+.todak-progress-section {
+  padding: 16px 20px;
+  background-color: var(--color-bg-white);
+  border-radius: 16px;
+  margin: 0 24px 24px;
+  box-shadow: var(--shadow-card);
+}
+
+.todak-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.todak-progress-title {
+  font-size: var(--font-size-body-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.todak-progress-count {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-navy);
+}
+
+.todak-progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: var(--color-border-light);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.todak-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary-magenta), var(--color-primary-navy));
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* 카테고리 섹션 */
+.todak-category {
+  padding: 0 24px;
+  margin-bottom: 24px;
+}
+
+.todak-category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.todak-category-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.todak-category-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.todak-category-title {
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+
+.todak-category-badge {
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-navy);
+  background-color: rgba(47, 75, 124, 0.08);
+  padding: 4px 10px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.todak-missions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 명언 카드 */
+.todak-quote-card {
+  margin: 28px 24px 100px;
+  padding: 40px 24px;
+  background-color: #FFF5F8;
+  border-radius: 24px;
+  text-align: center;
+  position: relative;
+}
+
+.todak-quote-icon {
+  font-size: 48px;
+  color: #D94F8A;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1;
+  opacity: 0.4;
+}
+
+.todak-quote-icon--left {
+  margin-bottom: 12px;
+}
+
+.todak-quote-icon--right {
+  margin-top: 12px;
+}
+
+.todak-quote-text {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: #D94F8A;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.todak-quote-highlight {
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  color: #D94F8A;
+  margin: 4px 0 0 0;
+  line-height: 1.5;
+}
+
+/* TODAK 섹션 FAB */
+.todak-section .fab {
+  bottom: 100px;
+}
+
+
+/* ==========================================
+   TODAK SECTION 미션 카드 커스텀
+   ========================================== */
+
+/* 기본 common.css 스타일 사용 */
+  padding: 3px 8px;
+}

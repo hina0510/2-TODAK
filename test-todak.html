@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TODAK - 오늘의 토닥 테스트</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/color.css">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background-color: #F6EFE8; }
+  </style>
+</head>
+<body>
+  <section class="section home-section" id="todak-section">
+    <header class="todak-header">
+      <img src="image/logo.png" alt="TODAK" class="todak-logo">
+    </header>
+
+    <main class="page-content todak-content">
+      <div class="todak-date">
+        <span class="todak-date__text">오늘</span>
+        <span class="todak-date__separator">·</span>
+        <span class="todak-date__full">2026년 6월 24일</span>
+      </div>
+
+      <div class="todak-divider"></div>
+
+      <div class="todak-title-section">
+        <h1 class="todak-page-title">오늘의 토닥</h1>
+        <p class="todak-page-description">오늘 하루를 소중한 순간으로 기록해보세요</p>
+      </div>
+
+      <div class="todak-progress-section">
+        <div class="todak-progress-header">
+          <h2 class="todak-progress-title">진행률</h2>
+          <span class="todak-progress-count" id="todak-progress-count">0/6</span>
+        </div>
+        <div class="todak-progress-bar">
+          <div class="todak-progress-fill" id="todak-progress-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="todak-category">
+        <div class="todak-category-header">
+          <div class="todak-category-left">
+            <span class="todak-category-icon">🎈</span>
+            <h3 class="todak-category-title">아이를 위해</h3>
+          </div>
+          <span class="todak-category-badge" id="category-child-badge">0/2 완료</span>
+        </div>
+        <div class="todak-missions-list" id="todak-category-child">
+          <div class="mission-card" data-mission-id="child-1">
+            <div class="mission-card__icon" aria-hidden="true">🎵</div>
+            <div class="mission-card__content">
+              <h4 class="mission-card__title">태교 음악 감상하기</h4>
+              <p class="mission-card__desc">엄마의 심정과의 활을 듣게 하세요</p>
+              <div class="mission-card__tags">
+                <span class="mission-tag">태교</span>
+                <span class="mission-tag">모자관계</span>
+              </div>
+            </div>
+            <input type="checkbox" class="mission-card__checkbox" aria-label="태교 음악 감상하기 완료">
+          </div>
+
+          <div class="mission-card completed" data-mission-id="child-2">
+            <div class="mission-card__icon" aria-hidden="true">🫶</div>
+            <div class="mission-card__content">
+              <h4 class="mission-card__title">태담 나누기</h4>
+              <p class="mission-card__desc">"오늘 날씨가 참 좋아"라고 베 속 아이에게 말을 걸어세요.</p>
+              <div class="mission-card__tags">
+                <span class="mission-tag">태담</span>
+                <span class="mission-tag">소통</span>
+              </div>
+            </div>
+            <input type="checkbox" class="mission-card__checkbox" aria-label="태담 나누기 완료" checked>
+          </div>
+        </div>
+      </div>
+
+      <div class="todak-category">
+        <div class="todak-category-header">
+          <div class="todak-category-left">
+            <span class="todak-category-icon">💝</span>
+            <h3 class="todak-category-title">나를 위해</h3>
+          </div>
+          <span class="todak-category-badge" id="category-self-badge">1/2 완료</span>
+        </div>
+        <div class="todak-missions-list" id="todak-category-self">
+          <div class="mission-card" data-mission-id="self-1">
+            <div class="mission-card__icon" aria-hidden="true">🌿</div>
+            <div class="mission-card__content">
+              <h4 class="mission-card__title">거버은 스트레칭</h4>
+              <p class="mission-card__desc">부은 다리의 혈리를 위해 5분간 고양이 자세를 해보세요.</p>
+              <div class="mission-card__tags">
+                <span class="mission-tag">스트레칭</span>
+                <span class="mission-tag">휴식</span>
+              </div>
+            </div>
+            <input type="checkbox" class="mission-card__checkbox" aria-label="거버은 스트레칭 완료">
+          </div>
+        </div>
+      </div>
+
+      <div class="todak-quote-card">
+        <p class="todak-quote-icon todak-quote-icon--left">"</p>
+        <p class="todak-quote-text">당신의 따뜻한 마음이</p>
+        <p class="todak-quote-highlight">아이에게 고스란히 전달되고 있어요</p>
+        <p class="todak-quote-icon todak-quote-icon--right">"</p>
+      </div>
+
+      <div style="height: 20px;"></div>
+    </main>
+
+    <button type="button" class="fab" aria-label="기록 추가">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <span class="fab__text">기록하기</span>
+    </button>
+  </section>
+
+  <script>
+    // 간단한 테스트 스크립트
+    document.querySelectorAll('.mission-card__checkbox').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        this.closest('.mission-card').classList.toggle('completed');
+      });
+    });
+  </script>
+</body>
+</html>
