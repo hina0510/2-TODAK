@@ -679,7 +679,7 @@
 /* 역할 pill 선택 상태 — 진한 마젠타 보더 */
 .btn-radio--pill.selected,
 .btn-radio--pill[aria-pressed="true"] {
-  border-color: #d02266;
+  border-color: var(--color-primary-magenta-vivid);
 }
 
 /* 역할 그룹 — 8px 간격 */
@@ -699,4 +699,289 @@
   font-size: var(--font-size-h2);
   box-shadow: 0px 10px 15px -3px rgba(168, 39, 99, 0.2),
               0px 4px 6px -4px rgba(168, 39, 99, 0.2);
+}
+
+/* Pill CTA 버튼 (역할 선택 / 회원가입 플로우 공용) */
+.btn--pill {
+  height: auto;
+  padding: 20px;
+  border-radius: 9999px;
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  background-color: var(--color-navy-button);
+  color: var(--color-text-white);
+}
+
+
+/* ----------------------------------------
+   Role Selection Card (역할 선택 카드)
+   ---------------------------------------- */
+
+.role-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 26px;
+  background-color: var(--color-bg-white);
+  border: 2px solid var(--color-border-neutral);
+  border-radius: 24px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  text-align: center;
+  font-family: 'Nanum Square', 'NanumSquare', sans-serif;
+}
+
+/* 선택 상태 */
+.role-card--selected {
+  background-color: var(--color-bg-radio-active);
+  border-color: var(--color-primary-magenta-vivid);
+  box-shadow: 0px 12px 12px rgba(168, 39, 99, 0.12);
+}
+
+/* 아이콘 원형 컨테이너 */
+.role-card__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 16px;
+}
+
+.role-card__icon--magenta {
+  background-color: var(--color-primary-magenta-vivid);
+}
+
+.role-card__icon--lavender {
+  background-color: var(--color-bg-icon-lavender);
+}
+
+/* 카드 제목 */
+.role-card__name {
+  display: block;
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-dark);
+  margin-bottom: 8px;
+}
+
+/* 카드 설명 */
+.role-card__desc {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-warm);
+  line-height: var(--line-height-snug);
+  text-align: center;
+}
+
+
+/* ----------------------------------------
+   Header Variants (헤더 변형)
+   ---------------------------------------- */
+
+/* 뒤로가기 + 중앙 제목 레이아웃 */
+.header--center {
+  position: relative;
+}
+
+.header--center .header__title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* 헤더 우측 균형용 빈 공간 */
+.header__spacer {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+/* 딥 마젠타 제목 색상 변형 */
+.header__title--rose {
+  color: var(--color-primary-magenta-deep);
+}
+
+
+/* ----------------------------------------
+   Input with Icon (아이콘 포함 인풋)
+   ---------------------------------------- */
+
+/* 아이콘 포함 인풋 래퍼 */
+.input-with-icon {
+  position: relative;
+  width: 100%;
+}
+
+/* 좌측 아이콘 절대 위치 */
+.input-with-icon__icon-left {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 좌측 아이콘 여백 인풋 */
+.input-with-icon__field {
+  padding-left: 48px;
+}
+
+/* 우측 아이콘 여백 인풋 (eye 토글 등) */
+.input-with-icon__field--with-right {
+  padding-right: 48px;
+}
+
+/* 우측 아이콘 / 토글 버튼 */
+.input-with-icon__icon-right {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.input-with-icon__icon-right img,
+.input-with-icon__icon-right svg {
+  display: block;
+  opacity: 0.45;
+  transition: opacity 0.2s ease;
+}
+
+.input-with-icon__icon-right.is-visible img,
+.input-with-icon__icon-right.is-visible svg {
+  opacity: 1;
+}
+
+
+/* ----------------------------------------
+   Input Form Variant (폼 인풋 변형)
+   로그인 · 회원가입 페이지용 — white bg, rose border, 56px
+   ---------------------------------------- */
+
+.input-field--form {
+  height: 56px;
+  background-color: var(--color-bg-white);
+  border: 1px solid var(--color-border-rose);
+  border-radius: 12px;
+  box-shadow: 0px 10px 25px -5px rgba(168, 39, 99, 0.12);
+  font-family: 'Nanum Square', 'NanumSquare', sans-serif;
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-primary);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.input-field--form::placeholder {
+  color: var(--color-border-rose);
+}
+
+.input-field--form:focus {
+  border-color: var(--color-primary-navy);
+  box-shadow: 0px 10px 25px -5px rgba(168, 39, 99, 0.18),
+              0 0 0 1px var(--color-primary-navy);
+}
+
+
+/* ----------------------------------------
+   Form Check (정책 동의 체크박스)
+   ---------------------------------------- */
+
+.form-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 커스텀 체크박스 박스 */
+.form-check__box {
+  position: relative;
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  background-color: var(--color-bg-white);
+  border: 1px solid var(--color-border-rose);
+  border-radius: 4px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+/* 체크마크 */
+.form-check__box::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid transparent;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.15s ease;
+}
+
+/* 체크 상태 (sr-only 인풋과 형제 관계) */
+.sr-only:checked + .form-check__box {
+  background-color: var(--color-primary-navy);
+  border-color: var(--color-primary-navy);
+}
+
+.sr-only:checked + .form-check__box::after {
+  border-color: var(--color-text-white);
+  transform: rotate(45deg) scale(1);
+}
+
+/* 동의 텍스트 */
+.form-check__text {
+  font-family: 'Nanum Square', 'NanumSquare', sans-serif;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-warm);
+  line-height: var(--line-height-snug);
+}
+
+.form-check__text strong {
+  color: var(--color-primary-magenta-deep);
+  font-weight: var(--font-weight-semibold);
+}
+
+
+/* ----------------------------------------
+   Text Link (링크형 텍스트 버튼)
+   ---------------------------------------- */
+
+.text-link {
+  font-family: 'Nanum Square', 'NanumSquare', sans-serif;
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-primary-magenta-deep);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.2s ease;
+}
+
+.text-link:active {
+  opacity: 0.7;
 }

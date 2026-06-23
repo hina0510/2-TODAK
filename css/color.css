@@ -118,4 +118,14 @@
   --color-bg-input-card: #f8f9ff;       /* 모달 내 인풋 배경 */
   --font-size-modal-title: 22px;        /* 모달 타이틀 */
   --shadow-card-rose: 0px 16px 32px -4px rgba(168, 39, 99, 0.12); /* 카드 그림자 */
+
+  --color-primary-magenta-vivid: #d02266; /* 진한 마젠타 — 선택 카드 보더, Figma --magenta */
+  --color-primary-magenta-deep: #a82763;  /* 딥 마젠타 — 헤더 제목, [필수] 텍스트, 링크 */
+  --color-border-neutral: #e9edf2;        /* 미선택 카드 뉴트럴 보더 */
+  --color-bg-icon-lavender: #f4f0fd;      /* 보호자 아이콘 원형 배경 */
+  --color-navy-button: #1a3558;           /* 다크 네이비 CTA 버튼 */
+
+  /* Typography — 누락 토큰 보완 */
+  --font-size-display: 32px;              /* 브랜드 로고 텍스트 */
+  --font-weight-extrabold: 800;           /* 브랜드 로고 굵기 */
 }

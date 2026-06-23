@@ -89,6 +89,112 @@ document.addEventListener('click', function(e) {
 
 
 /* ------------------------------------------
+   ROLE SELECTION SECTION
+   ------------------------------------------ */
+
+(function() {
+  var section = document.getElementById('role-selection-section');
+  if (!section) return;
+
+  var roleCards = section.querySelectorAll('.role-card');
+
+  /* 카드 단일 선택 */
+  roleCards.forEach(function(card) {
+    card.addEventListener('click', function() {
+      roleCards.forEach(function(c) {
+        c.classList.remove('role-card--selected');
+        c.setAttribute('aria-pressed', 'false');
+      });
+      card.classList.add('role-card--selected');
+      card.setAttribute('aria-pressed', 'true');
+    });
+  });
+
+  /* 뒤로가기 */
+  var backBtn = document.getElementById('role-sel-back');
+  if (backBtn) {
+    backBtn.addEventListener('click', function() {
+      showSection('login-section');
+    });
+  }
+
+  /* 다음 — 선택 역할을 회원가입 폼에 반영 후 signup-section 이동 */
+  var nextBtn = document.getElementById('role-sel-next');
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function() {
+      var selected = section.querySelector('.role-card--selected');
+      var role = selected ? selected.dataset.role : 'mom';
+      var isMom = role !== 'guardian';
+
+      var signupMomBtn      = document.getElementById('signup-role-mom');
+      var signupGuardianBtn = document.getElementById('signup-role-guardian');
+      if (signupMomBtn && signupGuardianBtn) {
+        signupMomBtn.classList.toggle('selected', isMom);
+        signupMomBtn.setAttribute('aria-pressed', String(isMom));
+        signupGuardianBtn.classList.toggle('selected', !isMom);
+        signupGuardianBtn.setAttribute('aria-pressed', String(!isMom));
+      }
+
+      showSection('signup-section');
+    });
+  }
+})();
+
+
+/* ------------------------------------------
+   SIGNUP SECTION
+   ------------------------------------------ */
+
+(function() {
+  var section = document.getElementById('signup-section');
+  if (!section) return;
+
+  /* 뒤로가기 → 역할 선택 */
+  var backBtn = document.getElementById('signup-back');
+  if (backBtn) {
+    backBtn.addEventListener('click', function() {
+      showSection('role-selection-section');
+    });
+  }
+
+  /* 역할 선택 (엄마 / 보호자) 단일 선택 */
+  var roleMomBtn      = document.getElementById('signup-role-mom');
+  var roleGuardianBtn = document.getElementById('signup-role-guardian');
+  [roleMomBtn, roleGuardianBtn].forEach(function(btn) {
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      [roleMomBtn, roleGuardianBtn].forEach(function(b) {
+        b.classList.remove('selected');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('selected');
+      btn.setAttribute('aria-pressed', 'true');
+    });
+  });
+
+  /* 비밀번호 표시/숨기기 토글 */
+  var pwToggle = document.getElementById('signup-pw-toggle');
+  var pwInput  = document.getElementById('signup-password');
+  if (pwToggle && pwInput) {
+    pwToggle.addEventListener('click', function() {
+      var isHidden = pwInput.type === 'password';
+      pwInput.type = isHidden ? 'text' : 'password';
+      pwToggle.classList.toggle('is-visible', isHidden);
+    });
+  }
+
+  /* 폼 제출 (더미 — Supabase 연동 전) */
+  var form = document.getElementById('signup-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      showToast('회원가입 기능은 준비 중입니다.');
+    });
+  }
+})();
+
+
+/* ------------------------------------------
    ONBOARDING SECTION
    ------------------------------------------ */
 

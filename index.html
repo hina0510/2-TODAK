@@ -166,7 +166,7 @@
         <!-- 회원가입 유도 (푸터) -->
         <div class="signup-nudge">
           <p class="signup-nudge__text">아직 회원이 아니신가요?</p>
-          <button type="button" class="btn-todak-start" data-goto="signup-section">
+          <button type="button" class="btn-todak-start" data-goto="role-selection-section">
             토닥 시작하기
           </button>
         </div>
@@ -177,11 +177,296 @@
 
 
     <!-- =====================================================
-         SIGNUP SECTION (Phase 3에서 구현)
+         SIGNUP SECTION (Phase 3)
          ===================================================== -->
     <section id="signup-section" class="section hidden">
-      <div class="section-placeholder">회원가입 화면 (준비 중)</div>
+
+      <!-- 상단 헤더 (뒤로가기 + 중앙 제목) -->
+      <header class="header header--center">
+        <button
+          type="button"
+          class="header__back-btn"
+          id="signup-back"
+          aria-label="뒤로가기"
+        >
+          <svg width="11" height="20" viewBox="0 0 11 20" fill="none" aria-hidden="true">
+            <path d="M9.5 1.5L1.5 10L9.5 18.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <h1 class="header__title header__title--rose">회원가입</h1>
+        <span class="header__spacer" aria-hidden="true"></span>
+      </header>
+
+      <!-- 스크롤 영역 -->
+      <main class="signup-main">
+
+        <!-- 히어로: 캐릭터 + 브랜드 + 슬로건 -->
+        <div class="signup-hero">
+          <div class="signup-hero__character">
+            <div class="signup-hero__glow" aria-hidden="true"></div>
+            <!-- TODO: image/signup-character.png 로 교체 (Figma URL은 7일 후 만료) -->
+            <img
+              src="https://www.figma.com/api/mcp/asset/ee3df320-1f5a-4d10-8aaf-4f7e68680d0e"
+              alt="토닥 캐릭터"
+              class="signup-hero__img"
+              width="110"
+              height="96"
+            >
+          </div>
+          <p class="signup-hero__brand" aria-label="TODAK">
+            <span class="signup-hero__brand-to">TO</span><span class="signup-hero__brand-dak">DAK</span>
+          </p>
+          <p class="signup-tagline">따뜻한 동행의 시작</p>
+          <p class="signup-subtitle">토닥과 함께 아이와의 소중한 시간을 기록하세요.</p>
+        </div>
+
+        <!-- 회원가입 폼 -->
+        <form id="signup-form" class="signup-form" novalidate>
+
+          <!-- 이름 -->
+          <div class="input-group">
+            <div class="input-label-pad">
+              <label class="input-label input-label--form" for="signup-name">이름</label>
+            </div>
+            <div class="input-with-icon">
+              <span class="input-with-icon__icon-left" aria-hidden="true">
+                <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
+                  <ellipse cx="8" cy="5.5" rx="4.5" ry="5" fill="#dcbfc7"/>
+                  <path d="M1 18C1 13.582 4.134 10 8 10C11.866 10 15 13.582 15 18" fill="#dcbfc7"/>
+                </svg>
+              </span>
+              <input
+                type="text"
+                id="signup-name"
+                class="input-field input-field--form input-with-icon__field"
+                placeholder="실명을 입력해주세요"
+                autocomplete="name"
+              >
+            </div>
+          </div>
+
+          <!-- 이메일 -->
+          <div class="input-group">
+            <div class="input-label-pad">
+              <label class="input-label input-label--form" for="signup-email">이메일</label>
+            </div>
+            <div class="input-with-icon">
+              <span class="input-with-icon__icon-left" aria-hidden="true">
+                <svg width="20" height="16" viewBox="0 0 20 16" fill="none">
+                  <rect x="1" y="1" width="18" height="14" rx="2" stroke="#dcbfc7" stroke-width="1.5"/>
+                  <path d="M1 4.5L10 10L19 4.5" stroke="#dcbfc7" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <input
+                type="email"
+                id="signup-email"
+                class="input-field input-field--form input-with-icon__field"
+                placeholder="example@todak.com"
+                autocomplete="email"
+              >
+            </div>
+          </div>
+
+          <!-- 비밀번호 -->
+          <div class="input-group">
+            <div class="input-label-pad">
+              <label class="input-label input-label--form" for="signup-password">비밀번호</label>
+            </div>
+            <div class="input-with-icon">
+              <span class="input-with-icon__icon-left" aria-hidden="true">
+                <svg width="16" height="20" viewBox="0 0 16 20" fill="none">
+                  <rect x="1" y="8" width="14" height="11" rx="2" stroke="#dcbfc7" stroke-width="1.5"/>
+                  <path d="M4 8V5.5C4 3.567 5.791 2 8 2C10.209 2 12 3.567 12 5.5V8" stroke="#dcbfc7" stroke-width="1.5"/>
+                  <circle cx="8" cy="13.5" r="1.5" fill="#dcbfc7"/>
+                </svg>
+              </span>
+              <input
+                type="password"
+                id="signup-password"
+                class="input-field input-field--form input-with-icon__field input-with-icon__field--with-right"
+                placeholder="8자 이상 입력해주세요"
+                autocomplete="new-password"
+              >
+              <button
+                type="button"
+                class="input-with-icon__icon-right"
+                id="signup-pw-toggle"
+                aria-label="비밀번호 표시/숨기기"
+              >
+                <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+                  <path d="M1 8C1 8 4.5 1 11 1C17.5 1 21 8 21 8C21 8 17.5 15 11 15C4.5 15 1 8 1 8Z" stroke="#dcbfc7" stroke-width="1.5" stroke-linejoin="round"/>
+                  <circle cx="11" cy="8" r="3" stroke="#dcbfc7" stroke-width="1.5"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- 비밀번호 확인 -->
+          <div class="input-group">
+            <div class="input-label-pad">
+              <label class="input-label input-label--form" for="signup-password-confirm">비밀번호 확인</label>
+            </div>
+            <div class="input-with-icon">
+              <span class="input-with-icon__icon-left" aria-hidden="true">
+                <svg width="16" height="20" viewBox="0 0 16 20" fill="none">
+                  <path d="M8 1L1 4V10C1 14.418 4.134 18.418 8 19C11.866 18.418 15 14.418 15 10V4L8 1Z" stroke="#dcbfc7" stroke-width="1.5" stroke-linejoin="round"/>
+                  <path d="M5 10L7 12L11 8" stroke="#dcbfc7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <input
+                type="password"
+                id="signup-password-confirm"
+                class="input-field input-field--form input-with-icon__field"
+                placeholder="비밀번호를 한번 더 입력해주세요"
+                autocomplete="new-password"
+              >
+            </div>
+          </div>
+
+          <!-- 역할 선택 -->
+          <div class="input-group">
+            <div class="input-label-pad">
+              <span class="input-label input-label--form">역할 선택</span>
+            </div>
+            <div class="btn-radio-group btn-radio-group--role" role="group" aria-label="역할 선택">
+              <button
+                type="button"
+                class="btn-radio btn-radio--pill selected"
+                id="signup-role-mom"
+                aria-pressed="true"
+              >엄마</button>
+              <button
+                type="button"
+                class="btn-radio btn-radio--pill"
+                id="signup-role-guardian"
+                aria-pressed="false"
+              >보호자</button>
+            </div>
+          </div>
+
+          <!-- 이용약관 동의 -->
+          <label class="form-check">
+            <input type="checkbox" class="sr-only" id="signup-agree">
+            <span class="form-check__box"></span>
+            <span class="form-check__text">
+              <strong>[필수]</strong> 서비스 이용약관 및 개인정보 수집·이용에 동의합니다.
+            </span>
+          </label>
+
+          <!-- 회원가입 완료 버튼 -->
+          <button type="submit" class="btn btn--pill w-full">회원가입 완료</button>
+
+        </form>
+        <!-- /#signup-form -->
+
+        <!-- 하단: 로그인 링크 -->
+        <div class="signup-footer">
+          <p class="divider--text">이미 계정이 있으신가요?</p>
+          <button type="button" class="text-link" data-goto="login-section">
+            기존 계정으로 로그인하기
+          </button>
+        </div>
+
+      </main>
+
     </section>
+    <!-- /#signup-section -->
+
+
+    <!-- =====================================================
+         ROLE SELECTION SECTION (Phase 3 — 회원가입 직후)
+         ===================================================== -->
+    <section id="role-selection-section" class="section hidden">
+
+      <!-- 상단 앱바 (뒤로가기) -->
+      <header class="header">
+        <button
+          type="button"
+          class="header__back-btn"
+          id="role-sel-back"
+          aria-label="뒤로가기"
+        >
+          <svg width="11" height="20" viewBox="0 0 11 20" fill="none" aria-hidden="true">
+            <path d="M9.5 1.5L1.5 10L9.5 18.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </header>
+
+      <!-- 메인 콘텐츠 -->
+      <main class="role-sel-main">
+        <div class="role-sel-container">
+
+          <!-- 헤딩 영역 -->
+          <div class="role-sel-card-header">
+            <h1 class="role-sel-title">당신의 역할을 선택해주세요</h1>
+            <p class="role-sel-subtitle">맞춤형 성장을 위해 보호자 유형을 알려주세요.</p>
+          </div>
+
+          <!-- 역할 카드 목록 -->
+          <div class="role-sel-options" role="group" aria-label="역할 선택">
+
+            <!-- 엄마 카드 (기본 선택) -->
+            <button
+              type="button"
+              class="role-card role-card--selected"
+              id="role-card-mom"
+              data-role="mom"
+              aria-pressed="true"
+            >
+              <div class="role-card__icon role-card__icon--magenta" aria-hidden="true">
+                <!-- 엄마 / 사람 아이콘 (흰색, 마젠타 원 위) -->
+                <svg width="32" height="30" viewBox="0 0 32 30" fill="none" aria-hidden="true">
+                  <ellipse cx="16" cy="9.5" rx="7.5" ry="8.5" fill="white"/>
+                  <path d="M1 31C1 22.163 7.716 15 16 15C24.284 15 31 22.163 31 31" fill="white"/>
+                </svg>
+              </div>
+              <strong class="role-card__name">엄마</strong>
+              <p class="role-card__desc">
+                아이와 가장 가까이에서<br>
+                소중한 시간을 기록해요
+              </p>
+            </button>
+
+            <!-- 보호자 카드 -->
+            <button
+              type="button"
+              class="role-card"
+              id="role-card-guardian"
+              data-role="guardian"
+              aria-pressed="false"
+            >
+              <div class="role-card__icon role-card__icon--lavender" aria-hidden="true">
+                <!-- 가족 / 보호자 아이콘 (라벤더 계열, 연보라 원 위) -->
+                <svg width="34" height="20" viewBox="0 0 34 20" fill="none" aria-hidden="true">
+                  <circle cx="11" cy="6" r="5.5" fill="#9B8EC7"/>
+                  <path d="M1 20C1 13.925 5.477 9 11 9C16.523 9 21 13.925 21 20" fill="#9B8EC7"/>
+                  <circle cx="23" cy="6" r="5.5" fill="#9B8EC7"/>
+                  <path d="M13 20C13 13.925 17.477 9 23 9C28.523 9 33 13.925 33 20" fill="#9B8EC7"/>
+                </svg>
+              </div>
+              <strong class="role-card__name">보호자</strong>
+              <p class="role-card__desc">
+                함께 아이의 성장을 응원하고<br>
+                기록을 공유받아요
+              </p>
+            </button>
+
+          </div>
+          <!-- /.role-sel-options -->
+
+          <!-- 다음 버튼 -->
+          <div class="role-sel-footer">
+            <button type="button" class="btn btn--pill w-full" id="role-sel-next">
+              다음
+            </button>
+          </div>
+
+        </div>
+        <!-- /.role-sel-container -->
+      </main>
+
+    </section>
+    <!-- /#role-selection-section -->
 
 
     <!-- =====================================================

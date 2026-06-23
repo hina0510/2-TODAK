@@ -483,9 +483,110 @@
 
 
 /* ==========================================
-   Phase 3: signup-section (추후 구현)
-   Phase 5~8: 추후 구현
+   SIGNUP SECTION (Phase 3)
    ========================================== */
+
+/* 헤더 제목 딥 마젠타 적용 */
+#signup-section .header__title {
+  color: var(--color-primary-magenta-deep);
+}
+
+/* 스크롤 가능한 메인 영역 */
+.signup-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 24px 48px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 히어로 섹션 (캐릭터 + 브랜드 + 슬로건) */
+.signup-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 32px;
+  padding-bottom: 40px;
+}
+
+/* 캐릭터 이미지 컨테이너 */
+.signup-hero__character {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 배경 글로우 */
+.signup-hero__glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: rgba(168, 39, 99, 0.05);
+  filter: blur(20px);
+}
+
+/* 캐릭터 이미지 */
+.signup-hero__img {
+  position: relative;
+  object-fit: contain;
+}
+
+/* TODAK 브랜드 텍스트 */
+.signup-hero__brand {
+  margin-top: 8px;
+  font-family: 'Nanum Square', 'NanumSquare', sans-serif;
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.signup-hero__brand-to {
+  color: var(--color-primary-navy);
+}
+
+.signup-hero__brand-dak {
+  color: var(--color-primary-magenta);
+}
+
+/* 슬로건 */
+.signup-tagline {
+  margin-top: 16px;
+  font-family: 'Nanum Square', 'NanumSquare', sans-serif;
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-magenta);
+  text-align: center;
+}
+
+/* 서브텍스트 */
+.signup-subtitle {
+  margin-top: 8px;
+  font-family: 'Nanum Square', 'NanumSquare', sans-serif;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-warm);
+  text-align: center;
+}
+
+/* 폼 영역 */
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 하단 로그인 링크 섹션 */
+.signup-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-top: 40px;
+}
 
 
 /* ==========================================
@@ -575,4 +676,71 @@
 
 #onboarding-section.guardian-mode .form-section--guardian-only {
   display: flex;
+}
+
+
+/* ==========================================
+   ROLE SELECTION SECTION (Phase 3 - 회원가입)
+   ========================================== */
+
+/* 헤더 아래 메인 콘텐츠 래퍼 */
+.role-sel-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px 34px;
+  overflow-y: auto;
+}
+
+/* 흰색 메인 카드 (전체 채움) */
+.role-sel-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-white);
+  border-radius: 32px;
+  box-shadow: 0px 16px 16px rgba(168, 39, 99, 0.12);
+  overflow: hidden;
+}
+
+/* 카드 헤딩 영역 */
+.role-sel-card-header {
+  padding: 30px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* 섹션 메인 타이틀 */
+.role-sel-title {
+  font-family: 'Nanum Square', 'NanumSquare', sans-serif;
+  font-size: var(--font-size-modal-title);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-dark);
+  line-height: 1.45;
+}
+
+/* 섹션 서브타이틀 */
+.role-sel-subtitle {
+  font-family: 'Nanum Square', 'NanumSquare', sans-serif;
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-warm);
+  line-height: var(--line-height-normal);
+}
+
+/* 역할 카드 목록 */
+.role-sel-options {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0 24px;
+  flex-shrink: 0;
+}
+
+/* 다음 버튼 영역 — mt: auto 로 카드 하단 고정 */
+.role-sel-footer {
+  margin-top: auto;
+  padding: 24px 24px 32px;
 }
