@@ -1,0 +1,91 @@
+/* ==========================================================================
+   reset.css - 브라우저 기본 스타일 초기화
+   모바일 웹앱 기준 (390px ~ 430px)
+   ========================================================================== */
+
+/* 모든 요소 초기화 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* HTML / Body 기본 설정 */
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%; /* iOS 가로모드 폰트 크기 자동 조정 방지 */
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-beige);
+
+  /* 모바일 앱처럼 스크롤 느낌 */
+  -webkit-overflow-scrolling: touch;
+
+  /* 텍스트 선택 방지 (앱 느낌) */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 최대 너비 제한 - 모바일 기준 */
+#app {
+  max-width: 430px;
+  min-height: 100dvh; /* dynamic viewport height */
+  margin: 0 auto;
+  position: relative;
+  background-color: var(--color-bg-beige);
+  overflow-x: hidden;
+}
+
+/* 링크 기본 스타일 */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 버튼 기본 스타일 */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent; /* 모바일 탭 하이라이트 제거 */
+}
+
+/* 인풋 기본 스타일 */
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  outline: none;
+  background: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* 이미지 기본 스타일 */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 리스트 스타일 제거 */
+ul, ol {
+  list-style: none;
+}
+
+/* iOS Safe Area 패딩 */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}

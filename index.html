@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>TODAK - 토닥</title>
+
+  <!-- Google Fonts: NanumSquare (한글), Be Vietnam Pro (소셜 버튼) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Square:wght@400;700;800&family=Be+Vietnam+Pro:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Design System -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/color.css">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- =====================================================
+         LOGIN SECTION
+         ===================================================== -->
+    <section id="login-section" class="section">
+
+      <!-- 상단 헤더 (로고) -->
+      <header class="login-header">
+        <div class="login-logo">
+          <!-- TODO: 이미지를 image/ 폴더에 저장 후 경로 교체 (Figma URL은 7일 후 만료됨) -->
+          <img
+            src="https://www.figma.com/api/mcp/asset/b476fd15-4309-48eb-b66e-5be41749f434"
+            alt="TODAK"
+            width="41"
+            height="36"
+          >
+        </div>
+      </header>
+
+      <!-- 메인 컨텐츠 -->
+      <main class="login-main">
+
+        <!-- 웰컴 섹션 (마스코트 + 인사말) -->
+        <div class="login-welcome">
+          <div class="mascot-wrap">
+            <div class="mascot-blur"></div>
+            <div class="mascot-circle">
+              <!-- TODO: image/mascot-login.png 로 교체 -->
+              <img
+                src="https://www.figma.com/api/mcp/asset/3099a4dc-f8f7-4554-8d9f-dd5cd18c9059"
+                alt="토닥 캐릭터"
+                width="100"
+                height="100"
+              >
+            </div>
+          </div>
+          <h1 class="login-heading">반가워요, 부모님</h1>
+          <p class="login-subtext">
+            아이와 함께하는 따뜻한 성장 일기,<br>
+            토닥과 함께 시작해보세요.
+          </p>
+        </div>
+
+        <!-- 로그인 폼 -->
+        <div class="login-form-area">
+          <form id="login-form" novalidate>
+
+            <div class="login-inputs">
+
+              <!-- 이메일 인풋 -->
+              <div class="login-input-wrap">
+                <span class="login-input-icon">
+                  <img
+                    src="https://www.figma.com/api/mcp/asset/33f206b4-3fbe-42f0-b4c6-dee5e958c603"
+                    alt=""
+                    width="20"
+                    height="16"
+                  >
+                </span>
+                <input
+                  type="email"
+                  id="login-email"
+                  class="login-input"
+                  placeholder="이메일 주소를 입력하세요"
+                  autocomplete="email"
+                >
+              </div>
+
+              <!-- 비밀번호 인풋 -->
+              <div class="login-input-wrap">
+                <span class="login-input-icon">
+                  <img
+                    src="https://www.figma.com/api/mcp/asset/27a78769-9da3-4dfd-8bdb-10e6654042ac"
+                    alt=""
+                    width="16"
+                    height="21"
+                  >
+                </span>
+                <input
+                  type="password"
+                  id="login-password"
+                  class="login-input login-input--pw"
+                  placeholder="비밀번호를 입력하세요"
+                  autocomplete="current-password"
+                >
+                <button type="button" class="pw-toggle-btn" id="pw-toggle" aria-label="비밀번호 표시/숨기기">
+                  <img
+                    src="https://www.figma.com/api/mcp/asset/5e850afe-fd6a-4374-91a8-c68c5d957628"
+                    alt=""
+                    width="22"
+                    height="15"
+                  >
+                </button>
+              </div>
+
+            </div>
+
+            <!-- 로그인 유지 + 비밀번호 찾기 -->
+            <div class="login-options">
+              <label class="remember-me">
+                <input type="checkbox" id="remember-check" class="sr-only">
+                <span class="remember-box"></span>
+                <span class="remember-text">로그인 유지</span>
+              </label>
+              <button type="button" class="forgot-pw-btn">비밀번호 찾기</button>
+            </div>
+
+            <!-- 로그인 버튼 -->
+            <button type="submit" class="btn-login">로그인</button>
+
+          </form>
+        </div>
+
+        <!-- 간편 로그인 구분선 -->
+        <div class="social-divider">
+          <span class="divider-line"></span>
+          <span class="divider-label">간편 로그인</span>
+          <span class="divider-line"></span>
+        </div>
+
+        <!-- 소셜 로그인 버튼 -->
+        <div class="social-btns">
+          <button type="button" class="btn-social btn-google">
+            <img
+              src="https://www.figma.com/api/mcp/asset/30fdb5e2-3d11-4740-abbc-91b9aa656ba2"
+              alt=""
+              width="16"
+              height="16"
+            >
+            <span>Google</span>
+          </button>
+          <button type="button" class="btn-social btn-kakao">
+            <img
+              src="https://www.figma.com/api/mcp/asset/85e6c648-499b-4646-9a40-65a7948a33f8"
+              alt=""
+              width="24"
+              height="24"
+            >
+            <span>Kakao</span>
+          </button>
+        </div>
+
+        <!-- 회원가입 유도 (푸터) -->
+        <div class="signup-nudge">
+          <p class="signup-nudge__text">아직 회원이 아니신가요?</p>
+          <button type="button" class="btn-todak-start" data-goto="signup-section">
+            토닥 시작하기
+          </button>
+        </div>
+
+      </main>
+    </section>
+    <!-- /#login-section -->
+
+
+    <!-- =====================================================
+         SIGNUP SECTION (Phase 3에서 구현)
+         ===================================================== -->
+    <section id="signup-section" class="section hidden">
+      <div class="section-placeholder">회원가입 화면 (준비 중)</div>
+    </section>
+
+
+    <!-- =====================================================
+         ONBOARDING SECTION (Phase 4)
+         ===================================================== -->
+    <section id="onboarding-section" class="section hidden">
+
+      <!-- 배경 장식 블러 원 -->
+      <div class="onboarding-bg-deco" aria-hidden="true">
+        <div class="onboarding-bg-deco__blob onboarding-bg-deco__blob--pink"></div>
+        <div class="onboarding-bg-deco__blob onboarding-bg-deco__blob--lavender"></div>
+      </div>
+
+      <!-- 장식용 블러 배경 카드 (모달 뒤에 보이는 흐릿한 스켈레톤) -->
+      <div class="onboarding-bg-content" aria-hidden="true">
+        <div class="onboarding-bg-card onboarding-bg-card--lg"></div>
+        <div class="onboarding-bg-card-row">
+          <div class="onboarding-bg-card onboarding-bg-card--md"></div>
+          <div class="onboarding-bg-card onboarding-bg-card--md"></div>
+        </div>
+        <div class="onboarding-bg-card onboarding-bg-card--sm"></div>
+      </div>
+
+      <!-- 모달 오버레이 (항상 active) -->
+      <div class="modal-overlay modal-overlay--center active" id="onboarding-overlay">
+        <div
+          class="modal modal--dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="onboarding-title"
+        >
+
+          <!-- 모달 헤더 -->
+          <div class="modal__dialog-header">
+            <h2 class="modal__dialog-title" id="onboarding-title">초기 아이 정보 설정</h2>
+            <p class="modal__dialog-subtitle">아이와의 첫 만남을 위해 정보를 입력해주세요.</p>
+          </div>
+
+          <!-- 모달 본문 -->
+          <div class="modal__body">
+
+            <!-- 현재 상태 (엄마 선택 시에만 표시) -->
+            <div class="input-group form-section form-section--mom-only">
+              <div class="input-label-pad">
+                <span class="input-label input-label--form">현재 상태</span>
+              </div>
+              <div class="btn-radio-group" role="group" aria-label="현재 상태 선택">
+
+                <!-- 임신 버튼 (기본 선택) -->
+                <button
+                  type="button"
+                  class="btn-radio btn-radio--status selected"
+                  aria-pressed="true"
+                  id="status-pregnant"
+                >
+                  <span class="btn-radio__icon">
+                    <svg width="20" height="18" viewBox="0 0 20 18" fill="none" aria-hidden="true">
+                      <path d="M10 16.5L1.5 8.5C0.5 7.5 0 6.2 0 5C0 2.2 2.2 0 5 0C6.5 0 7.9 0.65 8.9 1.7L10 2.8L11.1 1.7C12.1 0.65 13.5 0 15 0C17.8 0 20 2.2 20 5C20 6.2 19.5 7.5 18.5 8.5L10 16.5Z" fill="#D94F8A"/>
+                    </svg>
+                  </span>
+                  임신
+                </button>
+
+                <!-- 출산 버튼 -->
+                <button
+                  type="button"
+                  class="btn-radio btn-radio--status"
+                  aria-pressed="false"
+                  id="status-birth"
+                >
+                  <span class="btn-radio__icon">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                      <circle cx="9" cy="9" r="8" stroke="#564147" stroke-width="1.5"/>
+                      <circle cx="6.5" cy="7" r="1" fill="#564147"/>
+                      <circle cx="11.5" cy="7" r="1" fill="#564147"/>
+                      <path d="M6 11C6.7 12.5 7.8 13 9 13C10.2 13 11.3 12.5 12 11" stroke="#564147" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                  출산
+                </button>
+
+              </div>
+            </div>
+            <!-- /현재 상태 -->
+
+            <!-- 태명 (엄마 선택 시에만 표시) -->
+            <div class="input-group form-section form-section--mom-only">
+              <div class="input-label-pad">
+                <label class="input-label input-label--form" for="onboarding-taemyeong">태명</label>
+              </div>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  id="onboarding-taemyeong"
+                  class="input-field input-field--card"
+                  placeholder="예: 토닥이"
+                  autocomplete="off"
+                >
+                <span class="input-wrapper__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path d="M13 2L16 5L6 15L2 16L3 12L13 2Z" stroke="#DCBFC7" stroke-width="1.5" stroke-linejoin="round"/>
+                    <path d="M11 4L14 7" stroke="#DCBFC7" stroke-width="1.5"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+            <!-- /태명 -->
+
+            <!-- 출산 예정일 / 출산일 (엄마 선택 시에만 표시) -->
+            <div class="input-group form-section form-section--mom-only">
+              <div class="input-label-pad">
+                <label class="input-label input-label--form" for="onboarding-due-date" id="due-date-label">출산 예정일</label>
+              </div>
+              <div class="input-wrapper">
+                <input
+                  type="date"
+                  id="onboarding-due-date"
+                  class="input-field input-field--card input-field--date"
+                >
+                <span class="input-wrapper__icon" aria-hidden="true">
+                  <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
+                    <rect x="1" y="3" width="16" height="16" rx="3" stroke="#DCBFC7" stroke-width="1.5"/>
+                    <path d="M5 1V5M13 1V5" stroke="#DCBFC7" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M1 8H17" stroke="#DCBFC7" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+            <!-- /출산 예정일 -->
+
+            <!-- 엄마 코드 (보호자 선택 시에만 표시) -->
+            <div class="input-group form-section form-section--guardian-only">
+              <div class="input-label-pad">
+                <label class="input-label input-label--form" for="onboarding-mom-code">엄마 코드</label>
+              </div>
+              <input
+                type="text"
+                id="onboarding-mom-code"
+                class="input-field input-field--card"
+                placeholder="엄마 코드를 입력해주세요"
+                autocomplete="off"
+              >
+            </div>
+            <!-- /엄마 코드 -->
+
+            <!-- 나의 역할 (항상 표시) -->
+            <div class="input-group">
+              <div class="input-label-pad">
+                <span class="input-label input-label--form">나의 역할</span>
+              </div>
+              <div class="btn-radio-group btn-radio-group--role" role="group" aria-label="역할 선택">
+
+                <!-- 엄마 (기본 선택) -->
+                <button
+                  type="button"
+                  class="btn-radio btn-radio--pill selected"
+                  aria-pressed="true"
+                  id="role-mom"
+                >
+                  엄마
+                </button>
+
+                <!-- 보호자 -->
+                <button
+                  type="button"
+                  class="btn-radio btn-radio--pill"
+                  aria-pressed="false"
+                  id="role-guardian"
+                >
+                  보호자
+                </button>
+
+              </div>
+            </div>
+            <!-- /나의 역할 -->
+
+          </div>
+          <!-- /.modal__body -->
+
+          <!-- 모달 푸터 -->
+          <div class="modal__footer">
+            <button type="button" class="btn btn--primary btn--cta w-full" id="onboarding-start-btn">
+              시작하기
+            </button>
+          </div>
+
+        </div>
+        <!-- /.modal--dialog -->
+      </div>
+      <!-- /.modal-overlay -->
+
+    </section>
+
+
+    <!-- =====================================================
+         HOME SECTION (Phase 5에서 구현)
+         ===================================================== -->
+    <section id="home-section" class="section hidden">
+      <div class="section-placeholder">홈 화면 (준비 중)</div>
+    </section>
+
+
+    <!-- =====================================================
+         RECORD SECTION (Phase 6에서 구현)
+         ===================================================== -->
+    <section id="record-section" class="section hidden">
+      <div class="section-placeholder">기록 화면 (준비 중)</div>
+    </section>
+
+
+    <!-- =====================================================
+         GUIDE SECTION (Phase 7에서 구현)
+         ===================================================== -->
+    <section id="guide-section" class="section hidden">
+      <div class="section-placeholder">가이드 화면 (준비 중)</div>
+    </section>
+
+
+    <!-- =====================================================
+         MYPAGE SECTION (Phase 8에서 구현)
+         ===================================================== -->
+    <section id="mypage-section" class="section hidden">
+      <div class="section-placeholder">마이페이지 (준비 중)</div>
+    </section>
+
+
+  </div><!-- /#app -->
+
+  <!-- Supabase SDK (Phase 9에서 활성화) -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
+  <!-- <script src="supabase/supabase.js"></script> -->
+
+  <!-- 공통 유틸리티 -->
+  <script src="js/utils.js"></script>
+  <!-- 앱 메인 스크립트 -->
+  <script src="js/script.js"></script>
+</body>
+</html>
