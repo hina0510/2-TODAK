@@ -735,7 +735,7 @@ document.addEventListener('click', function(e) {
       {
         id: 'self-1',
         icon: '🌿',
-        title: '거버은 스트레칭',
+        title: '가벼운 스트레칭',
         desc: '부은 다리의 혈리를 위해 5분간 고양이 자세를 해보세요.',
         tags: ['스트레칭', '휴식'],
         completed: true
@@ -786,9 +786,13 @@ document.addEventListener('click', function(e) {
   /* 미션 카드 HTML 생성 */
   function createMissionCardHTML(mission) {
     var completedClass = mission.completed ? 'completed' : '';
-    var tagsHTML = mission.tags.map(function(tag) {
-      return '<span class="mission-tag">' + tag + '</span>';
-    }).join('');
+    var tagsHTML = '';
+
+    if (mission.id === 'child-1') {
+      tagsHTML = mission.tags.map(function(tag) {
+        return '<span class="mission-tag">' + tag + '</span>';
+      }).join('');
+    }
 
     return '<div class="mission-card ' + completedClass + '" data-mission-id="' + mission.id + '">' +
       '<div class="mission-card__icon" aria-hidden="true">' + mission.icon + '</div>' +
