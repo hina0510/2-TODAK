@@ -4,11 +4,17 @@
    ========================================================================== */
 
 /* Supabase 프로젝트 설정값 (Phase 9에서 실제 값으로 교체) */
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://ozpfycpnckeqsknnthfi.supabase.co/';
+const SUPABASE_ANON_KEY = 'sb_publishable_IHHZVcUWy01f0LNhQr7uKg_lcjg7fG4';
 
-/* Supabase 클라이언트 초기화 (Phase 9에서 SDK 스크립트 포함 후 활성화) */
-// const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* Supabase 클라이언트 초기화 */
+let supabase = null;
+try {
+  const { createClient } = window.supabase;
+  supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (e) {
+  console.warn('[TODAK] Supabase 초기화 실패 — 더미 모드로 동작합니다.', e.message);
+}
 
 /* ----------------------------------------
    인증 관련 함수 (Phase 10에서 구현)

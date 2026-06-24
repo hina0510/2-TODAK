@@ -325,25 +325,7 @@
           </div>
 
           <!-- 역할 선택 -->
-          <div class="input-group">
-            <div class="input-label-pad">
-              <span class="input-label input-label--form">역할 선택</span>
-            </div>
-            <div class="btn-radio-group btn-radio-group--role" role="group" aria-label="역할 선택">
-              <button
-                type="button"
-                class="btn-radio btn-radio--pill selected"
-                id="signup-role-mom"
-                aria-pressed="true"
-              >엄마</button>
-              <button
-                type="button"
-                class="btn-radio btn-radio--pill"
-                id="signup-role-guardian"
-                aria-pressed="false"
-              >보호자</button>
-            </div>
-          </div>
+          <input type="hidden" id="signup-role-value" name="role" value="mom">
 
           <!-- 이용약관 동의 -->
           <label class="form-check">
@@ -379,8 +361,8 @@
          ===================================================== -->
     <section id="role-selection-section" class="section hidden">
 
-      <!-- 상단 앱바 (뒤로가기) -->
-      <header class="header">
+      <!-- 상단 앱바 (뒤로가기 + 중앙 제목) -->
+      <header class="header header--center">
         <button
           type="button"
           class="header__back-btn"
@@ -391,6 +373,8 @@
             <path d="M9.5 1.5L1.5 10L9.5 18.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
+        <h1 class="header__title header__title--rose">회원가입</h1>
+        <span class="header__spacer" aria-hidden="true"></span>
       </header>
 
       <!-- 메인 콘텐츠 -->
@@ -613,36 +597,6 @@
             </div>
             <!-- /엄마 코드 -->
 
-            <!-- 나의 역할 (항상 표시) -->
-            <div class="input-group">
-              <div class="input-label-pad">
-                <span class="input-label input-label--form">나의 역할</span>
-              </div>
-              <div class="btn-radio-group btn-radio-group--role" role="group" aria-label="역할 선택">
-
-                <!-- 엄마 (기본 선택) -->
-                <button
-                  type="button"
-                  class="btn-radio btn-radio--pill selected"
-                  aria-pressed="true"
-                  id="role-mom"
-                >
-                  엄마
-                </button>
-
-                <!-- 보호자 -->
-                <button
-                  type="button"
-                  class="btn-radio btn-radio--pill"
-                  aria-pressed="false"
-                  id="role-guardian"
-                >
-                  보호자
-                </button>
-
-              </div>
-            </div>
-            <!-- /나의 역할 -->
 
           </div>
           <!-- /.modal__body -->
@@ -679,7 +633,7 @@
         <div class="info-card-top" id="header-card">
           <div class="info-card-top__content">
             <div class="info-card-top__label" id="header-label">아이와 함께하는 날</div>
-            <h2 class="info-card-top__title" id="header-title">건강하게 자라고 있는 다은이</h2>
+            <h2 class="info-card-top__title" id="header-title">건강하게 자라고 있는 다온이</h2>
             <p class="info-card-top__dday" id="header-dday">D-120</p>
           </div>
           <div class="info-card-top__icon">
@@ -919,29 +873,32 @@
 
           <!-- 중앙 캐릭터 -->
           <div class="character-ring">
-            <div class="character-ring__outer"></div>
-            <div class="character-ring__inner">
-              <img
-                src="image/preg3.png"
-                alt="캐릭터"
-                class="character-image"
-                id="character-image"
-              >
+            <div class="character-ring__outer">
+              <div class="character-ring__center">
+                <div class="character-ring__inner">
+                  <img
+                    src="image/preg3.png"
+                    alt="캐릭터"
+                    class="character-image"
+                    id="character-image"
+                  >
+                </div>
+              </div>
             </div>
           </div>
 
           <!-- 우측 사이드 카드 -->
           <div class="side-info-card side-info-card--right">
             <p class="side-info-card__title" id="right-card-title">태명</p>
-            <p class="side-info-card__value" id="right-card-value">다은이</p>
+            <p class="side-info-card__value" id="right-card-value">다온이</p>
           </div>
 
           <!-- 하단 상태 카드 -->
           <div class="stage-info-card" id="stage-info-card">
             <div class="stage-info-badge">
-              <span class="stage-info-number" id="stage-info-number">22</span>
+              <span class="stage-info-number" id="stage-info-number"></span>
             </div>
-            <span class="stage-info-text" id="stage-info-text">현재 22주차: 태동기</span>
+            <span class="stage-info-text" id="stage-info-text">22주차: 태동기</span>
           </div>
         </div>
 
@@ -967,7 +924,6 @@
           <div class="recommendation-card__badge">EDITOR'S PICK</div>
           <h3 class="recommendation-card__title" id="rec-title">임신 가이드</h3>
           <p class="recommendation-card__desc" id="rec-desc">임신 중 건강한 생활을 위한 팁</p>
-          <button type="button" class="recommendation-card__btn">기록하기</button>
         </div>
 
         <!-- 여백 (콘텐츠 밑줄) -->
@@ -1042,13 +998,9 @@
 
         <!-- 날짜 표시 -->
         <div class="todak-date">
-          <span class="todak-date__text" id="todak-date-text">오늘</span>
           <span class="todak-date__separator">·</span>
           <span class="todak-date__full" id="todak-date-full">2026년 6월 24일</span>
         </div>
-
-        <!-- 구분선 -->
-        <div class="todak-divider"></div>
 
         <!-- 제목 및 설명 -->
         <div class="todak-title-section">
@@ -2074,9 +2026,9 @@
 
   </div><!-- /#app -->
 
-  <!-- Supabase SDK (Phase 9에서 활성화) -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
-  <!-- <script src="supabase/supabase.js"></script> -->
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase/supabase.js"></script>
 
   <!-- 공통 유틸리티 -->
   <script src="js/utils.js"></script>

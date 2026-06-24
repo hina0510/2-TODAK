@@ -169,14 +169,8 @@ document.addEventListener('click', function(e) {
       var role = selected ? selected.dataset.role : 'mom';
       var isMom = role !== 'guardian';
 
-      var signupMomBtn      = document.getElementById('signup-role-mom');
-      var signupGuardianBtn = document.getElementById('signup-role-guardian');
-      if (signupMomBtn && signupGuardianBtn) {
-        signupMomBtn.classList.toggle('selected', isMom);
-        signupMomBtn.setAttribute('aria-pressed', String(isMom));
-        signupGuardianBtn.classList.toggle('selected', !isMom);
-        signupGuardianBtn.setAttribute('aria-pressed', String(!isMom));
-      }
+      var signupRoleHidden = document.getElementById('signup-role-value');
+      if (signupRoleHidden) signupRoleHidden.value = role;
 
       showSection('signup-section');
     });
@@ -199,21 +193,6 @@ document.addEventListener('click', function(e) {
       showSection('role-selection-section');
     });
   }
-
-  /* 역할 선택 (엄마 / 보호자) 단일 선택 */
-  var roleMomBtn      = document.getElementById('signup-role-mom');
-  var roleGuardianBtn = document.getElementById('signup-role-guardian');
-  [roleMomBtn, roleGuardianBtn].forEach(function(btn) {
-    if (!btn) return;
-    btn.addEventListener('click', function() {
-      [roleMomBtn, roleGuardianBtn].forEach(function(b) {
-        b.classList.remove('selected');
-        b.setAttribute('aria-pressed', 'false');
-      });
-      btn.classList.add('selected');
-      btn.setAttribute('aria-pressed', 'true');
-    });
-  });
 
   /* 비밀번호 표시/숨기기 토글 */
   var pwToggle = document.getElementById('signup-pw-toggle');
@@ -311,17 +290,11 @@ document.addEventListener('click', function(e) {
     var homeScreenData = {
       pregnancy: {
         headerLabel: "아이와 함께하는 날",
-        headerTitle: "건강하게 자라고 있는 다은이",
+        headerTitle: "건강하게 자라고 있는 다온이",
         dday: "D-120",
         characterImage: "image/preg3.png",
-        leftCardTitle: "주차",
-        leftCardValue: "22",
-        leftCardDesc: "태동기",
-        rightCardTitle: "태명",
-        rightCardValue: "다은이",
-        rightCardDesc: "",
         stageInfoNumber: "22",
-        stageInfoText: "현재 22주차: 태동기",
+        stageInfoText: "22주차: 태동기",
         missionStatus: "진행중 1/3",
         missions: [
           {
@@ -353,7 +326,7 @@ document.addEventListener('click', function(e) {
         recommendationDesc: "임신 중 필요한 영양소와 운동 가이드"
       },
       birth: {
-        headerLabel: "우리 아이 생종",
+        headerLabel: "우리아이 생후 143일",
         headerTitle: "건강하게 자라고 있는 다온이",
         dday: "143일째",
         characterImage: "image/baby1.png",
@@ -482,6 +455,12 @@ document.addEventListener('click', function(e) {
       // Recommendation Card
       document.getElementById('rec-title').textContent = data.recommendationTitle;
       document.getElementById('rec-desc').textContent = data.recommendationDesc;
+
+      // 출산 탭에서만 사이드 카드 표시
+      var characterArea = document.getElementById('character-area');
+      if (characterArea) {
+        characterArea.classList.toggle('birth-mode', mode === 'birth');
+      }
     }
 
     // ===== Birth Registration Modal 로직 =====
@@ -1010,4 +989,281 @@ document.addEventListener('click', function(e) {
   initDate();
   renderMissions();
   updateProgress();
+})();
+
+
+/* ==========================================================================
+   Supabase Auth & Data
+   ========================================================================== */
+
+var _todakRole = 'mom';
+var _pendingName = '';
+
+/* ---------- "토닥 시작하기" → role-selection-section 진입 ---------- */
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.btn-todak-start');
+  if (!btn) return;
+  e.stopImmediatePropagation();
+  showSection('role-selection-section');
+}, true);
+
+
+/* ---------- signup-back → role-selection-section ---------- */
+(function() {
+  var backBtn = document.getElementById('signup-back');
+  if (!backBtn) return;
+  var newBack = backBtn.cloneNode(true);
+  backBtn.parentNode.replaceChild(newBack, backBtn);
+  newBack.addEventListener('click', function() {
+    showSection('role-selection-section');
+  });
+})();
+
+
+/* ---------- 회원가입 폼 ---------- */
+(function() {
+  var form = document.getElementById('signup-form');
+  if (!form) return;
+
+  var newForm = form.cloneNode(true);
+  form.parentNode.replaceChild(newForm, form);
+
+  var pwToggle = document.getElementById('signup-pw-toggle');
+  var pwInput  = document.getElementById('signup-password');
+  if (pwToggle && pwInput) {
+    pwToggle.addEventListener('click', function() {
+      var isHidden = pwInput.type === 'password';
+      pwInput.type = isHidden ? 'text' : 'password';
+      pwToggle.classList.toggle('is-visible', isHidden);
+    });
+  }
+
+  newForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    var name     = document.getElementById('signup-name').value.trim();
+    var email    = document.getElementById('signup-email').value.trim();
+    var password = document.getElementById('signup-password').value;
+    var confirm  = document.getElementById('signup-password-confirm').value;
+    var agreed   = document.getElementById('signup-agree').checked;
+
+    if (!name)                    { showToast('이름을 입력해주세요.');             return; }
+    if (!email)                   { showToast('이메일을 입력해주세요.');           return; }
+    if (!password)                { showToast('비밀번호를 입력해주세요.');         return; }
+    if (password !== confirm)     { showToast('비밀번호가 일치하지 않습니다.');    return; }
+    if (!agreed)                  { showToast('이용약관에 동의해주세요.');         return; }
+
+    try {
+      if (supabase && supabase.auth) {
+        var { error } = await supabase.auth.signUp({ email: email, password: password });
+        if (error) throw error;
+      }
+
+      _pendingName = name;
+      newForm.reset();
+      showToast('회원가입이 완료되었습니다.');
+
+      var momBtn      = document.getElementById('role-mom');
+      var guardianBtn = document.getElementById('role-guardian');
+      if (_todakRole === 'guardian') {
+        if (guardianBtn) guardianBtn.click();
+      } else {
+        if (momBtn) momBtn.click();
+      }
+
+      showSection('onboarding-section');
+    } catch (err) {
+      showToast(err.message || '회원가입 중 오류가 발생했습니다.');
+    }
+  });
+})();
+
+
+/* ---------- 역할 선택 → 온보딩 ---------- */
+(function() {
+  var section = document.getElementById('role-selection-section');
+  if (!section) return;
+
+  var nextBtn = document.getElementById('role-sel-next');
+  if (!nextBtn) return;
+
+  var newBtn = nextBtn.cloneNode(true);
+  nextBtn.parentNode.replaceChild(newBtn, nextBtn);
+
+  newBtn.addEventListener('click', function() {
+    var selected = section.querySelector('.role-card--selected');
+    _todakRole = selected ? selected.dataset.role : 'mom';
+
+    var signupRoleHidden = document.getElementById('signup-role-value');
+    if (signupRoleHidden) signupRoleHidden.value = _todakRole;
+
+    showSection('signup-section');
+  });
+})();
+
+
+/* ---------- 온보딩 저장 ---------- */
+(function() {
+  var startBtn = document.getElementById('onboarding-start-btn');
+  if (!startBtn) return;
+
+  var newBtn = startBtn.cloneNode(true);
+  startBtn.parentNode.replaceChild(newBtn, startBtn);
+
+  newBtn.addEventListener('click', async function() {
+    try {
+      if (_todakRole === 'guardian') {
+        var momCode = document.getElementById('onboarding-mom-code').value.trim();
+        if (!momCode) { showToast('엄마 코드를 입력해주세요.'); return; }
+      } else {
+        var babyName = document.getElementById('onboarding-taemyeong').value.trim();
+        if (!babyName) { showToast('태명을 입력해주세요.'); return; }
+      }
+
+      if (supabase && supabase.auth) {
+        var { data: authData, error: authErr } = await supabase.auth.getUser();
+        if (!authErr && authData && authData.user) {
+          var userId    = authData.user.id;
+          var userEmail = authData.user.email;
+
+          await supabase.from('users').upsert({
+            id: userId,
+            name: _pendingName || userEmail,
+            email: userEmail,
+            role: _todakRole
+          }, { onConflict: 'id' });
+
+          var childData = { user_id: userId };
+          if (_todakRole === 'guardian') {
+            childData.mom_code = document.getElementById('onboarding-mom-code').value.trim();
+          } else {
+            var dueDate     = document.getElementById('onboarding-due-date').value;
+            var pregnantBtn = document.getElementById('status-pregnant');
+            childData.baby_name    = document.getElementById('onboarding-taemyeong').value.trim();
+            childData.birth_status = (pregnantBtn && pregnantBtn.classList.contains('selected')) ? 'pregnant' : 'birth';
+            childData.due_date     = dueDate || null;
+          }
+
+          var { error: childErr } = await supabase.from('children').insert(childData);
+          if (childErr) throw childErr;
+
+          await loadHomeData();
+        }
+      }
+
+      showSection('home-section');
+    } catch (err) {
+      showToast(err.message || '저장 중 오류가 발생했습니다.');
+    }
+  });
+})();
+
+
+/* ---------- 홈 데이터 로드 ---------- */
+async function loadHomeData() {
+  try {
+    if (!supabase || !supabase.auth) return;
+    var { data: authData } = await supabase.auth.getUser();
+    if (!authData || !authData.user) return;
+
+    var { data: child } = await supabase
+      .from('children')
+      .select('baby_name, birth_status, due_date')
+      .eq('user_id', authData.user.id)
+      .limit(1)
+      .single();
+
+    if (!child) return;
+
+    var headerTitle = document.getElementById('header-title');
+    if (headerTitle && child.baby_name) {
+      headerTitle.textContent = '건강하게 자라고 있는 ' + child.baby_name;
+    }
+
+    var ddayEl = document.getElementById('header-dday');
+    if (ddayEl && child.due_date) {
+      var diff = Math.ceil((new Date(child.due_date) - new Date()) / 86400000);
+      ddayEl.textContent = diff >= 0 ? 'D-' + diff : 'D+' + Math.abs(diff);
+    }
+
+    var rightCardValue = document.getElementById('right-card-value');
+    if (rightCardValue) {
+      rightCardValue.textContent = child.birth_status === 'pregnant' ? '임신 중' : '출산 완료';
+    }
+  } catch (_) {}
+}
+
+
+/* ---------- 로그인 폼 ---------- */
+(function() {
+  var form = document.getElementById('login-form');
+  if (!form) return;
+
+  var newForm = form.cloneNode(true);
+  form.parentNode.replaceChild(newForm, form);
+
+  var toggleBtn = document.getElementById('pw-toggle');
+  var pwInput   = document.getElementById('login-password');
+  if (toggleBtn && pwInput) {
+    toggleBtn.addEventListener('click', function() {
+      var isHidden = pwInput.type === 'password';
+      pwInput.type = isHidden ? 'text' : 'password';
+      toggleBtn.classList.toggle('is-visible', isHidden);
+    });
+  }
+
+  newForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    var email    = document.getElementById('login-email').value.trim();
+    var password = document.getElementById('login-password').value;
+
+    if (!email)    { showToast('이메일을 입력해주세요.');   return; }
+    if (!password) { showToast('비밀번호를 입력해주세요.'); return; }
+
+    try {
+      if (supabase && supabase.auth) {
+        var { error } = await supabase.auth.signInWithPassword({ email: email, password: password });
+        if (error) throw error;
+        await loadHomeData();
+      }
+
+      newForm.reset();
+      showSection('home-section');
+    } catch (err) {
+      showToast(err.message || '이메일 또는 비밀번호가 일치하지 않습니다.');
+    }
+  });
+})();
+
+
+/* ---------- 세션 유지 ---------- */
+(async function() {
+  try {
+    if (!supabase || !supabase.auth) return;
+    var { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      await loadHomeData();
+      showSection('home-section');
+    }
+  } catch (_) {}
+})();
+
+
+/* ---------- 로그아웃 ---------- */
+(function() {
+  var logoutBtn = document.querySelector('.mypage-logout-btn');
+  if (!logoutBtn) return;
+
+  logoutBtn.addEventListener('click', async function() {
+    try {
+      if (supabase && supabase.auth) {
+        var { error } = await supabase.auth.signOut();
+        if (error) throw error;
+      }
+      showSection('login-section');
+    } catch (err) {
+      showToast(err.message || '로그아웃 중 오류가 발생했습니다.');
+    }
+  });
 })();
