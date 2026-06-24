@@ -273,6 +273,14 @@ document.addEventListener('click', function(e) {
     });
   }
 
+  // Onboarding 닫기 버튼
+  var onboardingCloseBtn = document.querySelector('#onboarding-overlay .modal__close-btn');
+  if (onboardingCloseBtn) {
+    onboardingCloseBtn.addEventListener('click', function() {
+      showSection('home-section');
+    });
+  }
+
   /* --- Home Screen: 상태 기반 콘텐츠 관리 --- */
   var homeSection = document.getElementById('home-section');
   if (homeSection) {
@@ -539,6 +547,24 @@ document.addEventListener('click', function(e) {
       });
     }
 
+    // Birth Modal 닫기 버튼
+    var birthCloseBtn = document.querySelector('#birth-registration-overlay .modal__close-btn');
+    if (birthCloseBtn) {
+      birthCloseBtn.addEventListener('click', closeBirthModal);
+    }
+
+    // Birth datetime 아이콘 클릭 → input 포커스
+    var birthDatetimeInput = document.getElementById('birth-datetime');
+    var birthDatetimeIcon = document.querySelector('#birth-registration-overlay .input-wrapper__icon');
+    if (birthDatetimeIcon) {
+      birthDatetimeIcon.addEventListener('click', function() {
+        if (birthDatetimeInput) {
+          birthDatetimeInput.focus();
+          birthDatetimeInput.showPicker();
+        }
+      });
+    }
+
     // 토글 버튼 이벤트
     var pregnancyToggles = document.querySelectorAll('.pregnancy-birth-toggle .toggle-btn');
     pregnancyToggles.forEach(function(btn, index) {
@@ -567,7 +593,7 @@ document.addEventListener('click', function(e) {
 
     // ===== Growth Stage Modal 로직 =====
     var growthStageOverlay = document.getElementById('growth-stage-overlay');
-    var growthStageCloseBtn = document.querySelector('.growth-stage-close-btn');
+    var growthStageCloseBtn = document.querySelector('#growth-stage-overlay .modal__close-btn');
     var characterArea = document.getElementById('character-area');
 
     // 성장 단계 더미 데이터
@@ -899,17 +925,19 @@ document.addEventListener('click', function(e) {
 
   /* Record Creation Modal */
 
-  /* FAB 클릭 시 모달 열기 */
-  var recordFab = document.getElementById('record-fab');
+  /* FAB 클릭 시 모달 열기 - 모든 FAB 버튼 지원 */
   var recordCreateOverlay = document.getElementById('record-create-overlay');
-  if (recordFab && recordCreateOverlay) {
-    recordFab.addEventListener('click', function() {
-      recordCreateOverlay.classList.add('active');
+  var allFabs = document.querySelectorAll('.fab');
+  allFabs.forEach(function(fab) {
+    fab.addEventListener('click', function() {
+      if (recordCreateOverlay) {
+        recordCreateOverlay.classList.add('active');
+      }
     });
-  }
+  });
 
   /* 모달 X 버튼 클릭 시 닫기 */
-  var recordCreateCloseBtn = document.querySelector('.record-create-close-btn');
+  var recordCreateCloseBtn = document.querySelector('#record-create-overlay .modal__close-btn');
   if (recordCreateCloseBtn && recordCreateOverlay) {
     recordCreateCloseBtn.addEventListener('click', function() {
       recordCreateOverlay.classList.remove('active');

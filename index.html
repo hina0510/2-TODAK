@@ -484,9 +484,17 @@
           aria-labelledby="onboarding-title"
         >
 
+          <!-- 모달 핸들 -->
+          <div class="modal__handle"></div>
+
           <!-- 모달 헤더 -->
           <div class="modal__dialog-header">
             <h2 class="modal__dialog-title" id="onboarding-title">초기 아이 정보 설정</h2>
+            <button type="button" class="modal__close-btn" aria-label="닫기">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
             <p class="modal__dialog-subtitle">아이와의 첫 만남을 위해 정보를 입력해주세요.</p>
           </div>
 
@@ -658,8 +666,15 @@
             <!-- 모달 핸들 -->
             <div class="modal__handle"></div>
 
-            <!-- 모달 제목 -->
-            <h2 class="modal__title" id="birth-modal-title">출산 정보 등록</h2>
+            <!-- 모달 제목 + 닫기 버튼 -->
+            <div class="modal__header">
+              <h2 class="modal__title" id="birth-modal-title">출산 정보 등록</h2>
+              <button type="button" class="modal__close-btn" aria-label="닫기">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
 
             <!-- 모달 본문 -->
             <div class="modal__body" style="gap: 20px;">
@@ -712,9 +727,9 @@
                   <input
                     type="datetime-local"
                     id="birth-datetime"
-                    class="input-field input-field--card"
+                    class="input-field input-field--card input-field--date"
                   >
-                  <span class="input-wrapper__icon" aria-hidden="true">
+                  <span class="input-wrapper__icon" role="button" tabindex="0" aria-label="달력 열기">
                     <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
                       <rect x="1" y="3" width="16" height="16" rx="3" stroke="#DCBFC7" stroke-width="1.5"/>
                       <path d="M5 1V5M13 1V5" stroke="#DCBFC7" stroke-width="1.5" stroke-linecap="round"/>
@@ -783,10 +798,13 @@
         <div class="modal-overlay" id="growth-stage-overlay">
           <div class="modal" role="dialog" aria-modal="true" aria-labelledby="growth-stage-title">
 
+            <!-- 모달 핸들 -->
+            <div class="modal__handle"></div>
+
             <!-- 상단 제목 + 닫기 버튼 -->
-            <div class="growth-stage-header">
+            <div class="modal__header">
               <h2 class="modal__title" id="growth-stage-title">성장 단계 정보</h2>
-              <button type="button" class="growth-stage-close-btn" aria-label="닫기">
+              <button type="button" class="modal__close-btn" aria-label="닫기">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -794,7 +812,7 @@
             </div>
 
             <!-- 모달 본문 -->
-            <div class="growth-stage-content">
+            <div class="modal__body growth-stage-body">
 
               <!-- 캐릭터 + 현재 주차 배지 -->
               <div class="growth-stage-character">
@@ -851,10 +869,10 @@
               </div>
 
             </div>
-            <!-- /.growth-stage-content -->
+            <!-- /.modal__body -->
 
             <!-- 모달 푸터 (기록하기 버튼) -->
-            <div class="growth-stage-footer">
+            <div class="modal__footer growth-stage-footer">
               <button type="button" class="btn btn--primary w-full">기록하기</button>
             </div>
 
@@ -1074,14 +1092,6 @@
 
       </main>
 
-      <!-- 플로팅 액션 버튼 -->
-      <button type="button" class="fab" aria-label="기록 추가">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-        <span class="fab__text">기록하기</span>
-      </button>
-
       <!-- 하단 네비게이션 -->
       <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">
         <button type="button" class="bottom-nav__item" data-goto="home-section">
@@ -1257,6 +1267,52 @@
         <div style="height: 20px;"></div>
 
       </main>
+
+      <!-- 플로팅 액션 버튼 -->
+      <button type="button" class="fab" aria-label="기록 추가" id="growth-detail-fab">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="fab__text">기록하기</span>
+      </button>
+
+      <!-- 하단 네비게이션 -->
+      <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">
+        <button type="button" class="bottom-nav__item" data-goto="home-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+          </svg>
+          <span class="bottom-nav__label">홈</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="todak-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+          </svg>
+          <span class="bottom-nav__label">토닥</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="guide-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+          </svg>
+          <span class="bottom-nav__label">가이드</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="record-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <span class="bottom-nav__label">기록</span>
+        </button>
+
+        <button type="button" class="bottom-nav__item" data-goto="mypage-section">
+          <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <span class="bottom-nav__label">마이</span>
+        </button>
+      </nav>
 
     </section>
     <!-- /#growth-detail-section -->
@@ -1436,137 +1492,6 @@
 
       </main>
       <!-- /.record-content -->
-
-      <!-- 기록 생성 모달 -->
-      <div class="modal-overlay" id="record-create-overlay">
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="record-create-title">
-
-          <!-- 모달 핸들 -->
-          <div class="modal__handle"></div>
-
-          <!-- 헤더 -->
-          <div class="record-create-header">
-            <h2 class="record-create-title" id="record-create-title">성장 기록하기</h2>
-            <button type="button" class="record-create-close-btn" aria-label="닫기">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-          </div>
-
-          <!-- 모달 본문 (스크롤 가능) -->
-          <div class="modal__body record-create-body">
-
-            <!-- 날짜 -->
-            <div class="record-create-date">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <rect x="1" y="3" width="22" height="20" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M1 7H23" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M6 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M18 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-              <span class="record-create-date-text">2024년 5월 24일 금요일</span>
-            </div>
-
-            <!-- 아이 사진 -->
-            <div class="input-group">
-              <div class="input-label-pad">
-                <label class="input-label input-label--form">아이 사진</label>
-              </div>
-              <div class="record-create-photo-area">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <p class="record-create-photo-text">오늘의 예뻐 모습을 남겨주세요</p>
-              </div>
-            </div>
-
-            <!-- 성장 정보 (키, 몸무게) -->
-            <div class="record-create-growth-inputs">
-              <div class="input-group">
-                <div class="input-label-pad">
-                  <label class="input-label input-label--form" for="record-height">키 (cm)</label>
-                </div>
-                <input type="number" id="record-height" class="input-field input-field--card" placeholder="00.0" step="0.1">
-              </div>
-              <div class="input-group">
-                <div class="input-label-pad">
-                  <label class="input-label input-label--form" for="record-weight">몸무게 (kg)</label>
-                </div>
-                <input type="number" id="record-weight" class="input-field input-field--card" placeholder="0.00" step="0.1">
-              </div>
-            </div>
-
-            <!-- 수유 기록 -->
-            <div class="input-group">
-              <div class="input-label-pad">
-                <span class="input-label input-label--form">수유 기록</span>
-              </div>
-              <div class="record-create-feeding-options" role="group">
-                <button type="button" class="btn btn--pill record-create-feeding-btn" data-feeding="breast">
-                  <span>👶</span>
-                  모유
-                </button>
-                <button type="button" class="btn btn--pill record-create-feeding-btn selected" data-feeding="formula">
-                  <span>🍼</span>
-                  분유
-                </button>
-                <button type="button" class="btn btn--pill record-create-feeding-btn" data-feeding="pump">
-                  <span>💧</span>
-                  유축
-                </button>
-              </div>
-            </div>
-
-            <!-- 분유량 -->
-            <div class="input-group">
-              <div class="input-label-pad">
-                <label class="input-label input-label--form" for="record-amount">분유량</label>
-              </div>
-              <div class="record-create-amount-input">
-                <input type="number" id="record-amount" class="input-field input-field--card" placeholder="120" min="0">
-                <span class="record-create-amount-unit">ml</span>
-              </div>
-            </div>
-
-            <!-- 이유식 종류 -->
-            <div class="input-group">
-              <div class="input-label-pad">
-                <span class="input-label input-label--form">이유식 종류</span>
-              </div>
-              <div class="record-create-baby-food-tags">
-                <button type="button" class="record-create-baby-food-tag">초기 미음</button>
-                <button type="button" class="record-create-baby-food-tag">채소 죽</button>
-                <button type="button" class="record-create-baby-food-tag">소고기 미음</button>
-                <button type="button" class="record-create-baby-food-add" aria-label="이유식 종류 추가">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- 오늘의 메모 -->
-            <div class="input-group">
-              <div class="input-label-pad">
-                <label class="input-label input-label--form" for="record-memo">오늘의 메모</label>
-              </div>
-              <div class="record-create-memo-wrapper">
-                <textarea id="record-memo" class="record-create-memo-textarea" placeholder="오늘 하루는 어떠셨나요? 소중한 순간들을 기록해주세요" maxlength="200"></textarea>
-                <div class="record-create-memo-count">0 / 200</div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- 모달 푸터 -->
-          <div class="modal__footer">
-            <button type="button" class="btn btn--primary w-full record-create-save-btn">저장하기</button>
-          </div>
-
-        </div>
-      </div>
 
       <!-- 플로팅 액션 버튼 -->
       <button type="button" class="fab" aria-label="기록 추가" id="record-fab">
@@ -1763,14 +1688,6 @@
         <div style="height: 20px;"></div>
 
       </main>
-
-      <!-- 플로팅 액션 버튼 -->
-      <button type="button" class="fab" aria-label="기록 추가">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-        <span class="fab__text">기록하기</span>
-      </button>
 
       <!-- 하단 네비게이션 -->
       <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">
@@ -1974,14 +1891,6 @@
       </main>
       <!-- /.mypage-content -->
 
-      <!-- 플로팅 액션 버튼 -->
-      <button type="button" class="fab" aria-label="기록 추가">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-        <span class="fab__text">기록하기</span>
-      </button>
-
       <!-- 하단 네비게이션 -->
       <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">
         <button type="button" class="bottom-nav__item" data-goto="home-section">
@@ -2023,6 +1932,123 @@
     </section>
     <!-- /#mypage-section -->
 
+    <!-- 기록 생성 모달 (모든 섹션에서 접근 가능) -->
+    <div class="modal-overlay" id="record-create-overlay">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="record-create-title">
+
+        <!-- 모달 핸들 -->
+        <div class="modal__handle"></div>
+
+        <!-- 헤더 -->
+        <div class="modal__header">
+          <h2 class="modal__title" id="record-create-title">성장 기록하기</h2>
+          <button type="button" class="modal__close-btn" aria-label="닫기">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 모달 본문 (스크롤 가능) -->
+        <div class="modal__body record-create-body">
+
+          <!-- 날짜 -->
+          <div class="record-create-date">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="1" y="3" width="22" height="20" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M1 7H23" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M18 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span class="record-create-date-text">2024년 5월 24일 금요일</span>
+          </div>
+
+          <!-- 아이 사진 -->
+          <div class="input-group">
+            <div class="input-label-pad">
+              <label class="input-label input-label--form">아이 사진</label>
+            </div>
+            <div class="record-create-photo-area">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <p class="record-create-photo-text">오늘의 예뻐 모습을 남겨주세요</p>
+            </div>
+          </div>
+
+          <!-- 성장 정보 (키, 몸무게) -->
+          <div class="record-create-growth-inputs">
+            <div class="input-group">
+              <div class="input-label-pad">
+                <label class="input-label input-label--form" for="record-height">키 (cm)</label>
+              </div>
+              <input type="number" id="record-height" class="input-field input-field--card" placeholder="00.0" step="0.1">
+            </div>
+            <div class="input-group">
+              <div class="input-label-pad">
+                <label class="input-label input-label--form" for="record-weight">몸무게 (kg)</label>
+              </div>
+              <input type="number" id="record-weight" class="input-field input-field--card" placeholder="0.00" step="0.1">
+            </div>
+          </div>
+
+          <!-- 수유 기록 -->
+          <div class="input-group">
+            <div class="input-label-pad">
+              <span class="input-label input-label--form">수유 기록</span>
+            </div>
+            <div class="record-create-feeding-options" role="group">
+              <button type="button" class="btn btn--pill record-create-feeding-btn" data-feeding="breast">
+                <span>👶</span>
+                모유
+              </button>
+              <button type="button" class="btn btn--pill record-create-feeding-btn selected" data-feeding="formula">
+                <span>🍼</span>
+                분유
+              </button>
+              <button type="button" class="btn btn--pill record-create-feeding-btn" data-feeding="pump">
+                <span>💧</span>
+                유축
+              </button>
+              <button type="button" class="btn btn--pill record-create-feeding-btn" data-feeding="baby-food">
+                <span>🥄</span>
+                이유식
+              </button>
+            </div>
+          </div>
+
+          <!-- 분유량 -->
+          <div class="input-group">
+            <div class="input-label-pad">
+              <label class="input-label input-label--form" for="record-amount">분유량</label>
+            </div>
+            <div class="record-create-amount-input">
+              <input type="number" id="record-amount" class="input-field input-field--card" placeholder="120" min="0">
+              <span class="record-create-amount-unit">ml</span>
+            </div>
+          </div>
+
+          <!-- 오늘의 메모 -->
+          <div class="input-group">
+            <div class="input-label-pad">
+              <label class="input-label input-label--form" for="record-memo">오늘의 메모</label>
+            </div>
+            <div class="record-create-memo-wrapper">
+              <textarea id="record-memo" class="record-create-memo-textarea" placeholder="오늘 하루는 어떠셨나요? 소중한 순간들을 기록해주세요" maxlength="200"></textarea>
+              <div class="record-create-memo-count">0 / 200</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 모달 푸터 -->
+        <div class="modal__footer">
+          <button type="button" class="btn btn--primary w-full record-create-save-btn">저장하기</button>
+        </div>
+
+      </div>
+    </div>
 
   </div><!-- /#app -->
 

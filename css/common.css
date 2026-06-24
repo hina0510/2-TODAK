@@ -194,7 +194,7 @@
   justify-content: center;
   gap: 8px;
   box-shadow: var(--shadow-button);
-  z-index: 99;
+  z-index: 101;
   transition: transform 0.2s ease;
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-semibold);
@@ -321,10 +321,27 @@
   box-shadow: var(--shadow-modal);
   transform: translateY(100%);
   transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  overflow-y: auto;
 }
 
 .modal-overlay.active .modal {
   transform: translateY(0);
+}
+
+.modal::-webkit-scrollbar {
+  width: 4px;
+}
+
+.modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background: var(--color-text-secondary);
+  border-radius: 2px;
 }
 
 /* 모달 핸들 */
@@ -336,11 +353,57 @@
   margin: 0 auto 20px;
 }
 
+.modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
 .modal__title {
   font-size: var(--font-size-h3);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary-navy);
-  margin-bottom: 20px;
+  flex: 1;
+}
+
+.modal__close-btn {
+  flex-shrink: 0;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  line-height: 1 !important;
+  font-size: 0 !important;
+}
+
+.modal__close-btn svg {
+  width: 24px !important;
+  height: 24px !important;
+  display: block !important;
+  line-height: 0 !important;
+}
+
+.modal__close-btn:hover {
+  background-color: rgba(138, 143, 152, 0.1);
+}
+
+.modal__close-btn:active {
+  background-color: rgba(138, 143, 152, 0.2);
 }
 
 /* ----------------------------------------
@@ -649,27 +712,45 @@
 
 /* 다이얼로그 헤더 (하단 구분선 포함) */
 .modal__dialog-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 8px 12px;
   padding: 24px 24px 17px;
   border-bottom: 1px solid rgba(220, 191, 199, 0.2);
+  position: relative;
 }
 
 .modal__dialog-title {
+  grid-column: 1;
+  grid-row: 1;
   font-size: var(--font-size-modal-title);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   text-align: center;
   letter-spacing: -0.5px;
+  width: 100%;
+}
+
+.modal__dialog-header .modal__close-btn {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0 !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  align-self: center;
+  justify-self: center;
 }
 
 .modal__dialog-subtitle {
+  grid-column: 1 / -1;
+  grid-row: 2;
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-regular);
   /* color: var(--color-text-warm); */
   text-align: center;
+  width: 100%;
 }
 
 /* 다이얼로그 본문 / 푸터 */
@@ -678,6 +759,12 @@
   flex-direction: column;
   gap: 24px;
   padding: 24px;
+}
+
+.growth-stage-body {
+  padding: 0 20px;
+  align-items: center;
+  gap: 20px;
 }
 
 .modal__footer {
@@ -1241,10 +1328,8 @@
   gap: 0;
 }
 
-/* 캐릭터 원 + 사이드 카드 래퍼 (한 줄) */
-.character-area > .side-info-card:first-child,
-.character-area > .character-ring,
-.character-area > .side-info-card:nth-child(3) {
+/* 중앙 캐릭터 원 배치 */
+.character-area > .character-ring {
   display: inline-flex;
 }
 
@@ -1282,7 +1367,7 @@
 
 .character-area.birth-mode .side-info-card--left,
 .character-area.birth-mode .side-info-card--right {
-  display: flex;
+  display: inline-flex;
 }
 
 .side-info-card__title {
@@ -3180,22 +3265,20 @@
   margin: 0;
 }
 
-/* 수유 기록 옵션 */
+/* 수유 기록 옵션 - 2x2 그리드 레이아웃 */
 .record-create-feeding-options {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
 .record-create-feeding-btn {
-  flex: 1;
-  min-width: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 12px 12px;
+  gap: 8px;
+  padding: 16px 12px;
   background-color: var(--color-bg-white);
   border: 2px solid var(--color-text-secondary);
   border-radius: 12px;
@@ -3204,6 +3287,8 @@
   cursor: pointer;
   transition: all 0.2s ease;
   -webkit-tap-highlight-color: transparent;
+  height: 100px;
+  width: 100%;
 }
 
 .record-create-feeding-btn span {
@@ -3327,6 +3412,7 @@
   padding: 16px 20px;
   border-top: 1px solid var(--color-text-secondary);
   background-color: var(--color-bg-white);
+  flex-shrink: 0;
 }
 
 .record-create-save-btn {
