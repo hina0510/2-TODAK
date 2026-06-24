@@ -778,31 +778,14 @@
   padding: 0 0 100px 0;
 }
 
-/* 날짜 표시 */
-.todak-date {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 16px 20px 12px;
-  font-size: var(--font-size-body);
-  color: var(--color-primary-magenta);
-}
-
-.todak-date__separator {
-  opacity: 0.5;
-}
-
-.todak-date__full {
-  font-size: var(--font-size-small);
-}
-
-
 /* 제목 및 설명 섹션 */
 .todak-title-section {
   padding: 20px 24px 24px;
 }
-
+.todak-date__full {
+  font-size: var(--font-size-body);
+  color: var(--color-primary-magenta);
+}
 .todak-page-title {
   font-size: var(--font-size-h1);
   font-weight: var(--font-weight-bold);
@@ -812,7 +795,7 @@
 }
 
 .todak-page-description {
-  font-size: var(--font-size-body);
+  font-size: var(--font-size-h4);
   color: var(--color-text-warm);
   line-height: var(--line-height-normal);
 }
@@ -855,7 +838,7 @@
 
 .todak-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary-magenta), var(--color-primary-navy));
+  background: linear-gradient(90deg, var(--color-primary-pink), var(--color-primary-magenta));
   border-radius: 3px;
   transition: width 0.3s ease;
 }
@@ -887,16 +870,21 @@
 .todak-category-title {
   font-size: 16px;
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
   letter-spacing: -0.3px;
   margin: 0;
 }
+.todak-category-title.child{
+  color: var(--color-primary-lavender-dark);}
+.todak-category-title.mom{
+  color: var(--color-primary-magenta);}
+.todak-category-title.guardian{
+  color: var(--color-primary-navy);}
 
 .todak-category-badge {
   font-size: 12px;
   font-weight: var(--font-weight-semibold);
   color: var(--color-primary-navy);
-  background-color: rgba(47, 75, 124, 0.08);
+  background-color: var(--color-primary-light-blue);
   padding: 4px 10px;
   border-radius: 12px;
   flex-shrink: 0;
@@ -954,13 +942,4 @@
 /* TODAK 섹션 FAB */
 .todak-section .fab {
   bottom: 100px;
-}
-
-
-/* ==========================================
-   TODAK SECTION 미션 카드 커스텀
-   ========================================== */
-
-/* 기본 common.css 스타일 사용 */
-  padding: 3px 8px;
 }

@@ -719,7 +719,7 @@ document.addEventListener('click', function(e) {
         icon: '🎵',
         title: '태교 음악 감상하기',
         desc: '엄마의 심정과의 활을 듣게 하세요',
-        tags: ['태교', '모자관계'],
+        tags: ['태교'],
         completed: false
       },
       {
