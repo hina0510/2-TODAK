@@ -1104,7 +1104,24 @@
             <span class="todak-category-badge" id="category-child-badge">0/2 완료</span>
           </div>
           <div class="todak-missions-list" id="todak-category-child">
-            <!-- 동적으로 채워짐 -->
+            <div class="todak-mission-item" data-mission-id="child-1">
+              <div class="todak-mission-icon"></div>
+              <div class="todak-mission-content">
+                <p class="todak-mission-item-text"></p>
+                <p class="todak-mission-item-desc"></p>
+                <div class="todak-mission-item-tags"></div>
+              </div>
+              <input type="checkbox" class="todak-mission-checkbox">
+            </div>
+            <div class="todak-mission-item" data-mission-id="child-2">
+              <div class="todak-mission-icon"></div>
+              <div class="todak-mission-content">
+                <p class="todak-mission-item-text"></p>
+                <p class="todak-mission-item-desc"></p>
+                <div class="todak-mission-item-tags"></div>
+              </div>
+              <input type="checkbox" class="todak-mission-checkbox">
+            </div>
           </div>
         </div>
 
@@ -1118,7 +1135,24 @@
             <span class="todak-category-badge" id="category-self-badge">0/2 완료</span>
           </div>
           <div class="todak-missions-list" id="todak-category-self">
-            <!-- 동적으로 채워짐 -->
+            <div class="todak-mission-item" data-mission-id="self-1">
+              <div class="todak-mission-icon"></div>
+              <div class="todak-mission-content">
+                <p class="todak-mission-item-text"></p>
+                <p class="todak-mission-item-desc"></p>
+                <div class="todak-mission-item-tags"></div>
+              </div>
+              <input type="checkbox" class="todak-mission-checkbox">
+            </div>
+            <div class="todak-mission-item" data-mission-id="self-2">
+              <div class="todak-mission-icon"></div>
+              <div class="todak-mission-content">
+                <p class="todak-mission-item-text"></p>
+                <p class="todak-mission-item-desc"></p>
+                <div class="todak-mission-item-tags"></div>
+              </div>
+              <input type="checkbox" class="todak-mission-checkbox">
+            </div>
           </div>
         </div>
 
@@ -1132,7 +1166,24 @@
             <span class="todak-category-badge" id="category-family-badge">0/2 완료</span>
           </div>
           <div class="todak-missions-list" id="todak-category-family">
-            <!-- 동적으로 채워짐 -->
+            <div class="todak-mission-item" data-mission-id="family-1">
+              <div class="todak-mission-icon"></div>
+              <div class="todak-mission-content">
+                <p class="todak-mission-item-text"></p>
+                <p class="todak-mission-item-desc"></p>
+                <div class="todak-mission-item-tags"></div>
+              </div>
+              <input type="checkbox" class="todak-mission-checkbox">
+            </div>
+            <div class="todak-mission-item" data-mission-id="family-2">
+              <div class="todak-mission-icon"></div>
+              <div class="todak-mission-content">
+                <p class="todak-mission-item-text"></p>
+                <p class="todak-mission-item-desc"></p>
+                <div class="todak-mission-item-tags"></div>
+              </div>
+              <input type="checkbox" class="todak-mission-checkbox">
+            </div>
           </div>
         </div>
 
@@ -2065,13 +2116,14 @@
             <div class="input-label-pad">
               <label class="input-label input-label--form">아이 사진</label>
             </div>
-            <div class="record-create-photo-area">
+            <button type="button" class="record-create-photo-area" id="record-photo-upload">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
               <p class="record-create-photo-text">오늘의 예뻐 모습을 남겨주세요</p>
-            </div>
+            </button>
+            <input type="file" id="record-photo-input" accept="image/*" style="display: none;">
           </div>
 
           <!-- 성장 정보 (키, 몸무게) -->
