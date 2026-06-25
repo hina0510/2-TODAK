@@ -1079,20 +1079,6 @@ document.addEventListener('click', function(e) {
           console.error('[회원가입] signUp 실패:', signUpErr.message || signUpErr);
           throw signUpErr;
         }
-
-        // 회원가입 후 자동 로그인
-        try {
-          console.log('[회원가입] 자동 로그인 시작');
-          var signInResult = await supabase.auth.signInWithPassword({ email: email, password: password });
-          if (signInResult.error) {
-            console.warn('[회원가입] 자동 로그인 실패:', signInResult.error.message);
-          } else {
-            console.log('[회원가입] 자동 로그인 완료');
-          }
-        } catch (signInErr) {
-          console.warn('[회원가입] 자동 로그인 예외:', signInErr.message);
-        }
-
         console.log('[회원가입] signUp 완료');
       } else {
         console.warn('[회원가입] Supabase 미초기화');
@@ -1183,18 +1169,39 @@ document.addEventListener('click', function(e) {
         return;
       }
 
-      var { data: authData, error: authErr } = await supabase.auth.getUser();
+      var authData;
+      var authErr;
+      var maxRetries = 3;
+      var retryCount = 0;
+
+      // getUser() 재시도 로직 (최대 3회)
+      while (retryCount < maxRetries) {
+        var result = await supabase.auth.getUser();
+        authErr = result.error;
+        authData = result.data;
+
+        if (!authErr && authData && authData.user) {
+          break;
+        }
+
+        retryCount++;
+        if (retryCount < maxRetries) {
+          // 다음 재시도 전 1초 대기
+          await new Promise(function(resolve) { setTimeout(resolve, 1000); });
+        }
+      }
+
       if (authErr || !authData || !authData.user) {
-        // 회원가입 직후 세션이 없는 경우, 저장된 이메일과 비밀번호로 재로그인
+        // getUser() 재시도 실패 시, 저장된 이메일과 비밀번호로 로그인
         if (_signupEmail && _signupPassword) {
-          var { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({
+          var signInResult = await supabase.auth.signInWithPassword({
             email: _signupEmail,
             password: _signupPassword
           });
-          if (signInErr || !signInData.user) {
+          if (signInResult.error || !signInResult.data || !signInResult.data.user) {
             throw new Error('사용자 인증 정보를 가져올 수 없습니다.');
           }
-          authData = signInData;
+          authData = signInResult.data;
         } else {
           throw new Error('사용자 인증 정보를 가져올 수 없습니다.');
         }
