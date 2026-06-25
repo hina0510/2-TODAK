@@ -150,6 +150,12 @@
   box-shadow: var(--shadow-button);
 }
 
+.btn--white {
+  background-color: var(--color-bg-white);
+  color: var(--color-primary-magenta);
+  box-shadow: var(--shadow-button);
+}
+
 /* Outline 버튼 */
 .btn--outline {
   background-color: transparent;
@@ -1630,7 +1636,7 @@
 }
 
 .todak-mission-item-text {
-  font-size: var(--font-size-body);
+  font-size: var(--font-size-h4);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   margin: 0;
@@ -3557,7 +3563,6 @@
 
 .mypage-profile-email {
   font-size: var(--font-size-small);
-  color: var(--color-text-secondary);
   margin: 0;
 }
 
@@ -3623,7 +3628,7 @@
   color: var(--color-primary-magenta);
   background-color: rgba(217, 79, 138, 0.08);
   padding: 3px 8px;
-  border-radius: 6px;
+  border-radius: 15px;
   white-space: nowrap;
 }
 
@@ -3648,18 +3653,12 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  font-size: var(--font-size-small);
-  color: var(--color-text-secondary);
-}
-
-.mypage-child-meta-label {
-  color: var(--color-text-secondary);
-  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
 }
 
 .mypage-child-meta-value {
   color: var(--color-primary-navy);
-  font-weight: var(--font-weight-semibold);
 }
 
 .mypage-child-meta-divider {
@@ -3672,8 +3671,8 @@
    ======================================== */
 
 .mypage-invitation-card {
-  background: linear-gradient(135deg, var(--color-primary-magenta) 0%, var(--color-primary-magenta) 100%);
-  color: var(--color-text-white);
+  background: var(--color-primary-pink);
+  color: var(--color-text-black);
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -3699,11 +3698,11 @@
   width: auto;
   padding: 8px 16px;
   height: 40px;
-  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .mypage-invitation-card .btn:active {
-  background-color: rgba(255, 255, 255, 0.35);
+  background-color: var(--color-primary-magenta);
+  color: var(--color-text-white);
 }
 
 /* ========================================
@@ -3753,7 +3752,7 @@
 .mypage-family-role {
   font-size: var(--font-size-caption);
   font-weight: var(--font-weight-semibold);
-  background-color: var(--color-primary-lavender);
+  background-color: var(--color-primary-light-blue);
   color: var(--color-primary-navy);
   padding: 3px 8px;
   border-radius: 6px;
@@ -3762,7 +3761,6 @@
 
 .mypage-family-access {
   font-size: var(--font-size-small);
-  color: var(--color-text-secondary);
   margin: 0;
 }
 
