@@ -568,10 +568,10 @@
             </div>
             <!-- /태명 -->
 
-            <!-- 출산 예정일 / 출산일 (엄마 선택 시에만 표시) -->
-            <div class="input-group form-section form-section--mom-only">
+            <!-- 출산 예정일 (엄마 선택 + 임신 상태 시에만 표시) -->
+            <div class="input-group form-section form-section--mom-only form-section--pregnancy-only">
               <div class="input-label-pad">
-                <label class="input-label input-label--form" for="onboarding-due-date" id="due-date-label">출산 예정일</label>
+                <label class="input-label input-label--form" for="onboarding-due-date">출산 예정일</label>
               </div>
               <div class="input-wrapper">
                 <input
@@ -589,6 +589,68 @@
               </div>
             </div>
             <!-- /출산 예정일 -->
+
+            <!-- 출산일 (엄마 선택 + 출산 상태 시에만 표시) -->
+            <div class="input-group form-section form-section--mom-only form-section--birth-only hidden">
+              <div class="input-label-pad">
+                <label class="input-label input-label--form" for="onboarding-birth-date">출산일</label>
+              </div>
+              <div class="input-wrapper">
+                <input
+                  type="date"
+                  id="onboarding-birth-date"
+                  class="input-field input-field--card input-field--date"
+                >
+                <span class="input-wrapper__icon" aria-hidden="true">
+                  <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
+                    <rect x="1" y="3" width="16" height="16" rx="3" stroke="#DCBFC7" stroke-width="1.5"/>
+                    <path d="M5 1V5M13 1V5" stroke="#DCBFC7" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M1 8H17" stroke="#DCBFC7" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+            <!-- /출산일 -->
+
+            <!-- 출생 키 (엄마 선택 + 출산 상태 시에만 표시) -->
+            <div class="input-group form-section form-section--mom-only form-section--birth-only hidden">
+              <div class="input-label-pad">
+                <label class="input-label input-label--form" for="onboarding-height">출생 키</label>
+              </div>
+              <div class="input-wrapper">
+                <input
+                  type="number"
+                  id="onboarding-height"
+                  class="input-field input-field--card"
+                  placeholder="cm"
+                  step="0.1"
+                  min="0"
+                  autocomplete="off"
+                >
+                <span class="input-wrapper__icon" style="pointer-events: auto; color: var(--color-text-warm); font-weight: var(--font-weight-semibold);">cm</span>
+              </div>
+            </div>
+            <!-- /출생 키 -->
+
+            <!-- 출생 몸무게 (엄마 선택 + 출산 상태 시에만 표시) -->
+            <div class="input-group form-section form-section--mom-only form-section--birth-only hidden">
+              <div class="input-label-pad">
+                <label class="input-label input-label--form" for="onboarding-weight">출생 몸무게</label>
+              </div>
+              <div class="input-wrapper">
+                <input
+                  type="number"
+                  id="onboarding-weight"
+                  class="input-field input-field--card"
+                  placeholder="kg"
+                  step="0.1"
+                  min="0"
+                  autocomplete="off"
+                >
+                <span class="input-wrapper__icon" style="pointer-events: auto; color: var(--color-text-warm); font-weight: var(--font-weight-semibold);">kg</span>
+              </div>
+            </div>
+            <!-- /출생 몸무게 -->
 
             <!-- 엄마 코드 (보호자 선택 시에만 표시) -->
             <div class="input-group form-section form-section--guardian-only">

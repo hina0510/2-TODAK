@@ -1215,41 +1215,44 @@ document.addEventListener('click', function(e) {
         generatedMomCode = generateMomCode();
       }
 
-      var userData = {
-        id: userId,
+      // DB 저장 기능 (Supabase 재설정 후 활성화)
+      console.log('[온보딩] 저장 데이터:', {
+        userId: userId,
         name: _pendingName || userEmail,
-        email: userEmail,
         role: _todakRole,
-        mom_code: _todakRole === 'mom' ? generatedMomCode : null
-      };
+        birthStatus: birthStatus
+      });
 
-      var { error: userErr } = await supabase.from('users').upsert(userData);
-      if (userErr) throw userErr;
+      // var userData = {
+      //   id: userId,
+      //   name: _pendingName || userEmail,
+      //   email: userEmail,
+      //   role: _todakRole,
+      //   mom_code: _todakRole === 'mom' ? generatedMomCode : null
+      // };
+      // var { error: userErr } = await supabase.from('users').upsert(userData);
+      // if (userErr) throw userErr;
 
-      var childData = { user_id: userId };
-
-      if (_todakRole === 'guardian') {
-        childData.mom_code = document.getElementById('onboarding-mom-code').value.trim();
-      } else {
-        childData.baby_name = document.getElementById('onboarding-taemyeong').value.trim();
-        childData.birth_status = birthStatus;
-
-        if (birthStatus === 'pregnant') {
-          var pregnantDueDate = document.getElementById('onboarding-due-date').value;
-          childData.due_date = pregnantDueDate || null;
-        } else {
-          var birthDateVal = document.getElementById('onboarding-birth-date').value;
-          var heightInput = document.getElementById('onboarding-height');
-          var weightInput = document.getElementById('onboarding-weight');
-
-          childData.birth_date = birthDateVal || null;
-          childData.height = heightInput && heightInput.value ? parseFloat(heightInput.value) : null;
-          childData.weight = weightInput && weightInput.value ? parseFloat(weightInput.value) : null;
-        }
-      }
-
-      var { error: childErr } = await supabase.from('children').insert(childData);
-      if (childErr) throw childErr;
+      // var childData = { user_id: userId };
+      // if (_todakRole === 'guardian') {
+      //   childData.mom_code = document.getElementById('onboarding-mom-code').value.trim();
+      // } else {
+      //   childData.baby_name = document.getElementById('onboarding-taemyeong').value.trim();
+      //   childData.birth_status = birthStatus;
+      //   if (birthStatus === 'pregnant') {
+      //     var pregnantDueDate = document.getElementById('onboarding-due-date').value;
+      //     childData.due_date = pregnantDueDate || null;
+      //   } else {
+      //     var birthDateVal = document.getElementById('onboarding-birth-date').value;
+      //     var heightInput = document.getElementById('onboarding-height');
+      //     var weightInput = document.getElementById('onboarding-weight');
+      //     childData.birth_date = birthDateVal || null;
+      //     childData.height = heightInput && heightInput.value ? parseFloat(heightInput.value) : null;
+      //     childData.weight = weightInput && weightInput.value ? parseFloat(weightInput.value) : null;
+      //   }
+      // }
+      // var { error: childErr } = await supabase.from('children').insert(childData);
+      // if (childErr) throw childErr;
 
       _isBirthMode = birthStatus === 'birth';
       await loadHomeData();
@@ -1265,43 +1268,46 @@ document.addEventListener('click', function(e) {
 /* ---------- 홈 데이터 로드 ---------- */
 async function loadHomeData() {
   try {
-    if (!supabase || !supabase.auth) return;
-    var { data: authData } = await supabase.auth.getUser();
-    if (!authData || !authData.user) return;
+    // DB 로드 기능 (Supabase 재설정 후 활성화)
+    console.log('[홈] DB 데이터 로드 (Supabase 재설정 필요)');
 
-    var { data: child } = await supabase
-      .from('children')
-      .select('baby_name, birth_status, due_date, birth_date')
-      .eq('user_id', authData.user.id)
-      .limit(1)
-      .single();
-
-    if (!child) return;
-
-    _isBirthMode = child.birth_status === 'birth';
-
-    var headerTitle = document.getElementById('header-title');
-    if (headerTitle && child.baby_name) {
-      headerTitle.textContent = '건강하게 자라고 있는 ' + child.baby_name;
-    }
-
-    var ddayEl = document.getElementById('header-dday');
-    if (ddayEl) {
-      if (child.birth_status === 'pregnant' && child.due_date) {
-        var diff = Math.ceil((new Date(child.due_date) - new Date()) / 86400000);
-        ddayEl.textContent = diff >= 0 ? 'D-' + diff : 'D+' + Math.abs(diff);
-      } else if (child.birth_status === 'birth' && child.birth_date) {
-        var birthDate = new Date(child.birth_date);
-        var today = new Date();
-        var daysOld = Math.floor((today - birthDate) / 86400000);
-        ddayEl.textContent = daysOld + '일째';
-      }
-    }
-
-    var rightCardValue = document.getElementById('right-card-value');
-    if (rightCardValue) {
-      rightCardValue.textContent = child.birth_status === 'pregnant' ? '임신 중' : '출산 완료';
-    }
+    // if (!supabase || !supabase.auth) return;
+    // var { data: authData } = await supabase.auth.getUser();
+    // if (!authData || !authData.user) return;
+    //
+    // var { data: child } = await supabase
+    //   .from('children')
+    //   .select('baby_name, birth_status, due_date, birth_date')
+    //   .eq('user_id', authData.user.id)
+    //   .limit(1)
+    //   .single();
+    //
+    // if (!child) return;
+    //
+    // _isBirthMode = child.birth_status === 'birth';
+    //
+    // var headerTitle = document.getElementById('header-title');
+    // if (headerTitle && child.baby_name) {
+    //   headerTitle.textContent = '건강하게 자라고 있는 ' + child.baby_name;
+    // }
+    //
+    // var ddayEl = document.getElementById('header-dday');
+    // if (ddayEl) {
+    //   if (child.birth_status === 'pregnant' && child.due_date) {
+    //     var diff = Math.ceil((new Date(child.due_date) - new Date()) / 86400000);
+    //     ddayEl.textContent = diff >= 0 ? 'D-' + diff : 'D+' + Math.abs(diff);
+    //   } else if (child.birth_status === 'birth' && child.birth_date) {
+    //     var birthDate = new Date(child.birth_date);
+    //     var today = new Date();
+    //     var daysOld = Math.floor((today - birthDate) / 86400000);
+    //     ddayEl.textContent = daysOld + '일째';
+    //   }
+    // }
+    //
+    // var rightCardValue = document.getElementById('right-card-value');
+    // if (rightCardValue) {
+    //   rightCardValue.textContent = child.birth_status === 'pregnant' ? '임신 중' : '출산 완료';
+    // }
   } catch (err) {
     console.error('[홈 데이터 로드 오류]', err);
   }
