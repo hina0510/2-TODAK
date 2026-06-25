@@ -73,6 +73,13 @@ function showSection(sectionId) {
 
   /* 토닥 섹션이 표시될 때 미션 로드 */
   if (sectionId === "todak-section") {
+    if (window.loadTodakMissions) {
+      window.loadTodakMissions().then(function() {
+        console.log("[토닥] 미션 로드 완료");
+      }).catch(function(err) {
+        console.error("[토닥] 미션 로드 실패:", err);
+      });
+    }
     initTodakSection();
   }
 
@@ -747,63 +754,87 @@ document.addEventListener("click", function (e) {
   var section = document.getElementById("todak-section");
   if (!section) return;
 
-  /* 더미 미션 데이터 */
   var missionsData = {
-    child: [
-      {
-        id: "child-1",
-        icon: "🎵",
-        title: "태교 음악 감상하기",
-        desc: "엄마의 심정과의 활을 듣게 하세요",
-        tags: ["태교"],
-        completed: false,
-      },
-      {
-        id: "child-2",
-        icon: "🫶",
-        title: "태담 나누기",
-        desc: '"오늘 날씨가 참 좋아"라고 베 속 아이에게 말을 걸어세요.',
-        tags: ["태담", "소통"],
-        completed: false,
-      },
-    ],
-    self: [
-      {
-        id: "self-1",
-        icon: "🌿",
-        title: "가벼운 스트레칭",
-        desc: "부은 다리의 혈리를 위해 5분간 고양이 자세를 해보세요.",
-        tags: ["스트레칭", "휴식"],
-        completed: true,
-      },
-      {
-        id: "self-2",
-        icon: "❤️",
-        title: "나에게 칭찬 해나디",
-        desc: '"오늘도 수고 많았어" 거울 속 나에게 말을 걸어세요.',
-        tags: ["자기관리", "명상"],
-        completed: false,
-      },
-    ],
-    family: [
-      {
-        id: "family-1",
-        icon: "👥",
-        title: "고마음 표현하기",
-        desc: "함께 교생하는 파트너에게 작은 응원의 메시지를 보내세요.",
-        tags: ["감사", "소통"],
-        completed: false,
-      },
-      {
-        id: "family-2",
-        icon: "🦅",
-        title: "밤 마사지 해주기",
-        desc: "자녀 시간, 붕기를 가라앉히는 더 톡인 전달을 해보세요.",
-        tags: ["태교", "함께"],
-        completed: false,
-      },
-    ],
+    child: [],
+    self: [],
+    family: [],
   };
+
+  /* Supabase에서 임신 주차에 맞는 미션 로드 */
+  async function loadMissionsData() {
+    if (!window.supabase || !_currentChild) return;
+
+    try {
+      var currentWeek = parseInt(getWeekNumber());
+
+      var weekRanges = [
+        { min: 1, max: 4, week: 4 },
+        { min: 5, max: 8, week: 8 },
+        { min: 9, max: 12, week: 12 },
+        { min: 13, max: 16, week: 16 },
+        { min: 17, max: 20, week: 20 },
+        { min: 21, max: 24, week: 24 },
+        { min: 25, max: 28, week: 28 },
+        { min: 29, max: 31, week: 32 },
+        { min: 32, max: 36, week: 36 },
+        { min: 37, max: 40, week: 40 }
+      ];
+
+      var missionWeek = null;
+      for (var i = 0; i < weekRanges.length; i++) {
+        if (currentWeek >= weekRanges[i].min && currentWeek <= weekRanges[i].max) {
+          missionWeek = weekRanges[i].week;
+          break;
+        }
+      }
+
+      if (missionWeek === null) {
+        missionWeek = 40;
+      }
+
+      var { data: missions, error } = await window.supabase
+        .from("todak_missions")
+        .select("*")
+        .eq("week", missionWeek);
+
+      if (error) {
+        console.error("[토닥 미션 로드 오류]", error);
+        return;
+      }
+
+      if (!missions || missions.length === 0) {
+        console.log("[토닥 미션] " + missionWeek + "주차 미션이 없습니다.");
+        return;
+      }
+
+      missionsData.child = [];
+      missionsData.self = [];
+      missionsData.family = [];
+
+      missions.forEach(function (mission, index) {
+        var missionObj = {
+          id: mission.id,
+          icon: mission.icon || "•",
+          title: mission.title,
+          desc: mission.description || "",
+          tags: [],
+          completed: false,
+        };
+
+        if (mission.category === "baby") {
+          missionsData.child.push(missionObj);
+        } else if (mission.category === "self") {
+          missionsData.self.push(missionObj);
+        } else if (mission.category === "family") {
+          missionsData.family.push(missionObj);
+        }
+      });
+
+      renderMissions();
+    } catch (err) {
+      console.error("[토닥 미션 로드 예외]", err);
+    }
+  }
 
   /* 날짜 표시 설정 */
   function initDate() {
@@ -1367,8 +1398,9 @@ document.addEventListener("click", function (e) {
 
   /* 초기화 */
   initDate();
-  renderMissions();
-  updateProgress();
+
+  /* 외부에서 접근 가능하도록 함수 노출 */
+  window.loadTodakMissions = loadMissionsData;
 })();
 
 /* ==========================================================================
