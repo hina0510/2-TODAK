@@ -666,6 +666,70 @@
 }
 
 /* ----------------------------------------
+   Invite Code Modal (초대 코드 모달)
+   ---------------------------------------- */
+
+.invite-code-description {
+  font-size: var(--font-size-body);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.invite-code-box {
+  background: linear-gradient(135deg, var(--color-primary-lavender) 0%, rgba(227, 195, 255, 0.5) 100%);
+  border-radius: 16px;
+  padding: 32px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+}
+
+.invite-code-content {
+  text-align: center;
+}
+
+.invite-code-value {
+  font-size: 28px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-navy);
+  letter-spacing: 2px;
+  font-family: 'Courier New', monospace;
+}
+
+.invite-code-message {
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: var(--font-size-body);
+  margin-bottom: 16px;
+}
+
+.invite-code-message.error {
+  background-color: rgba(217, 79, 138, 0.1);
+  color: var(--color-primary-magenta);
+}
+
+.invite-code-message.info {
+  background-color: rgba(47, 75, 124, 0.1);
+  color: var(--color-primary-navy);
+}
+
+#invite-code-modal-overlay .modal__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#invite-code-modal-overlay .btn {
+  height: 48px;
+  font-size: var(--font-size-body);
+}
+
+/* ----------------------------------------
    Utility Classes (유틸리티)
    ---------------------------------------- */
 
