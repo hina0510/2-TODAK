@@ -64,6 +64,9 @@ function showSection(sectionId) {
   /* 마이페이지 섹션이 표시될 때 사용자 정보 로드 */
   if (sectionId === "mypage-section") {
     loadMypageUserInfo();
+    if (_currentChild) {
+      updateMypageChildInfo();
+    }
   }
 
   /* 온보딩 섹션이 표시될 때 사용자 역할 확인 */
@@ -91,6 +94,11 @@ function showSection(sectionId) {
   /* Record 섹션이 표시될 때 오늘 날짜 기록 로드 */
   if (sectionId === "record-section") {
     initRecordSection();
+  }
+
+  /* 성장기록상세 섹션이 표시될 때 최신 기록 로드 */
+  if (sectionId === "growth-detail-section") {
+    initGrowthDetailSection();
   }
 }
 
@@ -1087,22 +1095,6 @@ document.addEventListener("click", function (e) {
               hour12: true,
             });
 
-            var feedingInfo = "";
-            if (record.feeding_records && record.feeding_records.length > 0) {
-              var feeding = record.feeding_records[0];
-              var feedingLabel = {
-                breast: "모유",
-                formula: "분유",
-                pump: "유축",
-                baby_food: "이유식",
-              }[feeding.feeding_type] || feeding.feeding_type;
-
-              feedingInfo = feedingLabel;
-              if (feeding.amount_ml) {
-                feedingInfo += " " + feeding.amount_ml + "ml";
-              }
-            }
-
             var content = "";
             if (record.height || record.weight) {
               content +=
@@ -1110,13 +1102,6 @@ document.addEventListener("click", function (e) {
               if (record.height) content += "키: " + record.height + "cm ";
               if (record.weight) content += "몸무게: " + record.weight + "kg";
               content += "</p>";
-            }
-
-            if (feedingInfo) {
-              content +=
-                '<p class="record-item__desc">수유: ' +
-                feedingInfo +
-                "</p>";
             }
 
             if (record.memo) {
@@ -1177,7 +1162,32 @@ document.addEventListener("click", function (e) {
       if (recordCreateOverlay) {
         recordCreateOverlay.classList.add("active");
 
-        // 마지막 기록 자동 로드
+        var today = new Date();
+        var todayStr = today.getFullYear() + "-" +
+                       String(today.getMonth() + 1).padStart(2, "0") + "-" +
+                       String(today.getDate()).padStart(2, "0");
+
+        var dateInput = document.getElementById("record-date-hidden");
+        if (!dateInput) {
+          dateInput = document.createElement("input");
+          dateInput.type = "hidden";
+          dateInput.id = "record-date-hidden";
+          dateInput.value = todayStr;
+          recordCreateOverlay.appendChild(dateInput);
+        } else {
+          dateInput.value = todayStr;
+        }
+
+        var year = today.getFullYear();
+        var month = today.getMonth() + 1;
+        var day = today.getDate();
+        var dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"][today.getDay()];
+
+        var createDateText = document.querySelector(".record-create-date-text");
+        if (createDateText) {
+          createDateText.textContent = year + "년 " + month + "월 " + day + "일 " + dayOfWeek + "요일";
+        }
+
         var lastRecord = await loadLastGrowthRecord();
         var heightInput = document.getElementById("record-height");
         var weightInput = document.getElementById("record-weight");
@@ -1194,7 +1204,7 @@ document.addEventListener("click", function (e) {
           weightInput.value = "";
         }
 
-        console.log("[TODAK] 마지막 기록 로드 완료", lastRecord);
+        console.log("[TODAK] 마지막 기록 로드 완료, 기본 날짜 설정:", todayStr);
       }
     });
   });
@@ -1275,44 +1285,33 @@ document.addEventListener("click", function (e) {
     saveBtn.addEventListener("click", async function () {
       var heightInput = document.getElementById("record-height");
       var weightInput = document.getElementById("record-weight");
-      var feedingBtn = document.querySelector(
-        ".record-create-feeding-btn.selected",
-      );
-      var amountInput = document.getElementById("record-amount");
       var memoInput = document.getElementById("record-memo");
       var photoInput = document.getElementById("record-photo-input");
+      var dateInput = document.getElementById("record-date-hidden");
 
       var height = heightInput?.value ? parseFloat(heightInput.value) : null;
       var weight = weightInput?.value ? parseFloat(weightInput.value) : null;
-      var feedingType = feedingBtn?.dataset.feeding || "formula";
-      var amountMl =
-        feedingType === "formula" && amountInput?.value
-          ? parseFloat(amountInput.value)
-          : null;
       var memo = memoInput?.value || "";
       var photoFile = photoInput?.files?.[0] || null;
+      var recordDate = dateInput?.value || new Date().toISOString().split("T")[0];
 
       console.log("[TODAK] 저장 데이터:", {
         height,
         weight,
-        feedingType,
-        amountMl,
         memo,
         photoFile,
+        recordDate,
       });
 
-      // 키나 몸무게 중 하나라도 입력되어야 함
       if (!height && !weight) {
         showToast("키 또는 몸무게를 입력해주세요.");
         return;
       }
 
-      // 저장 시작
       saveBtn.disabled = true;
       console.log("[TODAK] 성장 기록 저장 시작");
 
       try {
-        // 1. 사진 업로드 (선택사항)
         var photoUrl = null;
         if (photoFile) {
           console.log("[TODAK] 사진 업로드 중...");
@@ -1322,12 +1321,12 @@ document.addEventListener("click", function (e) {
           }
         }
 
-        // 2. growth_records 저장
         var growthRecord = await saveGrowthRecord({
+          record_date: recordDate,
           height,
           weight,
-          photoUrl,
-          notes: memo,
+          photo_url: photoUrl,
+          memo,
         });
 
         if (!growthRecord) {
@@ -1338,26 +1337,12 @@ document.addEventListener("click", function (e) {
 
         console.log("[TODAK] growth_records 저장 완료:", growthRecord.id);
 
-        // 3. feeding_records 저장
-        var feedingSaved = await saveFeedingRecord(
-          growthRecord.id,
-          feedingType,
-          amountMl,
-        );
-
-        if (!feedingSaved) {
-          console.warn("[TODAK] 수유 기록 저장 실패");
-        }
-
-        // 4. Toast 표시
         showToast("성장 기록이 저장되었습니다.");
 
-        // 5. 모달 닫기
         if (recordCreateOverlay) {
           recordCreateOverlay.classList.remove("active");
         }
 
-        // 6. 폼 초기화
         if (heightInput) heightInput.value = "";
         if (weightInput) weightInput.value = "";
         if (memoInput) memoInput.value = "";
@@ -1365,8 +1350,18 @@ document.addEventListener("click", function (e) {
         var memoCount = document.querySelector(".record-create-memo-count");
         if (memoCount) memoCount.textContent = "0 / 200";
 
-        // 7. UI 갱신
+        var photoArea = document.querySelector(".record-create-photo-area");
+        if (photoArea) {
+          var preview = photoArea.querySelector("img");
+          if (preview) preview.remove();
+          var photoIcon = photoArea.querySelector("svg");
+          var photoText = photoArea.querySelector(".record-create-photo-text");
+          if (photoIcon) photoIcon.style.display = "block";
+          if (photoText) photoText.style.display = "block";
+        }
+
         console.log("[TODAK] UI 갱신 시작");
+        await initRecordSection();
         await updateHomeGrowthInfo();
 
         console.log("[TODAK] 모든 저장 및 갱신 완료");
@@ -1390,8 +1385,35 @@ document.addEventListener("click", function (e) {
     photoInput.addEventListener("change", function () {
       if (photoInput.files && photoInput.files.length > 0) {
         var fileName = photoInput.files[0].name;
+        var file = photoInput.files[0];
         console.log("[TODAK] 사진 선택됨:", fileName);
-        showToast("사진이 선택되었습니다.");
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var imgSrc = e.target.result;
+
+          var existingImg = photoUploadBtn.querySelector("img");
+          if (existingImg) {
+            existingImg.remove();
+          }
+
+          var svg = photoUploadBtn.querySelector("svg");
+          var photoText = photoUploadBtn.querySelector(".record-create-photo-text");
+          if (svg) svg.style.display = "none";
+          if (photoText) photoText.style.display = "none";
+
+          var img = document.createElement("img");
+          img.src = imgSrc;
+          img.style.width = "100%";
+          img.style.height = "100%";
+          img.style.objectFit = "cover";
+          img.style.borderRadius = "8px";
+          img.alt = "선택한 사진";
+          photoUploadBtn.appendChild(img);
+
+          console.log("[TODAK] 사진 미리보기 표시됨");
+        };
+        reader.readAsDataURL(file);
       }
     });
   }
@@ -2757,8 +2779,47 @@ async function loadMypageUserInfo() {
     if (profileAvatarEl) {
       profileAvatarEl.src = avatarUrl;
     }
+
+    // 자녀 정보 로드 및 업데이트
+    if (_currentChild) {
+      updateMypageChildInfo();
+    }
   } catch (err) {
   }
+}
+
+function updateMypageChildInfo() {
+  if (!_currentChild) return;
+
+  var ddayEl = document.querySelector(".mypage-child-dday");
+  var metaValueEls = document.querySelectorAll(".mypage-child-meta-value");
+
+  if (ddayEl) {
+    ddayEl.textContent = calculateDday();
+  }
+
+  if (metaValueEls.length >= 2) {
+    var dateStr = "";
+    if (_isBirthMode) {
+      var birthDate = new Date(_currentChild.birth_date);
+      dateStr = formatDateDisplay(birthDate);
+    } else {
+      var dueDate = new Date(_currentChild.due_date);
+      dateStr = formatDateDisplay(dueDate);
+    }
+    metaValueEls[0].textContent = dateStr;
+
+    var genderStr = _isBirthMode ? _currentChild.gender : "미정";
+    metaValueEls[1].textContent = genderStr;
+  }
+}
+
+function formatDateDisplay(date) {
+  if (!date) return "";
+  var year = date.getFullYear();
+  var month = String(date.getMonth() + 1).padStart(2, "0");
+  var day = String(date.getDate()).padStart(2, "0");
+  return year + "." + month + "." + day;
 }
 
 /* ------------------------------------------
@@ -2783,7 +2844,7 @@ async function loadLastGrowthRecord() {
       .from("growth_records")
       .select("*")
       .eq("child_id", _currentChild.id)
-      .order("date", { ascending: false })
+      .order("record_date", { ascending: false })
       .limit(1);
 
     if (error) {
@@ -2806,7 +2867,7 @@ async function loadLastGrowthRecord() {
 
 async function saveGrowthRecord(recordData) {
   try {
-    if (!supabase) {
+    if (!supabase || !supabase.auth) {
       console.log("[TODAK] Supabase 미초기화");
       return null;
     }
@@ -2816,18 +2877,25 @@ async function saveGrowthRecord(recordData) {
       return null;
     }
 
+    var { data: authData } = await supabase.auth.getUser();
+    if (!authData?.user) {
+      console.log("[TODAK] 로그인 필요");
+      return null;
+    }
+
     var today = new Date();
-    var recordDate = recordData.date || today.toISOString().split("T")[0];
+    var recordDate = recordData.record_date || today.toISOString().split("T")[0];
 
     console.log("[TODAK] 성장 기록 저장 시작 - 아이:", _currentChild.id, "날짜:", recordDate);
 
     var insertData = {
       child_id: _currentChild.id,
-      date: recordDate,
+      record_date: recordDate,
       height: recordData.height || null,
       weight: recordData.weight || null,
-      photo_url: recordData.photoUrl || null,
-      notes: recordData.notes || null,
+      photo_url: recordData.photo_url || null,
+      memo: recordData.memo || null,
+      created_by: authData.user.id,
     };
 
     console.log("[TODAK] 저장 데이터:", insertData);
@@ -2951,6 +3019,13 @@ async function uploadGrowthPhoto(file) {
   }
 }
 
+function getLocalDateString(date) {
+  var year = date.getFullYear();
+  var month = String(date.getMonth() + 1).padStart(2, '0');
+  var day = String(date.getDate()).padStart(2, '0');
+  return year + '-' + month + '-' + day;
+}
+
 async function fetchGrowthRecordsByDate(date) {
   try {
     if (!supabase) {
@@ -2963,7 +3038,7 @@ async function fetchGrowthRecordsByDate(date) {
       return [];
     }
 
-    var dateStr = date.toISOString().split("T")[0];
+    var dateStr = getLocalDateString(date);
 
     console.log("[TODAK] 날짜별 기록 조회:", dateStr);
 
@@ -2971,8 +3046,8 @@ async function fetchGrowthRecordsByDate(date) {
       .from("growth_records")
       .select("*")
       .eq("child_id", _currentChild.id)
-      .eq("date", dateStr)
-      .order("date", { ascending: false });
+      .eq("record_date", dateStr)
+      .order("record_date", { ascending: false });
 
     if (error) {
       console.error("[TODAK] 날짜별 기록 조회 실패:", error.message);
@@ -2997,9 +3072,9 @@ async function updateHomeGrowthInfo() {
 
     var { data, error } = await supabase
       .from("growth_records")
-      .select("height, weight, date")
+      .select("height, weight, record_date")
       .eq("child_id", _currentChild.id)
-      .order("date", { ascending: false })
+      .order("record_date", { ascending: false })
       .limit(1);
 
     if (error || !data || data.length === 0) {
@@ -3036,7 +3111,6 @@ async function initRecordSection() {
     var day = today.getDate();
     var dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"][today.getDay()];
 
-    // .record-calendar__month-btn 업데이트 (YYYY년 M월)
     var monthBtn = document.querySelector(".record-calendar__month-btn");
     if (monthBtn) {
       monthBtn.textContent = year + "년 " + month + "월 ";
@@ -3046,7 +3120,6 @@ async function initRecordSection() {
       }
     }
 
-    // .record-create-date-text 업데이트 (YYYY년 M월 D일 요일)
     var createDateText = document.querySelector(".record-create-date-text");
     if (createDateText) {
       createDateText.textContent = year + "년 " + month + "월 " + day + "일 " + dayOfWeek + "요일";
@@ -3066,7 +3139,7 @@ async function initRecordSection() {
       } else {
         var itemsHTML = "";
         records.forEach(function (record) {
-          var createdDate = new Date(record.date);
+          var createdDate = new Date(record.record_date);
           var timeStr = createdDate.toLocaleTimeString("ko-KR", {
             hour: "2-digit",
             minute: "2-digit",
@@ -3081,8 +3154,8 @@ async function initRecordSection() {
             content += "</p>";
           }
 
-          if (record.notes) {
-            content += '<p class="record-item__desc">' + record.notes + "</p>";
+          if (record.memo) {
+            content += '<p class="record-item__desc">' + record.memo + "</p>";
           }
 
           if (record.photo_url) {
@@ -3110,7 +3183,6 @@ async function initRecordSection() {
       }
     }
 
-    // 캘린더의 오늘 날짜에 active 상태 표시
     var activeDays = document.querySelectorAll(".record-calendar__day--active");
     activeDays.forEach(function (d) {
       d.classList.remove("record-calendar__day--active");
@@ -3127,3 +3199,111 @@ async function initRecordSection() {
     console.error("[TODAK] Record 섹션 초기화 중 에러:", err.message);
   }
 }
+
+/* 성장기록상세 섹션 초기화 - 최신 2개 기록 표시 */
+async function initGrowthDetailSection() {
+  try {
+    console.log("[TODAK] Growth Detail 섹션 초기화");
+
+    if (!supabase || !_currentChild) {
+      console.log("[TODAK] Supabase 또는 아이 정보 없음");
+      return;
+    }
+
+    var { data, error } = await supabase
+      .from("growth_records")
+      .select("*")
+      .eq("child_id", _currentChild.id)
+      .order("record_date", { ascending: false })
+      .limit(2);
+
+    if (error) {
+      console.error("[TODAK] 기록 조회 실패:", error.message);
+      return;
+    }
+
+    var records = data || [];
+    console.log("[TODAK] 조회된 최신 기록:", records);
+
+    var scrollContainer = document.querySelector(".growth-records-scroll");
+    if (!scrollContainer) {
+      console.log("[TODAK] growth-records-scroll 요소 없음");
+      return;
+    }
+
+    if (records.length === 0) {
+      scrollContainer.innerHTML =
+        '<div style="padding: 20px; text-align: center; color: #999;">아직 기록이 없습니다.</div>';
+      return;
+    }
+
+    var cardsHTML = "";
+    records.forEach(function (record) {
+      var dateStr;
+      if (record.record_date) {
+        var dateParts = record.record_date.split('T')[0].split('-');
+        if (dateParts.length === 3) {
+          dateStr = dateParts[0] + '.' + dateParts[1] + '.' + dateParts[2];
+        } else {
+          dateStr = record.record_date;
+        }
+      } else {
+        dateStr = '-';
+      }
+
+      var timeStr = '';
+      if (record.record_date) {
+        var recordDate = new Date(record.record_date);
+        timeStr = recordDate.toLocaleTimeString("ko-KR", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+      }
+
+      var metricsHTML = "";
+      if (record.height || record.weight) {
+        metricsHTML = '<div class="growth-record-metrics">';
+        if (record.height) metricsHTML += '<span class="growth-metric">' + record.height + 'cm</span>';
+        if (record.weight) metricsHTML += '<span class="growth-metric">' + record.weight + 'kg</span>';
+        metricsHTML += "</div>";
+      }
+
+      cardsHTML +=
+        '<div class="card growth-record-card">' +
+        '<div class="growth-record-date">' + dateStr + '</div>';
+
+      if (record.photo_url) {
+        cardsHTML +=
+          '<div class="growth-record-image">' +
+          '<img src="' + record.photo_url + '" alt="성장 기록 사진">' +
+          '</div>';
+      }
+
+      cardsHTML +=
+        '<div class="growth-record-info">' +
+        metricsHTML +
+        '<p class="growth-record-time">' + timeStr + '</p>' +
+        '</div>';
+
+      if (record.memo) {
+        cardsHTML +=
+          '<p class="growth-record-text">"' + record.memo + '"</p>';
+      }
+
+      cardsHTML += '</div>';
+    });
+
+    scrollContainer.innerHTML = cardsHTML;
+  } catch (err) {
+    console.error("[TODAK] Growth Detail 섹션 초기화 중 에러:", err.message);
+  }
+}
+
+/* Record 캘린더 아이콘 버튼 - Growth Detail 섹션으로 이동 */
+document.addEventListener("click", function (e) {
+  var calendarBtn = e.target.closest(".record-calendar-btn");
+  if (calendarBtn) {
+    showSection("growth-detail-section");
+  }
+});

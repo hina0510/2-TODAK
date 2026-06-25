@@ -2508,9 +2508,10 @@
 }
 
 .record-header {
+  display: flex;
+  justify-content: space-between;
   padding: 16px 20px;
   background-color: var(--color-bg-beige);
-  flex-shrink: 0;
 }
 
 .record-logo {
@@ -2914,11 +2915,8 @@
    ---------------------------------------- */
 
 .growth-detail-back {
-  width: 40px;
+  width: 24px;
   height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
@@ -3928,5 +3926,4 @@
   width: 20px;
   height: 20px;
   color: var(--color-primary-navy);
-}
 }

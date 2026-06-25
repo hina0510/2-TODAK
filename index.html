@@ -1434,6 +1434,14 @@
       <!-- 로고 헤더 -->
       <header class="record-header">
         <img src="image/logo.png" alt="TODAK" class="record-logo">
+        <button class="record-calendar-btn" aria-label="성장 기록 보기">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="1" y="3" width="22" height="20" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M1 7H23" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M6 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M18 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
       </header>
 
       <!-- 메인 콘텐츠 -->
@@ -2108,7 +2116,7 @@
               <path d="M6 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               <path d="M18 1V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
-            <span class="record-create-date-text">2024년 5월 24일 금요일</span>
+            <span class="record-create-date-text"></span>
           </div>
 
           <!-- 아이 사진 -->
@@ -2152,7 +2160,7 @@
                 <span>👶</span>
                 모유
               </button>
-              <button type="button" class="btn btn--pill record-create-feeding-btn selected" data-feeding="formula">
+              <button type="button" class="btn btn--pill record-create-feeding-btn" data-feeding="formula">
                 <span>🍼</span>
                 분유
               </button>
@@ -2164,17 +2172,6 @@
                 <span>🥄</span>
                 이유식
               </button>
-            </div>
-          </div>
-
-          <!-- 분유량 -->
-          <div class="input-group">
-            <div class="input-label-pad">
-              <label class="input-label input-label--form" for="record-amount">분유량</label>
-            </div>
-            <div class="record-create-amount-input">
-              <input type="number" id="record-amount" class="input-field input-field--card" placeholder="120" min="0">
-              <span class="record-create-amount-unit">ml</span>
             </div>
           </div>
 
