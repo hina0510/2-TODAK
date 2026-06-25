@@ -2296,8 +2296,59 @@ function initGuideSection() {
   var currentWeek = parseInt(getWeekNumber());
   var stepCards = document.querySelectorAll(".guide-step-card");
 
+  // loadMissionsData()와 동일한 주차 범위 로직 재사용
+  var weekRanges = [
+    { min: 1, max: 4, week: 4 },
+    { min: 5, max: 8, week: 8 },
+    { min: 9, max: 12, week: 12 },
+    { min: 13, max: 16, week: 16 },
+    { min: 17, max: 20, week: 20 },
+    { min: 21, max: 24, week: 24 },
+    { min: 25, max: 28, week: 28 },
+    { min: 29, max: 31, week: 32 },
+    { min: 32, max: 36, week: 36 },
+    { min: 37, max: 40, week: 40 }
+  ];
+
+  // 현재 임신 주차의 범위 인덱스 찾기
+  var currentRangeIndex = -1;
+  for (var i = 0; i < weekRanges.length; i++) {
+    if (currentWeek >= weekRanges[i].min && currentWeek <= weekRanges[i].max) {
+      currentRangeIndex = i;
+      break;
+    }
+  }
+
+  // 범위를 찾을 수 없으면 마지막 범위 사용
+  if (currentRangeIndex === -1) {
+    currentRangeIndex = weekRanges.length - 1;
+  }
+
+  // 현재, 다음, 다다음 범위의 주차 계산
+  var guideWeeks = [];
+  for (var j = 0; j < 3; j++) {
+    if (currentRangeIndex + j < weekRanges.length) {
+      guideWeeks.push(weekRanges[currentRangeIndex + j].week);
+    }
+  }
+
+  // .guide-week-card__number 업데이트 (현재 실제 임신 주차)
+  var weekCardNumber = document.querySelector(".guide-week-card__number");
+  if (weekCardNumber) {
+    weekCardNumber.textContent = currentWeek;
+  }
+
+  // .guide-period-link 업데이트 (${currentWeek}주차 맞춤 가이드)
+  var guidePeriodLink = document.querySelector(".guide-period-link");
+  if (guidePeriodLink) {
+    guidePeriodLink.textContent = currentWeek + "주차 맞춤 가이드";
+  }
+
+  // 가이드 카드 업데이트
   stepCards.forEach(function (card, index) {
-    var week = currentWeek + index;
+    if (index >= guideWeeks.length) return;
+
+    var week = guideWeeks[index];
     var guide = _weeklyGuides.find(function (g) {
       return g.week === week;
     });
@@ -2980,12 +3031,31 @@ async function initRecordSection() {
     var today = new Date();
     var records = await fetchGrowthRecordsByDate(today);
 
+    var year = today.getFullYear();
     var month = today.getMonth() + 1;
     var day = today.getDate();
+    var dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"][today.getDay()];
+
+    // .record-calendar__month-btn 업데이트 (YYYY년 M월)
+    var monthBtn = document.querySelector(".record-calendar__month-btn");
+    if (monthBtn) {
+      monthBtn.textContent = year + "년 " + month + "월 ";
+      var svg = monthBtn.querySelector("svg");
+      if (svg) {
+        monthBtn.appendChild(svg);
+      }
+    }
+
+    // .record-create-date-text 업데이트 (YYYY년 M월 D일 요일)
+    var createDateText = document.querySelector(".record-create-date-text");
+    if (createDateText) {
+      createDateText.textContent = year + "년 " + month + "월 " + day + "일 " + dayOfWeek + "요일";
+    }
+
     var dateTitle = document.querySelector(".record-date-title");
 
     if (dateTitle) {
-      dateTitle.textContent = today.getFullYear() + "년 " + month + "월 " + day + "일의 기록";
+      dateTitle.textContent = year + "년 " + month + "월 " + day + "일의 기록";
     }
 
     var recordItems = document.querySelector(".record-items");
