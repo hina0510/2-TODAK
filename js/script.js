@@ -182,9 +182,86 @@ document.addEventListener("click", function (e) {
   var section = document.getElementById("onboarding-section");
   if (!section) return;
 
+  var _guardianChildId = null;
+
   /* --- 역할 선택 (엄마 / 보호자) --- */
   var roleMomBtn = document.getElementById("role-mom");
   var roleGuardianBtn = document.getElementById("role-guardian");
+
+  function setupInviteCodeValidation() {
+    var momCodeInput = document.getElementById("onboarding-mom-code");
+    var guardianSection = document.querySelector(".form-section--guardian-only");
+
+    if (!momCodeInput || !guardianSection) return;
+
+    // 검증 버튼 생성 (아직 없으면)
+    var existingBtn = guardianSection.querySelector(".invite-code-verify-btn");
+    if (existingBtn) return;
+
+    var verifyBtn = document.createElement("button");
+    verifyBtn.type = "button";
+    verifyBtn.className = "invite-code-verify-btn";
+    verifyBtn.textContent = "확인";
+    verifyBtn.style.cssText = `
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 8px 16px;
+      background-color: var(--color-primary-magenta);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 10;
+    `;
+
+    // input-group을 position: relative로 변경
+    momCodeInput.parentElement.style.position = "relative";
+    momCodeInput.style.paddingRight = "70px";
+    momCodeInput.parentElement.appendChild(verifyBtn);
+
+    // 에러 메시지 요소 생성
+    var errorMsg = document.createElement("div");
+    errorMsg.className = "invite-code-error";
+    errorMsg.style.cssText = `
+      font-size: 12px;
+      color: #D94F8A;
+      margin-top: 6px;
+      display: none;
+    `;
+    momCodeInput.parentElement.parentElement.appendChild(errorMsg);
+
+    verifyBtn.addEventListener("click", async function (e) {
+      e.preventDefault();
+      var code = momCodeInput.value.trim();
+
+      if (!code) {
+        errorMsg.textContent = "초대코드를 입력해주세요.";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      // 검증 로직
+      var childId = await validateInviteCode(code);
+      if (childId) {
+        _guardianChildId = childId;
+        errorMsg.style.display = "none";
+        verifyBtn.style.backgroundColor = "#2F4B7C";
+        verifyBtn.textContent = "확인됨";
+        momCodeInput.style.borderColor = "#D94F8A";
+      } else {
+        _guardianChildId = null;
+        errorMsg.textContent = "올바르지 않은 초대코드입니다.";
+        errorMsg.style.display = "block";
+        verifyBtn.style.backgroundColor = "#D94F8A";
+        verifyBtn.textContent = "확인";
+        momCodeInput.style.borderColor = "#D94F8A";
+      }
+    });
+  }
 
   function selectRole(role) {
     var isMom = role === "mom";
@@ -196,6 +273,20 @@ document.addEventListener("click", function (e) {
 
     roleGuardianBtn.classList.toggle("selected", !isMom);
     roleGuardianBtn.setAttribute("aria-pressed", String(!isMom));
+
+    if (isMom) {
+      // 엄마 선택 시 초대코드 상태 초기화
+      _guardianChildId = null;
+      var momCodeInput = document.getElementById("onboarding-mom-code");
+      if (momCodeInput) {
+        momCodeInput.value = "";
+        var errorMsg = document.querySelector(".invite-code-error");
+        if (errorMsg) errorMsg.style.display = "none";
+      }
+    } else {
+      // 보호자 선택 시 검증 버튼 설정
+      setTimeout(setupInviteCodeValidation, 0);
+    }
   }
 
   if (roleMomBtn)
@@ -752,6 +843,30 @@ document.addEventListener("click", function (e) {
       });
     }
   }
+
+  /* 온보딩 섹션 초기화 함수 */
+  window.initOnboarding = function() {
+    // 초대코드 상태 초기화
+    _guardianChildId = null;
+    var momCodeInput = document.getElementById("onboarding-mom-code");
+    if (momCodeInput) {
+      momCodeInput.value = "";
+      momCodeInput.style.borderColor = "";
+      var errorMsg = document.querySelector(".invite-code-error");
+      if (errorMsg) {
+        errorMsg.style.display = "none";
+        errorMsg.textContent = "";
+      }
+      var verifyBtn = document.querySelector(".invite-code-verify-btn");
+      if (verifyBtn) {
+        verifyBtn.style.backgroundColor = "#D94F8A";
+        verifyBtn.textContent = "확인";
+      }
+    }
+
+    // 역할 선택 초기화 (엄마로 기본 설정)
+    selectRole("mom");
+  };
 })();
 
 /* ------------------------------------------
@@ -1546,6 +1661,9 @@ document.addEventListener(
     var password = document.getElementById("signup-password").value;
     var confirm = document.getElementById("signup-password-confirm").value;
     var agreed = document.getElementById("signup-agree").checked;
+    var inviteCode = _todakRole === "guardian"
+      ? document.getElementById("signup-invite-code").value.trim()
+      : null;
 
     if (!name) {
       showToast("이름을 입력해주세요.");
@@ -1567,8 +1685,24 @@ document.addEventListener(
       showToast("이용약관에 동의해주세요.");
       return;
     }
+    if (_todakRole === "guardian") {
+      if (!inviteCode) {
+        showToast("초대코드를 입력해주세요.");
+        return;
+      }
+    }
 
     try {
+      var childId = null;
+
+      if (_todakRole === "guardian") {
+        childId = await validateInviteCode(inviteCode);
+        if (!childId) {
+          showToast("올바른 초대코드를 확인해주세요.");
+          return;
+        }
+      }
+
       if (supabase && supabase.auth) {
         var authResult;
         try {
@@ -1597,6 +1731,10 @@ document.addEventListener(
               created_at: new Date().toISOString(),
             };
 
+            if (_todakRole === "guardian") {
+              userData.child_id = childId;
+            }
+
             var { error: userInsertErr } = await supabase
               .from("users")
               .insert([userData]);
@@ -1612,8 +1750,15 @@ document.addEventListener(
 
       _pendingName = name;
       newForm.reset();
-      showToast("회원가입이 완료되었습니다. 로그인해주세요.");
-      showSection("login-section");
+
+      if (_todakRole === "guardian") {
+        showToast("회원가입이 완료되었습니다.");
+        await loadHomeData();
+        showSection("home-section");
+      } else {
+        showToast("회원가입이 완료되었습니다. 로그인해주세요.");
+        showSection("login-section");
+      }
     } catch (err) {
       console.error("[회원가입] 오류 발생:", err.message);
       showToast(translateSupabaseError(err.message));
@@ -1621,7 +1766,7 @@ document.addEventListener(
   });
 })();
 
-/* ---------- 역할 선택 → 온보딩 ---------- */
+/* ---------- 역할 선택 → 회원가입 ---------- */
 (function () {
   var section = document.getElementById("role-selection-section");
   if (!section) return;
@@ -1639,11 +1784,16 @@ document.addEventListener(
     var signupRoleHidden = document.getElementById("signup-role-value");
     if (signupRoleHidden) signupRoleHidden.value = _todakRole;
 
+    var guardianOnlyField = document.querySelector(".form-section--guardian-only");
+    if (guardianOnlyField) {
+      guardianOnlyField.style.display = _todakRole === "guardian" ? "block" : "none";
+    }
+
     showSection("signup-section");
   });
 })();
 
-/* ---------- 온보딩 저장 ---------- */
+/* ---------- 온보딩 저장 (엄마만) ---------- */
 (function () {
   var startBtn = document.getElementById("onboarding-start-btn");
   if (!startBtn) return;
@@ -1653,52 +1803,38 @@ document.addEventListener(
 
   newBtn.addEventListener("click", async function () {
     try {
-      var birthStatus = "pregnant";
-      var childId = null;
+      if (_todakRole !== "mom") {
+        showToast("온보딩은 엄마만 진행 가능합니다.");
+        return;
+      }
 
-      if (_todakRole === "guardian") {
-        var momCode = document
-          .getElementById("onboarding-mom-code")
-          .value.trim();
-        if (!momCode) {
-          showToast("엄마 코드를 입력해주세요.");
-          return;
-        }
+      var babyName = document
+        .getElementById("onboarding-taemyeong")
+        .value.trim();
+      if (!babyName) {
+        showToast("태명을 입력해주세요.");
+        return;
+      }
 
-        childId = await validateInviteCode(momCode);
-        if (!childId) {
-          showToast("유효하지 않은 초대코드입니다.");
+      var pregnantBtn = document.getElementById("status-pregnant");
+      var birthStatus =
+        pregnantBtn && pregnantBtn.classList.contains("selected")
+          ? "pregnant"
+          : "birth";
+
+      if (birthStatus === "pregnant") {
+        var dueDate = document.getElementById("onboarding-due-date").value;
+        if (!dueDate) {
+          showToast("출산 예정일을 입력해주세요.");
           return;
         }
       } else {
-        var babyName = document
-          .getElementById("onboarding-taemyeong")
-          .value.trim();
-        if (!babyName) {
-          showToast("태명을 입력해주세요.");
+        var birthDate = document.getElementById(
+          "onboarding-birth-date",
+        ).value;
+        if (!birthDate) {
+          showToast("출산일을 입력해주세요.");
           return;
-        }
-
-        var pregnantBtn = document.getElementById("status-pregnant");
-        birthStatus =
-          pregnantBtn && pregnantBtn.classList.contains("selected")
-            ? "pregnant"
-            : "birth";
-
-        if (birthStatus === "pregnant") {
-          var dueDate = document.getElementById("onboarding-due-date").value;
-          if (!dueDate) {
-            showToast("출산 예정일을 입력해주세요.");
-            return;
-          }
-        } else {
-          var birthDate = document.getElementById(
-            "onboarding-birth-date",
-          ).value;
-          if (!birthDate) {
-            showToast("출산일을 입력해주세요.");
-            return;
-          }
         }
       }
 
@@ -1718,59 +1854,53 @@ document.addEventListener(
       var userId = authData.user.id;
       var userEmail = authData.user.email;
 
+      var childData = {
+        owner_id: userId,
+        baby_name: babyName,
+        birth_status: birthStatus,
+        invite_code: generateInviteCode(),
+      };
+
+      if (birthStatus === "pregnant") {
+        childData.due_date = document.getElementById(
+          "onboarding-due-date",
+        ).value || null;
+      } else {
+        childData.birth_date = document.getElementById(
+          "onboarding-birth-date",
+        ).value || null;
+        var heightInput = document.getElementById("onboarding-height");
+        var weightInput = document.getElementById("onboarding-weight");
+        childData.height = heightInput && heightInput.value
+          ? parseFloat(heightInput.value)
+          : null;
+        childData.weight = weightInput && weightInput.value
+          ? parseFloat(weightInput.value)
+          : null;
+      }
+
+      var { data: insertedChild, error: childInsertErr } = await supabase
+        .from("children")
+        .insert([childData])
+        .select();
+
+      if (childInsertErr) {
+        throw childInsertErr;
+      }
+
+      if (!insertedChild || insertedChild.length === 0) {
+        throw new Error("아이 정보 저장에 실패했습니다.");
+      }
+
+      var childId = insertedChild[0].id;
+
       var userData = {
         id: userId,
         name: _pendingName || userEmail,
         email: userEmail,
         role: _todakRole,
+        child_id: childId,
       };
-
-      if (_todakRole === "mom") {
-        var childData = {
-          owner_id: userId,
-          baby_name: document
-            .getElementById("onboarding-taemyeong")
-            .value.trim(),
-          birth_status: birthStatus,
-          invite_code: generateInviteCode(),
-        };
-
-        if (birthStatus === "pregnant") {
-          childData.due_date = document.getElementById(
-            "onboarding-due-date",
-          ).value || null;
-        } else {
-          childData.birth_date = document.getElementById(
-            "onboarding-birth-date",
-          ).value || null;
-          var heightInput = document.getElementById("onboarding-height");
-          var weightInput = document.getElementById("onboarding-weight");
-          childData.height = heightInput && heightInput.value
-            ? parseFloat(heightInput.value)
-            : null;
-          childData.weight = weightInput && weightInput.value
-            ? parseFloat(weightInput.value)
-            : null;
-        }
-
-        var { data: insertedChild, error: childInsertErr } = await supabase
-          .from("children")
-          .insert([childData])
-          .select();
-
-        if (childInsertErr) {
-          throw childInsertErr;
-        }
-
-        if (!insertedChild || insertedChild.length === 0) {
-          throw new Error("아이 정보 저장에 실패했습니다.");
-        }
-
-        childId = insertedChild[0].id;
-        userData.child_id = childId;
-      } else {
-        userData.child_id = childId;
-      }
 
       var { error: userErr } = await supabase
         .from("users")

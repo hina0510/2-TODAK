@@ -327,6 +327,20 @@
           <!-- 역할 선택 -->
           <input type="hidden" id="signup-role-value" name="role" value="mom">
 
+          <!-- 보호자용 초대코드 -->
+          <div class="input-group form-section form-section--guardian-only" style="display: none;">
+            <div class="input-label-pad">
+              <label class="input-label input-label--form" for="signup-invite-code">초대코드</label>
+            </div>
+            <input
+              type="text"
+              id="signup-invite-code"
+              class="input-field input-field--card"
+              placeholder="초대코드를 입력해주세요"
+              autocomplete="off"
+            >
+          </div>
+
           <!-- 이용약관 동의 -->
           <label class="form-check">
             <input type="checkbox" class="sr-only" id="signup-agree">
