@@ -79,11 +79,14 @@ function showSection(sectionId) {
     if (window.loadTodakMissions) {
       window.loadTodakMissions().then(function() {
         console.log("[토닥] 미션 로드 완료");
+        initTodakSection();
       }).catch(function(err) {
         console.error("[토닥] 미션 로드 실패:", err);
+        initTodakSection();
       });
+    } else {
+      initTodakSection();
     }
-    initTodakSection();
   }
 
   /* 가이드 섹션이 표시될 때 가이드 로드 */
@@ -450,6 +453,7 @@ document.addEventListener("click", function (e) {
         recommendationDesc: "산후 회복을 위한 5분 스트레칭 가이드",
       },
     };
+    
 
     // Home 콘텐츠 업데이트 함수
     window.updateHomeContent = function(mode) {
@@ -709,32 +713,48 @@ document.addEventListener("click", function (e) {
 
     // Growth Stage Modal 열기
     function openGrowthStageModal(stageIndex) {
-      var stage = getCurrentGrowthStage();
+      var stage;
+      var badgeText;
+
+      if (_isBirthMode) {
+        stage = getCurrentBirthStage();
+        var daysAfterBirth = calculateDaysAfterBirth();
+        badgeText = "생후 " + daysAfterBirth + "일";
+      } else {
+        stage = getCurrentGrowthStage();
+        badgeText = getWeekNumber() + "주차";
+      }
+
       if (!stage) return;
 
       // 데이터 업데이트
-      
-      document.getElementById("growth-stage-badge").textContent =
-        getWeekNumber() + "주차";
-      document.getElementById("growth-stage-stage-name").textContent =
-        stage.stage;
-      document.getElementById("growth-stage-description").textContent =
-        stage.description;
-      document.getElementById("growth-stage-baby-status").textContent =
-        stage.babyStatus;
-      document.getElementById("growth-stage-mom-status").textContent =
-        stage.momStatus;
-      document.getElementById("growth-stage-char-img").src =
-        stage.characterImage;
+      document.getElementById("growth-stage-badge").textContent = badgeText;
+      document.getElementById("growth-stage-stage-name").textContent = stage.stage;
+      document.getElementById("growth-stage-description").textContent = stage.description;
+      document.getElementById("growth-stage-baby-status").textContent = stage.babyStatus;
+      document.getElementById("growth-stage-mom-status").textContent = stage.momStatus;
+      document.getElementById("growth-stage-char-img").src = stage.characterImage;
 
       // 다음 단계 (있으면)
-      if (stageIndex < _growthStagesData.length - 1) {
-        var nextStage = _growthStagesData[stageIndex + 1];
-        document.getElementById("growth-stage-next-stage").textContent =
-          nextStage.stage + " (" + nextStage.weekRange + ")";
-      }else {
-        document.getElementById("growth-stage-next-stage").textContent =
-          "마지막 성장 단계입니다.";
+      if (_isBirthMode) {
+        var birthStageIndex = getBirthStageIndex();
+        if (birthStageIndex < birthStagesData.length - 1) {
+          var nextStage = birthStagesData[birthStageIndex + 1];
+          document.getElementById("growth-stage-next-stage").textContent =
+            nextStage.stage + " (" + nextStage.dayRange + ")";
+        } else {
+          document.getElementById("growth-stage-next-stage").textContent =
+            "마지막 성장 단계입니다.";
+        }
+      } else {
+        if (stageIndex < _growthStagesData.length - 1) {
+          var nextStage = _growthStagesData[stageIndex + 1];
+          document.getElementById("growth-stage-next-stage").textContent =
+            nextStage.stage + " (" + nextStage.weekRange + ")";
+        } else {
+          document.getElementById("growth-stage-next-stage").textContent =
+            "마지막 성장 단계입니다.";
+        }
       }
 
       // 모달 열기
@@ -1546,6 +1566,40 @@ var _growthStagesData = [
       "소화 불편함이 완화되고 출산에 대한 불안감이 커질 수 있습니다. 이는 매우 정상이에요.",
   },
 ];
+
+// 출산 후 성장 단계 더미 데이터
+var birthStagesData = [
+  {
+    dayRange: "0~100일",
+    minDay: 0,
+    maxDay: 100,
+    stage: "신생아 적응기",
+    characterImage: "image/baby1.png",
+    description: "세상에 적응하며 수면, 수유, 울음 패턴이 만들어지는 시기입니다.",
+    babyStatus: "시각과 청각이 조금씩 발달하고, 엄마 아빠의 목소리에 반응하기 시작해요.",
+    momStatus: "수면 부족과 회복이 함께 오는 시기입니다. 짧게라도 자주 쉬는 것이 중요해요."
+  },
+  {
+    dayRange: "101일~1년",
+    minDay: 101,
+    maxDay: 365,
+    stage: "감각 발달기",
+    characterImage: "image/baby2.png",
+    description: "뒤집기, 앉기, 기기처럼 움직임이 많아지고 감정 표현이 풍부해지는 시기입니다.",
+    babyStatus: "손으로 물건을 잡고, 낯가림이나 애착 표현이 나타날 수 있어요.",
+    momStatus: "아이의 활동량이 늘어나며 돌봄 강도가 커질 수 있습니다. 주변 도움을 함께 받아보세요."
+  },
+  {
+    dayRange: "1년~2년",
+    minDay: 366,
+    maxDay: 730,
+    stage: "자립 시작기",
+    characterImage: "image/baby3.png",
+    description: "걷기와 말하기가 시작되며 스스로 해보려는 욕구가 커지는 시기입니다.",
+    babyStatus: "간단한 말을 이해하고 따라 하며, 걷기와 탐색 활동이 활발해져요.",
+    momStatus: "아이의 자율성이 커지며 훈육과 기다림이 필요한 시기입니다. 안전한 환경을 만들어주세요."
+  }
+];
 var _weeklyGuides = [];
 var _guideContents = [];
 var _growthRecords = [];
@@ -2153,7 +2207,15 @@ function updateHomeDisplay() {
   var dday = calculateDday();
   if (headerDday) headerDday.textContent = dday;
   if (leftCardValue) leftCardValue.textContent = getWeekNumber();
-  if (stageInfoText) stageInfoText.textContent = getWeekNumber() + "주차: " + getStageInfo();
+  if (stageInfoText) {
+    if (_isBirthMode) {
+      var daysAfterBirth = calculateDaysAfterBirth();
+      var stage = getCurrentBirthStage();
+      stageInfoText.textContent = "생후 " + daysAfterBirth + "일: " + stage.stage;
+    } else {
+      stageInfoText.textContent = getWeekNumber() + "주차: " + getStageInfo();
+    }
+  }
 
   if (!_isBirthMode) {
     var currentWeek = parseInt(getWeekNumber());
@@ -2177,6 +2239,17 @@ function updateHomeDisplay() {
   }
 }
 
+function calculateDaysAfterBirth() {
+  if (!_currentChild || !_isBirthMode) return 0;
+
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  var birthDate = new Date(_currentChild.birth_date);
+  birthDate.setHours(0, 0, 0, 0);
+  var diff = Math.floor((today - birthDate) / (1000 * 60 * 60 * 24));
+  return Math.max(0, diff);
+}
+
 function calculateDday() {
   if (!_currentChild) return "D-0";
 
@@ -2196,6 +2269,35 @@ function calculateDday() {
   }
 }
 
+function getCurrentBirthStage() {
+  if (!_isBirthMode) return birthStagesData[0];
+
+  var days = calculateDaysAfterBirth();
+  var currentStage = birthStagesData[0];
+
+  birthStagesData.forEach(function (stage) {
+    if (days >= stage.minDay && days <= stage.maxDay) {
+      currentStage = stage;
+    }
+  });
+
+  return currentStage;
+}
+
+function getBirthStageIndex() {
+  if (!_isBirthMode) return 0;
+
+  var days = calculateDaysAfterBirth();
+
+  for (var i = 0; i < birthStagesData.length; i++) {
+    if (days >= birthStagesData[i].minDay && days <= birthStagesData[i].maxDay) {
+      return i;
+    }
+  }
+
+  return 0;
+}
+
 function getWeekNumber() {
   if (!_currentChild) return "0";
 
@@ -2212,13 +2314,7 @@ function getWeekNumber() {
   }
 }
 
-function getMissionWeek() {
-  var currentWeek = parseInt(getWeekNumber());
-
-  if (_isBirthMode) {
-    return null;
-  }
-
+function mapPregnancyWeekToMissionWeek(pregnancyWeek) {
   var weekRanges = [
     { min: 1, max: 4, week: 4 },
     { min: 5, max: 8, week: 8 },
@@ -2233,12 +2329,33 @@ function getMissionWeek() {
   ];
 
   for (var i = 0; i < weekRanges.length; i++) {
-    if (currentWeek >= weekRanges[i].min && currentWeek <= weekRanges[i].max) {
+    if (pregnancyWeek >= weekRanges[i].min && pregnancyWeek <= weekRanges[i].max) {
       return weekRanges[i].week;
     }
   }
 
   return 40;
+}
+
+function mapBirthDaysToMissionWeek(daysAfterBirth) {
+  if (daysAfterBirth >= 0 && daysAfterBirth <= 100) {
+    return 100;
+  } else if (daysAfterBirth >= 101 && daysAfterBirth <= 365) {
+    return 365;
+  } else if (daysAfterBirth >= 366 && daysAfterBirth <= 730) {
+    return 730;
+  }
+  return null;
+}
+
+function getMissionWeek() {
+  if (_isBirthMode) {
+    var daysAfterBirth = calculateDaysAfterBirth();
+    return mapBirthDaysToMissionWeek(daysAfterBirth);
+  } else {
+    var currentWeek = parseInt(getWeekNumber());
+    return mapPregnancyWeekToMissionWeek(currentWeek);
+  }
 }
 
 function getStageInfo() {
@@ -2318,10 +2435,6 @@ function initTodakSection() {
 }
 
 function getFilteredMissions() {
-  if (_isBirthMode) {
-    return [];
-  }
-
   var missionWeek = getMissionWeek();
   if (missionWeek === null) {
     return [];
@@ -2590,6 +2703,14 @@ function updateMissionProgress() {
 
 /* ---------- 가이드 섹션 초기화 ---------- */
 function initGuideSection() {
+  if (_isBirthMode) {
+    initGuideSection_Birth();
+  } else {
+    initGuideSection_Pregnancy();
+  }
+}
+
+function initGuideSection_Pregnancy() {
   if (!_weeklyGuides || _weeklyGuides.length === 0) return;
 
   var currentWeek = parseInt(getWeekNumber());
@@ -2637,6 +2758,12 @@ function initGuideSection() {
     weekCardNumber.textContent = currentWeek;
   }
 
+  // .guide-week-card__unit 업데이트
+  var weekCardUnit = document.querySelector(".guide-week-card__unit");
+  if (weekCardUnit) {
+    weekCardUnit.textContent = "주차";
+  }
+
   // .guide-period-link 업데이트 (${currentWeek}주차 맞춤 가이드)
   var guidePeriodLink = document.querySelector(".guide-period-link");
   if (guidePeriodLink) {
@@ -2658,6 +2785,53 @@ function initGuideSection() {
 
       card.addEventListener("click", function () {
         showGuideDetail(guide.id, guide.stage_name, guide.description);
+      });
+    }
+  });
+}
+
+function initGuideSection_Birth() {
+  var daysAfterBirth = calculateDaysAfterBirth();
+  var stepCards = document.querySelectorAll(".guide-step-card");
+
+  // .guide-week-card__number 업데이트 (생후 일수)
+  var weekCardNumber = document.querySelector(".guide-week-card__number");
+  if (weekCardNumber) {
+    weekCardNumber.textContent = "D+" + daysAfterBirth;
+  }
+
+  // .guide-week-card__unit 업데이트
+  var weekCardUnit = document.querySelector(".guide-week-card__unit");
+  if (weekCardUnit) {
+    weekCardUnit.textContent = "";
+  }
+
+  // .guide-period-link 업데이트
+  var guidePeriodLink = document.querySelector(".guide-period-link");
+  if (guidePeriodLink) {
+    guidePeriodLink.textContent = "생후 " + daysAfterBirth + "일 맞춤 가이드";
+  }
+
+  // 가이드 카드 업데이트 (출산 후 단계별)
+  var stageLabels = ["~100일", "~첫돌", "~2살"];
+  stepCards.forEach(function (card, index) {
+    if (index >= stageLabels.length) return;
+
+    var label = stageLabels[index];
+    var stepNumber = card.querySelector(".guide-step-number");
+    if (stepNumber) {
+      stepNumber.textContent = label;
+    }
+
+    // 간단한 설명 표시
+    var stageInfo = birthStagesData[index];
+    if (stageInfo) {
+      card.addEventListener("click", function () {
+        showGuideDetail(
+          "birth-stage-" + index,
+          stageInfo.stage,
+          stageInfo.description
+        );
       });
     }
   });
