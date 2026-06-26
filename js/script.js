@@ -452,7 +452,7 @@ document.addEventListener("click", function (e) {
     };
 
     // Home 콘텐츠 업데이트 함수
-    function updateHomeContent(mode) {
+    window.updateHomeContent = function(mode) {
       var data = homeScreenData[mode];
 
       // Header Card
@@ -495,7 +495,7 @@ document.addEventListener("click", function (e) {
       if (characterArea) {
         characterArea.classList.toggle("birth-mode", mode === "birth");
       }
-    }
+    };
 
     // ===== Birth Registration Modal 로직 =====
     var birthModal = document.getElementById("birth-registration-overlay");
@@ -561,18 +561,69 @@ document.addEventListener("click", function (e) {
 
     // Birth Register 버튼 클릭
     if (birthRegisterBtn) {
-      birthRegisterBtn.addEventListener("click", function () {
+      birthRegisterBtn.addEventListener("click", async function () {
         if (validateBirthForm()) {
           // Validation 통과
           saveBirthData();
-          closeBirthModal();
 
-          // Home 화면을 Birth 모드로 전환
-          updateHomeContent("birth");
+          try {
+            if (!supabase || !supabase.auth) {
+              showToast("Supabase가 초기화되지 않았습니다.");
+              return;
+            }
 
-          // 토글 버튼 상태 업데이트
-          pregnancyToggles[0].classList.remove("active");
-          pregnancyToggles[1].classList.add("active");
+            var { data: authData, error: authErr } = await supabase.auth.getUser();
+            if (authErr || !authData || !authData.user) {
+              showToast("인증 정보를 조회할 수 없습니다.");
+              return;
+            }
+
+            var userId = authData.user.id;
+            var { data: userData, error: userErr } = await supabase
+              .from("users")
+              .select("child_id")
+              .eq("id", userId)
+              .single();
+
+            if (userErr || !userData || !userData.child_id) {
+              showToast("아이 정보를 조회할 수 없습니다.");
+              return;
+            }
+
+            var childId = userData.child_id;
+            var birthDate = document.getElementById("birth-datetime").value;
+            var updateData = {
+              baby_name: birthData.childName,
+              birth_status: "birth",
+              birth_date: birthDate,
+              gender: birthData.gender,
+              due_date: birthDate,
+            };
+
+            var { error: updateErr } = await supabase
+              .from("children")
+              .update(updateData)
+              .eq("id", childId);
+
+            if (updateErr) {
+              throw updateErr;
+            }
+
+            _isBirthMode = true;
+            _currentChild.baby_name = birthData.childName;
+            _currentChild.birth_status = "birth";
+            _currentChild.birth_date = birthDate;
+            _currentChild.gender = birthData.gender;
+            _currentChild.due_date = birthDate;
+
+            closeBirthModal();
+            updateHomeContent("birth");
+            pregnancyToggles[0].classList.remove("active");
+            pregnancyToggles[1].classList.add("active");
+            showToast("출산 정보가 저장되었습니다.");
+          } catch (err) {
+            showToast(translateSupabaseError(err.message));
+          }
         }
       });
     }
@@ -617,11 +668,11 @@ document.addEventListener("click", function (e) {
           return;
         }
 
-        if (!isPregnancy && !birthData.childName) {
-          // 출산 모드로 전환할 때, Birth 데이터가 없으면 모달 열기
+        if (!isPregnancy && !_isBirthMode) {
+          // 임신 상태에서 출산 탭을 클릭하면 모달 열기
           openBirthModal();
         } else {
-          // 기존 로직 (이미 등록된 경우)
+          // 이미 출산 상태인 경우 (불가능하지만 안전성 위해)
           var mode = isPregnancy ? "pregnancy" : "birth";
 
           // 버튼 상태 업데이트
@@ -1189,6 +1240,18 @@ document.addEventListener("click", function (e) {
           weightInput.value = "";
         }
 
+        var growthInputsContainer = document.querySelector(".record-create-growth-inputs");
+        var feedingContainer = document.querySelector(".record-create-feeding-options");
+        if (growthInputsContainer && feedingContainer) {
+          if (_isBirthMode) {
+            growthInputsContainer.style.display = "block";
+            feedingContainer.parentElement.style.display = "block";
+          } else {
+            growthInputsContainer.style.display = "none";
+            feedingContainer.parentElement.style.display = "none";
+          }
+        }
+
         console.log("[TODAK] 마지막 기록 로드 완료, 기본 날짜 설정:", todayStr);
       }
     });
@@ -1735,6 +1798,7 @@ document.addEventListener(
       if (_todakRole === "guardian") {
         showToast("회원가입이 완료되었습니다.");
         await loadHomeData();
+        setupTabsAfterLogin();
         showSection("home-section");
       } else {
         showToast("회원가입이 완료되었습니다. 로그인해주세요.");
@@ -1892,6 +1956,7 @@ document.addEventListener(
 
       _isBirthMode = birthStatus === "birth";
       await loadHomeData();
+      setupTabsAfterLogin();
       showSection("home-section");
     } catch (err) {
       showToast(translateSupabaseError(err.message));
@@ -1962,7 +2027,7 @@ async function loadHomeData() {
       .from("growth_records")
       .select("*")
       .eq("child_id", userData.child_id)
-      .order("date", { ascending: false });
+      .order("record_date", { ascending: false });
 
     if (!recordsErr && records) {
       _growthRecords = records;
@@ -1972,8 +2037,8 @@ async function loadHomeData() {
     var { data: todayCompletions, error: completionsErr } = await supabase
       .from("mission_completions")
       .select("*")
-      .eq("user_id", userId)
-      .eq("date", today);
+      .eq("child_id", userData.child_id)
+      .eq("completed_date", today);
 
     if (!completionsErr && todayCompletions) {
       _missionCompletions = todayCompletions;
@@ -1982,6 +2047,76 @@ async function loadHomeData() {
     console.log("[홈] 모든 데이터 로드 완료");
   } catch (err) {
     console.error("[홈 데이터 로드 오류]", err);
+  }
+}
+
+/* ---------- 로그인 후 탭 설정 ---------- */
+function setupTabsAfterLogin() {
+  if (!_currentChild || !_currentUser) return;
+
+  var pregnancyToggles = document.querySelectorAll(
+    ".pregnancy-birth-toggle .toggle-btn",
+  );
+
+  var isBirthStatus = _currentChild.birth_status === "birth";
+  _isBirthMode = isBirthStatus;
+
+  if (_currentUser.role === "guardian") {
+    pregnancyToggles.forEach(function (btn) {
+      btn.style.pointerEvents = "none";
+      btn.style.opacity = "0.6";
+      btn.style.cursor = "not-allowed";
+    });
+
+    if (isBirthStatus) {
+      if (pregnancyToggles[1]) {
+        pregnancyToggles[1].classList.add("active");
+      }
+      if (pregnancyToggles[0]) {
+        pregnancyToggles[0].classList.remove("active");
+      }
+      updateHomeContent("birth");
+    } else {
+      if (pregnancyToggles[0]) {
+        pregnancyToggles[0].classList.add("active");
+      }
+      if (pregnancyToggles[1]) {
+        pregnancyToggles[1].classList.remove("active");
+      }
+      updateHomeContent("pregnancy");
+    }
+  } else if (isBirthStatus) {
+    var pregnancyBtn = pregnancyToggles[0];
+    if (pregnancyBtn) {
+      pregnancyBtn.style.pointerEvents = "none";
+      pregnancyBtn.style.opacity = "0.6";
+      pregnancyBtn.style.cursor = "not-allowed";
+    }
+
+    if (pregnancyToggles[1]) {
+      pregnancyToggles[1].classList.add("active");
+    }
+    if (pregnancyToggles[0]) {
+      pregnancyToggles[0].classList.remove("active");
+    }
+
+    updateHomeContent("birth");
+  } else {
+    if (pregnancyToggles[0]) {
+      pregnancyToggles[0].classList.add("active");
+    }
+    if (pregnancyToggles[1]) {
+      pregnancyToggles[1].classList.remove("active");
+    }
+
+    var birthBtn = pregnancyToggles[1];
+    if (birthBtn) {
+      birthBtn.style.pointerEvents = "auto";
+      birthBtn.style.opacity = "1";
+      birthBtn.style.cursor = "pointer";
+    }
+
+    updateHomeContent("pregnancy");
   }
 }
 
@@ -2045,16 +2180,19 @@ function updateHomeDisplay() {
 function calculateDday() {
   if (!_currentChild) return "D-0";
 
-  var startDate = _isBirthMode
-    ? new Date(_currentChild.birth_date)
-    : new Date(_currentChild.due_date);
   var today = new Date();
-  var diff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+  today.setHours(0, 0, 0, 0);
 
   if (_isBirthMode) {
-    return "D+" + diff;
+    var birthDate = new Date(_currentChild.birth_date);
+    birthDate.setHours(0, 0, 0, 0);
+    var diff = Math.floor((today - birthDate) / (1000 * 60 * 60 * 24));
+    return "D+" + Math.max(0, diff);
   } else {
-    return "D-" + Math.max(0, Math.floor((startDate - today) / (1000 * 60 * 60 * 24)));
+    var dueDate = new Date(_currentChild.due_date);
+    dueDate.setHours(0, 0, 0, 0);
+    var daysDiff = Math.floor((dueDate - today) / (1000 * 60 * 60 * 24));
+    return "D-" + Math.max(0, daysDiff);
   }
 }
 
@@ -2275,13 +2413,13 @@ function attachMissionCheckboxEvents() {
         icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white"/></svg>';
         item.classList.add("completed");
 
-        if (supabase && _currentUser) {
+        if (supabase && _currentChild) {
           var { error } = await supabase
             .from("mission_completions")
             .insert([{
-              user_id: _currentUser.id,
+              child_id: _currentChild.id,
               mission_id: missionId,
-              date: today
+              completed_date: today
             }]);
 
           if (error) {
@@ -2371,13 +2509,13 @@ function createMissionItemForTodak(mission, isCompleted) {
       icon.classList.add("completed");
       li.classList.add("completed");
 
-      if (supabase && _currentUser) {
+      if (supabase && _currentChild) {
         var { error } = await supabase
           .from("mission_completions")
           .insert([{
-            user_id: _currentUser.id,
+            child_id: _currentChild.id,
             mission_id: mission.id,
-            date: today
+            completed_date: today
           }]);
 
         if (error) {
@@ -2588,6 +2726,7 @@ function showGuideDetail(guideId, stageName, description) {
         }
 
         await loadHomeData();
+        setupTabsAfterLogin();
       }
 
       newForm.reset();
@@ -2618,6 +2757,7 @@ function showGuideDetail(guideId, stageName, description) {
       }
 
       await loadHomeData();
+      setupTabsAfterLogin();
       showSection("home-section");
     } else {
       showSection("login-section");
