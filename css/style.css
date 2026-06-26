@@ -884,7 +884,7 @@
   font-size: 12px;
   font-weight: var(--font-weight-semibold);
   color: var(--color-primary-navy);
-  background-color: var(--color-primary-light-blue);
+  background-color: var(--color-primary-light-purple);
   padding: 4px 10px;
   border-radius: 12px;
   flex-shrink: 0;
@@ -898,7 +898,9 @@
 
 /* 명언 카드 */
 .todak-quote-card {
-  margin: 28px 24px 100px;
+  display: flex;
+  justify-content: center;
+  margin: 28px 24px 0;
   padding: 40px 24px;
   background-color: var(--color-primary-light-pink);
   border-radius: 24px;
@@ -916,11 +918,13 @@
 }
 
 .todak-quote-icon--left {
+  font-family: "Nanum Myeongjo", serif;
   margin-bottom: 12px;
 }
 
 .todak-quote-icon--right {
-  margin-top: 12px;
+  font-family: "Nanum Myeongjo", serif;
+  margin-bottom: 12px;
 }
 
 .todak-quote-text {

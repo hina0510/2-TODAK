@@ -451,75 +451,6 @@ document.addEventListener("click", function (e) {
       },
     };
 
-    // 미션 아이템 HTML 생성
-    function createMissionItemHTML(mission) {
-      var iconClass = mission.icon === "completed" ? "completed" : "pending";
-      var svgContent =
-        mission.icon === "completed"
-          ? '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white"/>'
-          : '<circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/><circle cx="5" cy="12" r="1" fill="currentColor"/>';
-
-      return (
-        '<div class="todak-mission-item">' +
-        '<div class="todak-mission-icon ' +
-        iconClass +
-        '">' +
-        '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
-        svgContent +
-        "</svg>" +
-        "</div>" +
-        '<div class="todak-mission-content">' +
-        '<p class="todak-mission-item-text">' +
-        mission.text +
-        "</p>" +
-        '<p class="todak-mission-item-status">' +
-        mission.status +
-        "</p>" +
-        "</div>" +
-        '<p class="todak-mission-item-time">' +
-        mission.time +
-        "</p>" +
-        "</div>"
-      );
-    }
-
-    // Quick Action Card HTML 생성
-    function createQuickActionHTML(action) {
-      var iconSVG = "";
-      if (action.icon === "edit") {
-        iconSVG =
-          '<svg class="quick-action-icon" width="32" height="32" viewBox="0 0 24 24" fill="#6B5B95" aria-hidden="true">' +
-          '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/>' +
-          '<path d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>' +
-          "</svg>";
-      } else if (action.icon === "calendar") {
-        iconSVG =
-          '<svg class="quick-action-icon" width="32" height="32" viewBox="0 0 24 24" fill="#D94F8A" aria-hidden="true">' +
-          '<rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>' +
-          '<line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/>' +
-          '<line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/>' +
-          '<line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/>' +
-          "</svg>";
-      } else if (action.icon === "photo") {
-        iconSVG =
-          '<svg class="quick-action-icon" width="32" height="32" viewBox="0 0 24 24" fill="#D94F8A" aria-hidden="true">' +
-          '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-2.04-2.71L6.5 17h11l-3.54-4.71z"/>' +
-          "</svg>";
-      }
-
-      return (
-        '<button type="button" class="quick-action-card">' +
-        iconSVG +
-        '<h4 class="quick-action-title">' +
-        action.title +
-        "</h4>" +
-        '<p class="quick-action-desc">' +
-        action.desc +
-        "</p>" +
-        "</button>"
-      );
-    }
-
     // Home 콘텐츠 업데이트 함수
     function updateHomeContent(mode) {
       var data = homeScreenData[mode];
@@ -545,22 +476,14 @@ document.addEventListener("click", function (e) {
         data.rightCardValue;
 
       // Stage Info Card
-      document.getElementById("stage-info-number").textContent =
-        data.stageInfoNumber;
+
       document.getElementById("stage-info-text").textContent =
         data.stageInfoText;
 
       // TODAK Missions
       document.getElementById("mission-status").textContent =
         data.missionStatus;
-      var missionListHTML = data.missions.map(createMissionItemHTML).join("");
-      document.getElementById("mission-list").innerHTML = missionListHTML;
-
-      // Quick Action Cards
-      var quickActionHTML = data.quickActions
-        .map(createQuickActionHTML)
-        .join("");
-      document.getElementById("quick-action-cards").innerHTML = quickActionHTML;
+      renderMissionList("mission-list", data.missions);
 
       // Recommendation Card
       document.getElementById("rec-title").textContent =
@@ -1085,34 +1008,18 @@ document.addEventListener("click", function (e) {
 
   /* 미션 리스트 렌더링 */
   function renderMissions() {
-    var childContainer = document.getElementById("todak-category-child");
-    var selfContainer = document.getElementById("todak-category-self");
-    var familyContainer = document.getElementById("todak-category-family");
-
-    if (childContainer) {
-      childContainer.innerHTML = missionsData.child
-        .map(createMissionCardHTML)
-        .join("");
-    }
-    if (selfContainer) {
-      selfContainer.innerHTML = missionsData.self
-        .map(createMissionCardHTML)
-        .join("");
-    }
-    if (familyContainer) {
-      familyContainer.innerHTML = missionsData.family
-        .map(createMissionCardHTML)
-        .join("");
-    }
+    renderMissionList("todak-category-child", missionsData.child);
+    renderMissionList("todak-category-self", missionsData.self);
+    renderMissionList("todak-category-family", missionsData.family);
 
     updateCategoryBadges();
 
     /* 미션 체크박스 이벤트 */
-    var checkboxes = section.querySelectorAll(".mission-card__checkbox");
+    var checkboxes = section.querySelectorAll(".todak-mission-checkbox");
     checkboxes.forEach(function (checkbox) {
       checkbox.addEventListener("change", function () {
-        var missionCard = this.closest(".mission-card");
-        var missionId = missionCard.dataset.missionId;
+        var missionItem = this.closest(".todak-mission-item");
+        var missionId = missionItem ? missionItem.dataset.missionId : null;
         var allMissions = [].concat(
           missionsData.child,
           missionsData.self,
@@ -1124,7 +1031,7 @@ document.addEventListener("click", function (e) {
 
         if (mission) {
           mission.completed = this.checked;
-          missionCard.classList.toggle("completed", this.checked);
+          if (missionItem) missionItem.classList.toggle("completed", this.checked);
           updateProgress();
           updateCategoryBadges();
         }
@@ -2171,6 +2078,51 @@ function getStageInfo() {
   }
 }
 
+/* ---------- 공통 미션 리스트 렌더링 ---------- */
+function renderMissionList(containerId, missions) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+
+  var items = container.querySelectorAll(".todak-mission-item");
+
+  items.forEach(function (item, i) {
+    if (i >= missions.length) {
+      item.style.display = "none";
+      return;
+    }
+    item.style.display = "";
+
+    var mission = missions[i];
+    var isCompleted = mission.completed || mission.icon === "completed" || false;
+
+    var titleEl = item.querySelector(".todak-mission-item-text");
+    var descEl = item.querySelector(".todak-mission-item-desc");
+    var tagsEl = item.querySelector(".todak-mission-item-tags");
+    var checkbox = item.querySelector(".todak-mission-checkbox");
+    var statusEl = item.querySelector(".todak-mission-item-status");
+    var timeEl = item.querySelector(".todak-mission-item-time");
+
+    if (titleEl) titleEl.textContent = mission.title || mission.text || "";
+    if (descEl) descEl.textContent = mission.desc || mission.description || "";
+    if (tagsEl) {
+      tagsEl.innerHTML = (mission.tags || [])
+        .map(function (tag) {
+          return '<span class="mission-tag">' + tag + "</span>";
+        })
+        .join("");
+    }
+    if (checkbox) {
+      checkbox.checked = isCompleted;
+      if (mission.id) checkbox.dataset.missionId = mission.id;
+    }
+    if (statusEl) statusEl.textContent = mission.status || (isCompleted ? "완료" : "예정");
+    if (timeEl) timeEl.textContent = mission.time || "";
+
+    item.classList.toggle("completed", isCompleted);
+    if (mission.id) item.dataset.missionId = mission.id;
+  });
+}
+
 /* ---------- 토닥 섹션 초기화 ---------- */
 function initTodakSection() {
   if (!_todakMissions || _todakMissions.length === 0) return;
@@ -2242,20 +2194,10 @@ function populateMissionItems(container, missions, todayCompletionMap) {
     var mission = missions[index];
     var isCompleted = todayCompletionMap[mission.id] !== undefined;
 
-    var icon = item.querySelector(".todak-mission-icon");
     var titleEl = item.querySelector(".todak-mission-item-text");
     var descEl = item.querySelector(".todak-mission-item-desc");
     var tagsEl = item.querySelector(".todak-mission-item-tags");
     var checkbox = item.querySelector(".todak-mission-checkbox");
-
-    if (icon) {
-      icon.className = "todak-mission-icon" + (isCompleted ? " completed" : "");
-      icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
-        (isCompleted
-          ? '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white"/>'
-          : '<circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/><circle cx="5" cy="12" r="1" fill="currentColor"/>')
-        + '</svg>';
-    }
 
     if (titleEl) titleEl.textContent = mission.title || "";
     if (descEl) descEl.textContent = mission.description || "";
@@ -2285,7 +2227,6 @@ function attachMissionCheckboxEvents() {
     checkbox._changeHandler = async function () {
       var item = checkbox.closest(".todak-mission-item");
       var missionId = checkbox.dataset.missionId;
-      var icon = item.querySelector(".todak-mission-icon");
       var today = new Date().toISOString().split("T")[0];
 
       if (checkbox.checked) {
@@ -2341,42 +2282,21 @@ function renderHomeMissions() {
     todayCompletionMap[c.mission_id] = c.id;
   });
 
-  var missionList = document.getElementById("mission-list");
-  if (!missionList) return;
-
-  missionList.innerHTML = "";
-
   var filteredMissions = getFilteredMissions();
-  var missionsToDisplay = filteredMissions.slice(0, 2);
-
-  var completedCount = 0;
-  missionsToDisplay.forEach(function (mission) {
+  var missionsToDisplay = filteredMissions.slice(0, 2).map(function (mission) {
     var isCompleted = todayCompletionMap[mission.id] !== undefined;
-    if (isCompleted) completedCount++;
-
-    var completedClass = isCompleted ? "completed" : "";
-    var iconSvg = isCompleted
-      ? '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white"/>'
-      : '<circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/><circle cx="5" cy="12" r="1" fill="currentColor"/>';
-
-    var html = '<div class="todak-mission-item ' + completedClass + '" data-mission-id="' + mission.id + '">' +
-      '<div class="todak-mission-icon ' + (isCompleted ? "completed" : "") + '">' +
-      '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
-      iconSvg +
-      '</svg>' +
-      '</div>' +
-      '<div class="todak-mission-content">' +
-      '<p class="todak-mission-item-text">' + mission.title + '</p>' +
-      '<p class="todak-mission-item-status">' + (isCompleted ? "완료" : "예정") + '</p>' +
-      '</div>' +
-      '<p class="todak-mission-item-time"></p>' +
-      '</div>';
-
-    var div = document.createElement("div");
-    div.innerHTML = html;
-    missionList.appendChild(div.firstElementChild);
+    return {
+      id: mission.id,
+      text: mission.title,
+      status: isCompleted ? "완료" : "예정",
+      time: "",
+      completed: isCompleted,
+    };
   });
 
+  renderMissionList("mission-list", missionsToDisplay);
+
+  var completedCount = missionsToDisplay.filter(function (m) { return m.completed; }).length;
   var missionStatus = document.getElementById("mission-status");
   if (missionStatus) {
     missionStatus.textContent = "진행중 " + completedCount + "/" + missionsToDisplay.length;
@@ -2393,19 +2313,6 @@ function createMissionItemForTodak(mission, isCompleted) {
   checkbox.checked = isCompleted;
   checkbox.dataset.missionId = mission.id;
   checkbox.style.display = "none";
-
-  var icon = document.createElement("div");
-  icon.className = "todak-mission-icon" + (isCompleted ? " completed" : "");
-  var svg = document.createElement("svg");
-  svg.setAttribute("width", "20");
-  svg.setAttribute("height", "20");
-  svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("fill", "currentColor");
-  svg.setAttribute("aria-hidden", "true");
-  svg.innerHTML = isCompleted
-    ? '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white"/>'
-    : '<circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/><circle cx="5" cy="12" r="1" fill="currentColor"/>';
-  icon.appendChild(svg);
 
   var label = document.createElement("label");
   label.className = "todak-mission-label";
@@ -2990,39 +2897,33 @@ async function loadMypageFamilyInfo(currentUserId, childId, currentUserRole) {
   var familyCard = document.querySelector(".mypage-family-card");
   if (!familyCard) return;
 
-  console.log("[가족] currentUserId:", currentUserId, "/ childId:", childId, "/ role:", currentUserRole);
-
   if (!supabase || !childId) {
-    console.log("[가족] supabase 또는 childId 없음 - supabase:", !!supabase, "/ childId:", childId);
-    familyCard.innerHTML = '<p class="mypage-family-empty">연결된 가족이 없습니다.</p>';
+    familyCard.innerHTML =
+      '<p class="mypage-family-empty">연결된 가족이 없습니다.</p>';
     return;
   }
 
   try {
-    // 같은 child_id를 가진 사용자 조회 (본인 제외)
-    // RLS 정책 users_select_family 가 적용되어야 이 쿼리가 성공함
     var query = supabase
       .from("users")
       .select("id, name, role")
       .eq("child_id", childId)
       .neq("id", currentUserId);
 
-    // 엄마인 경우 보호자만 표시
+    // 엄마는 보호자만 표시
     if (currentUserRole === "mom") {
       query = query.eq("role", "guardian");
     }
 
     var { data: familyList, error } = await query;
 
-    console.log("[가족] 쿼리 결과 - data:", familyList, "/ error:", error);
-
     if (error || !familyList || familyList.length === 0) {
-      console.log("[가족] 가족 없음 또는 에러 - error:", error?.message, "/ count:", familyList?.length);
-      familyCard.innerHTML = '<p class="mypage-family-empty">연결된 가족이 없습니다.</p>';
+      familyCard.innerHTML =
+        '<p class="mypage-family-empty">연결된 가족이 없습니다.</p>';
       return;
     }
 
-    // 보호자가 로그인한 경우 엄마를 상단에 정렬
+    // 보호자 로그인 시 엄마를 가장 위로
     familyList.sort(function (a, b) {
       if (a.role === "mom" && b.role !== "mom") return -1;
       if (a.role !== "mom" && b.role === "mom") return 1;
@@ -3030,6 +2931,7 @@ async function loadMypageFamilyInfo(currentUserId, childId, currentUserRole) {
     });
 
     var html = "";
+
     familyList.forEach(function (member, index) {
       var roleLabel = member.role === "mom" ? "엄마" : "보호자";
       var memberName = member.name || "이름 없음";
@@ -3038,19 +2940,45 @@ async function loadMypageFamilyInfo(currentUserId, childId, currentUserRole) {
         html += '<div class="mypage-family-divider"></div>';
       }
 
-      html += '<div class="mypage-family-item">'
-        + '<div class="mypage-family-info">'
-        + '<div class="mypage-family-name-row">'
-        + '<h4 class="mypage-family-name">' + memberName + '</h4>'
-        + '<span class="mypage-family-role">' + roleLabel + '</span>'
-        + '</div>'
-        + '</div>'
-        + '</div>';
+      html +=
+        '<div class="mypage-family-item">' +
+          '<div class="mypage-family-info">' +
+            '<div class="mypage-family-name-row">' +
+              '<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">' + 
+                  '<rect width="40" height="40" rx="20" fill="#F4F0FD"/>' + 
+                  '<path d="M20 20C18.9 20 17.9583 19.6083 17.175 18.825C16.3917 18.0417 16 17.1 16 16C16 14.9 16.3917 13.9583 17.175 13.175C17.9583 12.3917 18.9 12 20 12C21.1 12 22.0417 12.3917 22.825 13.175C23.6083 13.9583 24 14.9 24 16C24 17.1 23.6083 18.0417 22.825 18.825C22.0417 19.6083 21.1 20 20 20ZM12 28V25.2C12 24.6333 12.1458 24.1125 12.4375 23.6375C12.7292 23.1625 13.1167 22.8 13.6 22.55C14.6333 22.0333 15.6833 21.6458 16.75 21.3875C17.8167 21.1292 18.9 21 20 21C21.1 21 22.1833 21.1292 23.25 21.3875C24.3167 21.6458 25.3667 22.0333 26.4 22.55C26.8833 22.8 27.2708 23.1625 27.5625 23.6375C27.8542 24.1125 28 24.6333 28 25.2V28H12ZM14 26H26V25.2C26 25.0167 25.9542 24.85 25.8625 24.7C25.7708 24.55 25.65 24.4333 25.5 24.35C24.6 23.9 23.6917 23.5625 22.775 23.3375C21.8583 23.1125 20.9333 23 20 23C19.0667 23 18.1417 23.1125 17.225 23.3375C16.3083 23.5625 15.4 23.9 14.5 24.35C14.35 24.4333 14.2292 24.55 14.1375 24.7C14.0458 24.85 14 25.0167 14 25.2V26ZM20 18C20.55 18 21.0208 17.8042 21.4125 17.4125C21.8042 17.0208 22 16.55 22 16C22 15.45 21.8042 14.9792 21.4125 14.5875C21.0208 14.1958 20.55 14 20 14C19.45 14 18.9792 14.1958 18.5875 14.5875C18.1958 14.9792 18 15.45 18 16C18 16.55 18.1958 17.0208 18.5875 17.4125C18.9792 17.8042 19.45 18 20 18Z" fill="#674E99"/>' + 
+                '</svg>' +
+
+              '<h4 class="mypage-family-name">' +
+                memberName +
+              '</h4>' +
+
+              '<span class="mypage-family-role">' +
+                roleLabel +
+              '</span>' +
+
+            '</div>' +
+
+            '<p class="mypage-family-access"></p>' +
+
+          '</div>' +
+
+          '<button class="mypage-family-menu" aria-label="설정">' +
+            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+              '<circle cx="12" cy="12" r="2" fill="currentColor"/>' +
+              '<circle cx="19" cy="12" r="2" fill="currentColor"/>' +
+              '<circle cx="5" cy="12" r="2" fill="currentColor"/>' +
+            '</svg>' +
+          '</button>' +
+
+        '</div>';
     });
 
     familyCard.innerHTML = html;
+
   } catch (err) {
-    familyCard.innerHTML = '<p class="mypage-family-empty">연결된 가족이 없습니다.</p>';
+    familyCard.innerHTML =
+      '<p class="mypage-family-empty">연결된 가족이 없습니다.</p>';
   }
 }
 
@@ -3552,9 +3480,8 @@ async function initGrowthDetailSection() {
       }
 
       cardsHTML +=
-        '<div class="growth-record-info">' +
+        '<p class="growth-record-time">' + timeStr + '</p>' +'<div class="growth-record-info">' +
         metricsHTML +
-        '<p class="growth-record-time">' + timeStr + '</p>' +
         '</div>';
 
       if (record.memo) {

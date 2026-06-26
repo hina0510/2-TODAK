@@ -3,6 +3,13 @@
    CSS 변수(Custom Properties)로 정의
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap');
+
+
+
+
+
+
 :root {
   /* ----------------------------------------
      Primary Colors (브랜드 컬러)
@@ -10,7 +17,8 @@
 
   /* Navy - 신뢰, 안정, 보호 */
   --color-primary-navy: #1A3558;
-  --color-primary-light-blue: #F4F0FD;
+  --color-primary-light-purple: #F4F0FD;
+  --color-primary-light-blue: #E9EDF2;
   --color-primary-blue: #074EAA;
 
   /* Magenta - 사랑, 공감, 따뜻함 */
@@ -19,6 +27,7 @@
   --color-primary-light-pink: #FDEFF4;
 
   /* Lavender - 소중한 아이, 새 생명, 성장 */
+  --color-primary-light-lavender: #efe3f8;
   --color-primary-lavender: #E3C3FF;
   --color-primary-lavender-dark: #C893F5;
 
@@ -26,7 +35,7 @@
      Neutral Colors (중립 컬러)
      ---------------------------------------- */
 
-  --color-neutral-gray: #8A8F98;
+   --color-neutral-gray: #8A8F98;
    --color-neutral-light-gray: #F1F3F7;
   /* 텍스트 컬러 */
    --color-text-warm: #564147;           /* 따뜻한 갈색 보조 텍스트 */
