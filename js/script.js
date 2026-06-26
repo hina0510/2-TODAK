@@ -643,84 +643,28 @@ document.addEventListener("click", function (e) {
       "#growth-stage-overlay .modal__close-btn",
     );
     var characterArea = document.getElementById("character-area");
+    function getCurrentGrowthStage() {
+      var currentWeek = getWeekNumber();
 
-    // 성장 단계 더미 데이터
-    var growthStagesData = [
-      {
-        stage: "초기 적응기",
-        weekRange: "4~11주",
-        week: 4,
-        dday: "D-170",
-        characterImage: "image/preg1.png",
-        description:
-          "호르몬 변화로 피로감과 메스꺼움이 생기는 시기입니다. 아이의 모습을 초음파로 처음 확인할 수 있어요.",
-        babyStatus:
-          "태아의 크기가 쌀알 정도에서 완두콩 크기로 자랍니다. 심장, 뇌, 척추 등 기본 구조가 형성돼요.",
-        momStatus:
-          "호르몬 변화로 감정 변화가 크고 피로감이 느껴집니다. 충분한 수면과 휴식이 중요해요.",
-      },
-      {
-        stage: "안정기",
-        weekRange: "12~19주",
-        week: 15,
-        dday: "D-135",
-        characterImage: "image/preg2.png",
-        description:
-          "아침 병증이 완화되고 아이의 움직임이 미세하게 느껴지는 시기입니다. 안정적인 성장 단계예요.",
-        babyStatus:
-          "얼굴의 윤곽이 뚜렷해지고 손가락 발가락이 나타납니다. 피부가 형성되기 시작해요.",
-        momStatus:
-          "에너지가 돌아오고 아이에 대한 실감이 생기기 시작합니다. 적절한 운동과 영양 섭취가 좋아요.",
-      },
-      {
-        stage: "태동기",
-        weekRange: "20~27주",
-        week: 22,
-        dday: "D-105",
-        characterImage: "image/preg3.png",
-        description:
-          "아이의 움직임이 왕발하게 되고 엄마와의 교감이 가장 깊어지는 소중한 시기입니다.",
-        babyStatus:
-          "눈을 뜨고 감을 수 있으며, 소리에 반응하여 태동을 보냅니다. 피부의 지방층이 생성되기 시작해요.",
-        momStatus:
-          "배가 눈에 띄게 불러오며 허리 통증이 생길 수 있습니다. 가벼운 스트레칭과 명상이 도움이 돼요.",
-      },
-      {
-        stage: "성장기",
-        weekRange: "28~35주",
-        week: 30,
-        dday: "D-70",
-        characterImage: "image/preg3.png",
-        description:
-          "아이가 급속도로 성장하고 엄마의 몸이 출산 준비를 시작하는 시기입니다.",
-        babyStatus:
-          "폐가 성숙해지고 뇌 발달이 활발해집니다. 아이의 움직임이 더욱 분명하고 규칙적이 돼요.",
-        momStatus:
-          "피로감이 증가하고 자주 피곤해집니다. 충분한 휴식과 가벼운 운동이 도움이 돼요.",
-      },
-      {
-        stage: "출산 준비기",
-        weekRange: "36주~출산",
-        week: 38,
-        dday: "D-14",
-        characterImage: "image/preg3.png",
-        description:
-          "출산이 임박한 시기입니다. 아이가 골반 쪽으로 내려오면서 호흡이 편해져요.",
-        babyStatus:
-          "면역 체계가 완성되고 장기 기능이 완전히 발달합니다. 출산 준비를 하고 있어요.",
-        momStatus:
-          "소화 불편함이 완화되고 출산에 대한 불안감이 커질 수 있습니다. 이는 매우 정상이에요.",
-      },
-    ];
+      var currentStage = _growthStagesData[0];
+
+      _growthStagesData.forEach(function (stage) {
+        if (currentWeek >= stage.week) {
+          currentStage = stage;
+        }
+    });
+    return currentStage;
+  }
 
     // Growth Stage Modal 열기
     function openGrowthStageModal(stageIndex) {
-      var stage = growthStagesData[stageIndex];
+      var stage = getCurrentGrowthStage();
       if (!stage) return;
 
       // 데이터 업데이트
+      
       document.getElementById("growth-stage-badge").textContent =
-        stage.week + "주차";
+        getWeekNumber() + "주차";
       document.getElementById("growth-stage-stage-name").textContent =
         stage.stage;
       document.getElementById("growth-stage-description").textContent =
@@ -731,14 +675,15 @@ document.addEventListener("click", function (e) {
         stage.momStatus;
       document.getElementById("growth-stage-char-img").src =
         stage.characterImage;
-      document.getElementById("growth-stage-dday-badge").textContent =
-        stage.dday;
 
       // 다음 단계 (있으면)
-      if (stageIndex < growthStagesData.length - 1) {
-        var nextStage = growthStagesData[stageIndex + 1];
+      if (stageIndex < _growthStagesData.length - 1) {
+        var nextStage = _growthStagesData[stageIndex + 1];
         document.getElementById("growth-stage-next-stage").textContent =
           nextStage.stage + " (" + nextStage.weekRange + ")";
+      }else {
+        document.getElementById("growth-stage-next-stage").textContent =
+          "마지막 성장 단계입니다.";
       }
 
       // 모달 열기
@@ -750,10 +695,23 @@ document.addEventListener("click", function (e) {
       growthStageOverlay.classList.remove("active");
     }
 
-    // 캐릭터 영역 클릭 → 모달 열기 (현재 22주차 = index 2)
+    // 캐릭터 영역 클릭 → 모달 열기 (현재 주차 기반)
     if (characterArea) {
       characterArea.addEventListener("click", function () {
-        openGrowthStageModal(2);
+        var currentWeek = parseInt(getWeekNumber());
+        var stageIndex = 0;
+
+        if (currentWeek >= 12 && currentWeek < 20) {
+          stageIndex = 1;
+        } else if (currentWeek >= 20 && currentWeek < 28) {
+          stageIndex = 2;
+        } else if (currentWeek >= 28 && currentWeek < 36) {
+          stageIndex = 3;
+        } else if (currentWeek >= 36) {
+          stageIndex = 4;
+        }
+
+        openGrowthStageModal(stageIndex);
       });
     }
 
@@ -1463,6 +1421,68 @@ var _currentUser = null;
 var _currentChild = null;
 var _todakMissions = [];
 var _missionCompletions = [];
+var _growthStagesData = [
+  {
+    stage: "초기 적응기",
+    weekRange: "1~11주",
+    week: 4,
+    characterImage: "image/preg1.png",
+    description:
+      "호르몬 변화로 피로감과 메스꺼움이 생기는 시기입니다. 아이의 모습을 초음파로 처음 확인할 수 있어요.",
+    babyStatus:
+      "태아의 크기가 쌀알 정도에서 완두콩 크기로 자랍니다. 심장, 뇌, 척추 등 기본 구조가 형성돼요.",
+    momStatus:
+      "호르몬 변화로 감정 변화가 크고 피로감이 느껴집니다. 충분한 수면과 휴식이 중요해요.",
+  },
+  {
+    stage: "안정기",
+    weekRange: "12~19주",
+    week: 11,
+    characterImage: "image/preg2.png",
+    description:
+      "아침 병증이 완화되고 아이의 움직임이 미세하게 느껴지는 시기입니다. 안정적인 성장 단계예요.",
+    babyStatus:
+      "얼굴의 윤곽이 뚜렷해지고 손가락 발가락이 나타납니다. 피부가 형성되기 시작해요.",
+    momStatus:
+      "에너지가 돌아오고 아이에 대한 실감이 생기기 시작합니다. 적절한 운동과 영양 섭취가 좋아요.",
+  },
+  {
+    stage: "태동기",
+    weekRange: "20~27주",
+    week: 20,
+    characterImage: "image/preg3.png",
+    description:
+      "아이의 움직임이 왕발하게 되고 엄마와의 교감이 가장 깊어지는 소중한 시기입니다.",
+    babyStatus:
+      "눈을 뜨고 감을 수 있으며, 소리에 반응하여 태동을 보냅니다. 피부의 지방층이 생성되기 시작해요.",
+    momStatus:
+      "배가 눈에 띄게 불러오며 허리 통증이 생길 수 있습니다. 가벼운 스트레칭과 명상이 도움이 돼요.",
+  },
+  {
+    stage: "성장기",
+    weekRange: "28~35주",
+    week: 28,
+    characterImage: "image/preg4.png",
+    description:
+      "아이가 급속도로 성장하고 엄마의 몸이 출산 준비를 시작하는 시기입니다.",
+    babyStatus:
+      "폐가 성숙해지고 뇌 발달이 활발해집니다. 아이의 움직임이 더욱 분명하고 규칙적이 돼요.",
+    momStatus:
+      "피로감이 증가하고 자주 피곤해집니다. 충분한 휴식과 가벼운 운동이 도움이 돼요.",
+  },
+  {
+    stage: "출산 준비기",
+    weekRange: "36주~출산",
+    week: 36,
+    characterImage: "image/preg5.png",
+    description:
+      "출산이 임박한 시기입니다. 아이가 골반 쪽으로 내려오면서 호흡이 편해져요.",
+    babyStatus:
+      "면역 체계가 완성되고 장기 기능이 완전히 발달합니다. 출산 준비를 하고 있어요.",
+    momStatus:
+      "소화 불편함이 완화되고 출산에 대한 불안감이 커질 수 있습니다. 이는 매우 정상이에요.",
+  },
+];
 var _weeklyGuides = [];
 var _guideContents = [];
 var _growthRecords = [];
@@ -1999,6 +2019,27 @@ function updateHomeDisplay() {
   if (headerDday) headerDday.textContent = dday;
   if (leftCardValue) leftCardValue.textContent = getWeekNumber();
   if (stageInfoText) stageInfoText.textContent = getWeekNumber() + "주차: " + getStageInfo();
+
+  if (!_isBirthMode) {
+    var currentWeek = parseInt(getWeekNumber());
+    var stageIndex = 0;
+
+    if (currentWeek >= 12 && currentWeek < 20) {
+      stageIndex = 1;
+    } else if (currentWeek >= 20 && currentWeek < 28) {
+      stageIndex = 2;
+    } else if (currentWeek >= 28 && currentWeek < 36) {
+      stageIndex = 3;
+    } else if (currentWeek >= 36) {
+      stageIndex = 4;
+    }
+
+    var stage = _growthStagesData[stageIndex];
+    var characterImage = document.getElementById("character-image");
+    if (characterImage && stage) {
+      characterImage.src = stage.characterImage;
+    }
+  }
 }
 
 function calculateDday() {
