@@ -660,31 +660,27 @@ document.addEventListener("click", function (e) {
     );
     pregnancyToggles.forEach(function (btn, index) {
       btn.addEventListener("click", function () {
-        // 보호자는 탭 변경 불가 (읽기 전용)
+        // 1. 보호자는 탭 변경 불가 (읽기 전용)
         if (_currentUser && _currentUser.role === "guardian") {
+          return;
+        }
+
+        // 2. 현재 active 탭을 다시 누른 경우
+        if (btn.classList.contains("active")) {
           return;
         }
 
         var isPregnancy = index === 0;
 
+        // 3. 출산 상태에서 임신 탭을 누른 경우
         if (isPregnancy && _isBirthMode) {
           showToast("출산 상태에서는 임신 탭으로 이동할 수 없습니다.");
           return;
         }
 
+        // 4. 임신 상태에서 출산 탭을 누른 경우에만 모달 열기
         if (!isPregnancy && !_isBirthMode) {
-          // 임신 상태에서 출산 탭을 클릭하면 모달 열기
           openBirthModal();
-        } else {
-          // 이미 출산 상태인 경우 (불가능하지만 안전성 위해)
-          var mode = isPregnancy ? "pregnancy" : "birth";
-
-          // 버튼 상태 업데이트
-          pregnancyToggles[0].classList.toggle("active", isPregnancy);
-          pregnancyToggles[1].classList.toggle("active", !isPregnancy);
-
-          // 콘텐츠 업데이트
-          updateHomeContent(mode);
         }
       });
     });
@@ -2118,7 +2114,6 @@ function setupTabsAfterLogin() {
   if (_currentUser.role === "guardian") {
     pregnancyToggles.forEach(function (btn) {
       btn.style.pointerEvents = "none";
-      btn.style.opacity = "0.6";
       btn.style.cursor = "not-allowed";
     });
 

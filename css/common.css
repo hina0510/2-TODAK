@@ -504,6 +504,11 @@
   color: var(--color-text-white);
 }
 
+.toggle-btn:not(.active) {
+  color: var(--color-primary-navy);
+  opacity: 1;
+}
+
 /* 보호자 모드: 비활성 탭 클릭 차단 */
 .pregnancy-birth-toggle.guardian-mode .toggle-btn:not(.active) {
   cursor: default;
