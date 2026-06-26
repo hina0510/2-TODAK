@@ -682,6 +682,11 @@ document.addEventListener("click", function (e) {
     );
     pregnancyToggles.forEach(function (btn, index) {
       btn.addEventListener("click", function () {
+        // 보호자는 탭 변경 불가 (읽기 전용)
+        if (_currentUser && _currentUser.role === "guardian") {
+          return;
+        }
+
         var isPregnancy = index === 0;
 
         if (isPregnancy && _isBirthMode) {
@@ -1575,8 +1580,7 @@ async function validateInviteCode(inviteCode) {
       .from("children")
       .select("id")
       .eq("invite_code", inviteCode)
-      .limit(1)
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
       return null;
@@ -1653,6 +1657,55 @@ document.addEventListener(
     });
   }
 
+  var _signupInviteVerified = false;
+  var _signupVerifiedChildId = null;
+  var signupVerifyBtn = document.getElementById("signup-invite-verify-btn");
+  var signupInviteInput = document.getElementById("signup-invite-code");
+  var signupInviteResult = document.getElementById("signup-invite-result");
+
+  if (signupVerifyBtn) {
+    signupVerifyBtn.addEventListener("click", async function () {
+      var code = signupInviteInput ? signupInviteInput.value.trim() : "";
+      if (!code) {
+        if (signupInviteResult) {
+          signupInviteResult.textContent = "초대코드를 입력해주세요.";
+          signupInviteResult.style.color = "#D94F8A";
+          signupInviteResult.style.display = "block";
+        }
+        return;
+      }
+      var childId = await validateInviteCode(code);
+      if (childId) {
+        _signupInviteVerified = true;
+        _signupVerifiedChildId = childId;
+        if (signupInviteResult) {
+          signupInviteResult.textContent = "일치합니다.";
+          signupInviteResult.style.color = "#2F4B7C";
+          signupInviteResult.style.display = "block";
+        }
+      } else {
+        _signupInviteVerified = false;
+        _signupVerifiedChildId = null;
+        if (signupInviteResult) {
+          signupInviteResult.textContent = "일치하지 않습니다.";
+          signupInviteResult.style.color = "#D94F8A";
+          signupInviteResult.style.display = "block";
+        }
+      }
+    });
+  }
+
+  if (signupInviteInput) {
+    signupInviteInput.addEventListener("input", function () {
+      _signupInviteVerified = false;
+      _signupVerifiedChildId = null;
+      if (signupInviteResult) {
+        signupInviteResult.style.display = "none";
+        signupInviteResult.textContent = "";
+      }
+    });
+  }
+
   newForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
@@ -1690,18 +1743,14 @@ document.addEventListener(
         showToast("초대코드를 입력해주세요.");
         return;
       }
+      if (!_signupVerifiedChildId) {
+        showToast("초대코드를 먼저 확인해주세요.");
+        return;
+      }
     }
 
     try {
       var childId = null;
-
-      if (_todakRole === "guardian") {
-        childId = await validateInviteCode(inviteCode);
-        if (!childId) {
-          showToast("올바른 초대코드를 확인해주세요.");
-          return;
-        }
-      }
 
       if (supabase && supabase.auth) {
         var authResult;
@@ -1721,6 +1770,11 @@ document.addEventListener(
 
         if (authResult.data && authResult.data.user) {
           var userId = authResult.data.user.id;
+
+          if (_todakRole === "guardian") {
+            // 확인 버튼에서 이미 검증된 child_id 사용 (signUp 이후 재검증 없음)
+            childId = _signupVerifiedChildId;
+          }
 
           try {
             var userData = {
@@ -2007,6 +2061,13 @@ async function loadHomeData() {
 /* ---------- 홈 화면 업데이트 ---------- */
 function updateHomeDisplay() {
   if (!_currentChild) return;
+
+  // 보호자 모드 토글 잠금
+  var toggleContainer = document.querySelector(".pregnancy-birth-toggle");
+  if (toggleContainer) {
+    var isGuardian = _currentUser && _currentUser.role === "guardian";
+    toggleContainer.classList.toggle("guardian-mode", isGuardian);
+  }
 
   var headerLabel = document.getElementById("header-label");
   var headerTitle = document.getElementById("header-title");
@@ -2889,7 +2950,7 @@ async function loadMypageUserInfo() {
 
     var { data: userData, error: userErr } = await supabase
       .from("users")
-      .select("name")
+      .select("id, name, role, child_id")
       .eq("id", user.id)
       .single();
 
@@ -2914,12 +2975,92 @@ async function loadMypageUserInfo() {
     if (_currentChild) {
       updateMypageChildInfo();
     }
+
+    // 가족 목록 로드
+    await loadMypageFamilyInfo(user.id, userData?.child_id, userData?.role);
   } catch (err) {
+  }
+}
+
+/* ------------------------------------------
+   마이페이지 가족 목록 로드
+   ------------------------------------------ */
+
+async function loadMypageFamilyInfo(currentUserId, childId, currentUserRole) {
+  var familyCard = document.querySelector(".mypage-family-card");
+  if (!familyCard) return;
+
+  console.log("[가족] currentUserId:", currentUserId, "/ childId:", childId, "/ role:", currentUserRole);
+
+  if (!supabase || !childId) {
+    console.log("[가족] supabase 또는 childId 없음 - supabase:", !!supabase, "/ childId:", childId);
+    familyCard.innerHTML = '<p class="mypage-family-empty">연결된 가족이 없습니다.</p>';
+    return;
+  }
+
+  try {
+    // 같은 child_id를 가진 사용자 조회 (본인 제외)
+    // RLS 정책 users_select_family 가 적용되어야 이 쿼리가 성공함
+    var query = supabase
+      .from("users")
+      .select("id, name, role")
+      .eq("child_id", childId)
+      .neq("id", currentUserId);
+
+    // 엄마인 경우 보호자만 표시
+    if (currentUserRole === "mom") {
+      query = query.eq("role", "guardian");
+    }
+
+    var { data: familyList, error } = await query;
+
+    console.log("[가족] 쿼리 결과 - data:", familyList, "/ error:", error);
+
+    if (error || !familyList || familyList.length === 0) {
+      console.log("[가족] 가족 없음 또는 에러 - error:", error?.message, "/ count:", familyList?.length);
+      familyCard.innerHTML = '<p class="mypage-family-empty">연결된 가족이 없습니다.</p>';
+      return;
+    }
+
+    // 보호자가 로그인한 경우 엄마를 상단에 정렬
+    familyList.sort(function (a, b) {
+      if (a.role === "mom" && b.role !== "mom") return -1;
+      if (a.role !== "mom" && b.role === "mom") return 1;
+      return 0;
+    });
+
+    var html = "";
+    familyList.forEach(function (member, index) {
+      var roleLabel = member.role === "mom" ? "엄마" : "보호자";
+      var memberName = member.name || "이름 없음";
+
+      if (index > 0) {
+        html += '<div class="mypage-family-divider"></div>';
+      }
+
+      html += '<div class="mypage-family-item">'
+        + '<div class="mypage-family-info">'
+        + '<div class="mypage-family-name-row">'
+        + '<h4 class="mypage-family-name">' + memberName + '</h4>'
+        + '<span class="mypage-family-role">' + roleLabel + '</span>'
+        + '</div>'
+        + '</div>'
+        + '</div>';
+    });
+
+    familyCard.innerHTML = html;
+  } catch (err) {
+    familyCard.innerHTML = '<p class="mypage-family-empty">연결된 가족이 없습니다.</p>';
   }
 }
 
 function updateMypageChildInfo() {
   if (!_currentChild) return;
+
+  var childNameEl = document.querySelector(".mypage-child-name");
+  if (childNameEl) {
+    childNameEl.textContent = _currentChild.baby_name || "토닥이";
+  }
 
   var ddayEl = document.querySelector(".mypage-child-dday");
   var metaValueEls = document.querySelectorAll(".mypage-child-meta-value");

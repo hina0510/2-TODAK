@@ -332,13 +332,22 @@
             <div class="input-label-pad">
               <label class="input-label input-label--form" for="signup-invite-code">초대코드</label>
             </div>
-            <input
-              type="text"
-              id="signup-invite-code"
-              class="input-field input-field--card"
-              placeholder="초대코드를 입력해주세요"
-              autocomplete="off"
-            >
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <input
+                type="text"
+                id="signup-invite-code"
+                class="input-field input-field--card"
+                placeholder="초대코드를 입력해주세요"
+                autocomplete="off"
+                style="flex: 1;"
+              >
+              <button
+                type="button"
+                id="signup-invite-verify-btn"
+                style="background-color: #D94F8A; color: #fff; border: none; border-radius: 20px; padding: 6px 16px; font-size: 14px; cursor: pointer; white-space: nowrap; flex-shrink: 0;"
+              >확인</button>
+            </div>
+            <div id="signup-invite-result" style="font-size: 12px; margin-top: 6px; display: none;"></div>
           </div>
 
           <!-- 이용약관 동의 -->

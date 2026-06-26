@@ -503,6 +503,12 @@
   color: var(--color-text-white);
 }
 
+/* 보호자 모드: 비활성 탭 클릭 차단 */
+.pregnancy-birth-toggle.guardian-mode .toggle-btn:not(.active) {
+  cursor: default;
+  pointer-events: none;
+}
+
 /* ----------------------------------------
    Mission Card (미션 카드)
    ---------------------------------------- */
@@ -1246,6 +1252,11 @@
               0 0 0 1px var(--color-primary-navy);
 }
 
+/* 비밀번호 입력 점(•) 가시성 보장 — NanumSquare 웹폰트 미지원 문자 대체 */
+input[type="password"] {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  -webkit-text-fill-color: var(--color-text-primary);
+}
 
 /* ----------------------------------------
    Form Check (정책 동의 체크박스)
@@ -3850,6 +3861,14 @@
 .mypage-family-divider {
   height: 1px;
   background-color: var(--color-text-secondary);
+}
+
+.mypage-family-empty {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body);
+  padding: 16px 0;
+  margin: 0;
 }
 
 /* ========================================
