@@ -1084,7 +1084,7 @@ document.addEventListener("click", function (e) {
             if (record.height || record.weight) {
               content +=
                 '<p class="record-item__desc">';
-              if (record.height) content += "키: " + record.height + "cm ";
+              if (record.height) content += "키: " + record.height + "cm " + "<br>";
               if (record.weight) content += "몸무게: " + record.weight + "kg";
               content += "</p>";
             }
@@ -3378,6 +3378,7 @@ async function initRecordSection() {
           '<div style="padding: 20px; text-align: center; color: #999;">아직 기록이 없습니다.</div>';
       } else {
         var itemsHTML = "";
+
         records.forEach(function (record) {
           var createdDate = new Date(record.record_date);
           var timeStr = createdDate.toLocaleTimeString("ko-KR", {
@@ -3387,38 +3388,49 @@ async function initRecordSection() {
           });
 
           var content = "";
+
           if (record.height || record.weight) {
             content += '<p class="record-item__desc">';
-            if (record.height) content += "키: " + record.height + "cm ";
+            if (record.height) content += "키: " + record.height + "cm " + "<br>";
             if (record.weight) content += "몸무게: " + record.weight + "kg";
             content += "</p>";
           }
 
           if (record.memo) {
-            content += '<p class="record-item__desc">' + record.memo + "</p>";
+            content +=
+              '<p class="record-item__desc">' +
+              record.memo +
+              "</p>";
           }
 
+          // 이미지가 있는 경우 record-item 바깥에 생성
           if (record.photo_url) {
-            content +=
-              '<div class="record-item__images"><img src="' +
-              record.photo_url +
-              '" alt="기록 사진" class="record-item__image"></div>';
+            itemsHTML +=
+              '<div class="record-item__images">' +
+                '<img src="' +
+                record.photo_url +
+                '" alt="기록 사진" class="record-item__image">' +
+              '</div>';
           }
 
           itemsHTML +=
             '<div class="record-item">' +
-            '<div class="record-item__header">' +
-            '<span class="record-item__time">' +
-            timeStr +
-            '</span>' +
-            '<div class="record-item__dot"></div>' +
-            "</div>" +
-            '<div class="record-item__content">' +
-            '<h4 class="record-item__title">성장 기록</h4>' +
-            content +
-            "</div>" +
-            "</div>";
+
+              '<div class="record-item__header">' +
+                '<span class="record-item__time">' +
+                  timeStr +
+                '</span>' +
+                '<div class="record-item__dot"></div>' +
+              '</div>' +
+
+              '<div class="record-item__content">' +
+                '<h4 class="record-item__title">성장 기록</h4>' +
+                content +
+              '</div>' +
+
+            '</div>';
         });
+
         recordItems.innerHTML = itemsHTML;
       }
     }
