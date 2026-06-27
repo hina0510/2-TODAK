@@ -1381,7 +1381,6 @@ input[type="password"] {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding-top: 20px;
 }
 
 /* 상단 정보 카드 */
@@ -1488,12 +1487,12 @@ input[type="password"] {
 }
 
 .side-info-card--left {
-  left: 16px;
+  left: 0;
   display: none;
 }
 
 .side-info-card--right {
-  right: 16px;
+  right: 0;
   display: none;
 }
 
