@@ -1483,7 +1483,7 @@ input[type="password"] {
   width: 80px;
   flex-shrink: 0;
   position: absolute;
-  top:0;
+  top:-10px;
 }
 
 .side-info-card--left {
