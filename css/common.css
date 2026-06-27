@@ -4178,6 +4178,23 @@ input[type="password"] {
   border-top: none;
 }
 
+.modal__body--guide-detail::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal__body--guide-detail::-webkit-scrollbar-track {
+  background: transparent;
+  margin-bottom: 25px;
+}
+
+.modal__body--guide-detail::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  opacity: 0.5;
+}
+
+.modal__body--guide-detail::-webkit-scrollbar-thumb:hover {
+  opacity: 1;
+}
 .todak-mission-checkbox {
   width: 26px;
   height: 26px;
