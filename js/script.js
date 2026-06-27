@@ -3207,12 +3207,13 @@ async function loadMypageUserInfo() {
 
     var { data: userData, error: userErr } = await supabase
       .from("users")
-      .select("id, name, role, child_id")
+      .select("id, name, role, child_id, profile_image")
       .eq("id", user.id)
       .single();
 
     var userName = userData?.name || "사용자";
-    var avatarUrl = "image/profile.png";
+    var defaultAvatar = userData?.role === "guardian" ? "image/man.png" : "image/woman.png";
+    var avatarUrl = getProfileImageUrl(userData?.profile_image, defaultAvatar);
 
     var profileNameEl = document.querySelector(".mypage-profile-name");
     var profileEmailEl = document.querySelector(".mypage-profile-email");
@@ -3226,6 +3227,16 @@ async function loadMypageUserInfo() {
     }
     if (profileAvatarEl) {
       profileAvatarEl.src = avatarUrl;
+    }
+
+    // 프로필 수정 버튼 클릭 이벤트
+    var profileEditBtn = Array.from(document.querySelectorAll(".btn.btn--sm.btn--secondary")).find(function(btn) {
+      return btn.textContent.includes("프로필 수정");
+    });
+    if (profileEditBtn) {
+      profileEditBtn.onclick = function() {
+        showProfileImageModal(user.id);
+      };
     }
 
     // 자녀 정보 로드 및 업데이트
@@ -3867,3 +3878,190 @@ document.addEventListener("click", function (e) {
     showSection("growth-detail-section");
   }
 });
+
+/* ------------------------------------------
+   마이페이지 프로필 이미지 변경
+   ------------------------------------------ */
+
+function getProfileImageUrl(profileImagePath, defaultPath) {
+  if (!profileImagePath) {
+    return defaultPath;
+  }
+  if (profileImagePath.startsWith("image/")) {
+    return profileImagePath;
+  }
+  if (!supabase) {
+    return defaultPath;
+  }
+  var { data: { publicUrl } } = supabase.storage.from("profiles").getPublicUrl(profileImagePath);
+  return publicUrl || defaultPath;
+}
+
+function showProfileImageModal(userId) {
+  var existingOverlay = document.getElementById("profile-image-modal-overlay");
+  if (existingOverlay) {
+    existingOverlay.remove();
+  }
+
+  var overlay = document.createElement("div");
+  overlay.id = "profile-image-modal-overlay";
+  overlay.className = "modal-overlay modal-overlay--center active";
+
+  var modal = document.createElement("div");
+  modal.className = "modal modal--dialog";
+
+  var currentImageSrc = document.querySelector(".mypage-profile-avatar img")?.src || "image/woman.png";
+
+  var html = '<div class="modal__dialog-header">' +
+    '<h2 class="modal__dialog-title">프로필 이미지 변경</h2>' +
+    '<button class="modal__close-btn" aria-label="닫기">' +
+      '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '</svg>' +
+    '</button>' +
+  '</div>';
+
+  var body = document.createElement("div");
+  body.className = "modal__body";
+  body.innerHTML = '<div class="profile-image-preview-container">' +
+    '<img id="profile-image-preview" src="' + currentImageSrc + '" alt="프로필 미리보기" class="profile-image-preview">' +
+  '</div>' +
+  '<input type="file" id="profile-image-input" accept=".jpg,.jpeg,.png,.webp" class="profile-image-input" style="display:none;">' +
+  '<button type="button" class="btn btn--primary btn--block" id="profile-image-select-btn">이미지 선택</button>';
+
+  var footer = document.createElement("div");
+  footer.className = "modal__footer";
+  footer.innerHTML = '<button type="button" class="btn btn--white btn--block" id="profile-image-cancel-btn">취소</button>' +
+    '<button type="button" class="btn btn--primary btn--block" id="profile-image-save-btn">저장</button>';
+
+  modal.innerHTML = html;
+  modal.appendChild(body);
+  modal.appendChild(footer);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  var fileInput = document.getElementById("profile-image-input");
+  var selectBtn = document.getElementById("profile-image-select-btn");
+  var previewImg = document.getElementById("profile-image-preview");
+  var saveBtn = document.getElementById("profile-image-save-btn");
+  var cancelBtn = document.getElementById("profile-image-cancel-btn");
+  var closeBtn = overlay.querySelector(".modal__close-btn");
+
+  selectBtn.onclick = function() {
+    fileInput.click();
+  };
+
+  fileInput.onchange = function(e) {
+    handleProfileImageSelect(e, previewImg);
+  };
+
+  saveBtn.onclick = function() {
+    if (!fileInput.files || fileInput.files.length === 0) {
+      alert("이미지를 선택해주세요.");
+      return;
+    }
+    uploadProfileImage(userId, fileInput.files[0], overlay);
+  };
+
+  cancelBtn.onclick = function() {
+    closeProfileImageModal(overlay);
+  };
+
+  closeBtn.onclick = function() {
+    closeProfileImageModal(overlay);
+  };
+
+  overlay.onclick = function(e) {
+    if (e.target === overlay) {
+      closeProfileImageModal(overlay);
+    }
+  };
+
+  document.addEventListener("keydown", function handleEsc(e) {
+    if (e.key === "Escape") {
+      closeProfileImageModal(overlay);
+      document.removeEventListener("keydown", handleEsc);
+    }
+  });
+}
+
+function handleProfileImageSelect(event, previewImg) {
+  var file = event.target.files[0];
+  if (!file) return;
+
+  var allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  if (!allowedTypes.includes(file.type)) {
+    alert("jpg, jpeg, png, webp 형식만 지원합니다.");
+    event.target.value = "";
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    alert("파일 크기는 5MB 이하여야 합니다.");
+    event.target.value = "";
+    return;
+  }
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    previewImg.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function uploadProfileImage(userId, file, overlay) {
+  try {
+    if (!supabase || !supabase.auth) {
+      console.error("프로필 이미지 변경: Supabase 미초기화");
+      alert("시스템 오류가 발생했습니다.");
+      return;
+    }
+
+    var fileExt = file.name.split(".").pop().toLowerCase();
+    var fileName = "avatar." + fileExt;
+    var filePath = userId + "/" + fileName;
+
+    var { data: uploadData, error: uploadError } = await supabase.storage
+      .from("profiles")
+      .upload(filePath, file, { upsert: true });
+
+    if (uploadError) {
+      console.error("프로필 이미지 업로드 오류:", uploadError.message);
+      alert("이미지 업로드에 실패했습니다: " + uploadError.message);
+      return;
+    }
+
+    var { data: userData, error: userError } = await supabase
+      .from("users")
+      .update({ profile_image: filePath })
+      .eq("id", userId)
+      .single();
+
+    if (userError) {
+      console.error("프로필 이미지 저장 오류:", userError.message);
+      alert("이미지 저장에 실패했습니다: " + userError.message);
+      return;
+    }
+
+    var { data: { publicUrl } } = supabase.storage.from("profiles").getPublicUrl(filePath);
+    var profileAvatarImg = document.querySelector(".mypage-profile-avatar img");
+    if (profileAvatarImg) {
+      profileAvatarImg.src = publicUrl;
+    }
+
+    closeProfileImageModal(overlay);
+    showToast("프로필 이미지가 변경되었습니다.");
+  } catch (err) {
+    console.error("프로필 이미지 변경 중 오류:", err.message);
+    alert("프로필 이미지 변경 중 오류가 발생했습니다.");
+  }
+}
+
+function closeProfileImageModal(overlay) {
+  if (overlay) {
+    overlay.classList.remove("active");
+    setTimeout(function() {
+      overlay.remove();
+    }, 300);
+  }
+}

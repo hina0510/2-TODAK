@@ -3620,7 +3620,7 @@ input[type="password"] {
   border-radius: 50%;
   flex-shrink: 0;
   overflow: hidden;
-  background-color: var(--color-primary-lavender);
+  background-color: var(--color-bg-beige);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3958,4 +3958,40 @@ input[type="password"] {
   width: 20px;
   height: 20px;
   color: var(--color-primary-navy);
+}
+
+/* ----------------------------------------
+   프로필 이미지 변경 모달
+   ---------------------------------------- */
+
+.profile-image-preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.profile-image-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-primary-magenta);
+}
+
+.profile-image-input {
+  display: none;
+}
+
+#profile-image-modal-overlay .modal__body {
+  gap: 16px;
+}
+
+#profile-image-modal-overlay .btn {
+  height: 48px;
+  font-size: var(--font-size-body);
+}
+
+#profile-image-select-btn {
+  margin-top: 12px;
 }
