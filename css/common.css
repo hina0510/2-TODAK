@@ -1053,7 +1053,7 @@
 
 /* Pill CTA 버튼 (역할 선택 / 회원가입 플로우 공용) */
 .btn--pill {
-  height: auto;
+  height: 56px;
   padding: 20px;
   border-radius: 9999px;
   font-size: var(--font-size-h2);
@@ -1072,7 +1072,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 26px;
+  padding: 16px 26px;
   background-color: var(--color-bg-white);
   border: 2px solid var(--color-text-secondary);
   border-radius: 24px;
@@ -1103,7 +1103,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
   margin-bottom: 16px;
 }
 
@@ -1267,7 +1266,8 @@ input[type="password"] {
 .form-check {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  padding: 0 10px;
+  gap: 8px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1315,9 +1315,8 @@ input[type="password"] {
 /* 동의 텍스트 */
 .form-check__text {
   font-family: 'Nanum Square', 'NanumSquare', sans-serif;
-  font-size: var(--font-size-body);
+  font-size: var(--font-size-small);
   font-weight: var(--font-weight-regular);
-  /* color: var(--color-text-warm); */
   line-height: var(--line-height-snug);
 }
 

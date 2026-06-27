@@ -373,7 +373,8 @@
 
 /* "토닥 시작하기" outline 버튼 */
 .btn-todak-start {
-  padding: 14px 34px;
+  height: 56px;
+  padding: 0 34px;
   border: 2px solid rgba(208, 34, 102, 0.3);
   border-radius: 9999px;
   background-color: transparent;
@@ -416,15 +417,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 32px;
-  padding-bottom: 40px;
+  padding-bottom: 30px;
 }
 
 /* 캐릭터 이미지 컨테이너 */
 .signup-hero__character {
   position: relative;
-  width: 160px;
-  height: 160px;
+  width: 120px;
+  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -487,7 +487,7 @@
 .signup-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 /* 하단 로그인 링크 섹션 */
@@ -616,7 +616,7 @@
 
 /* 카드 헤딩 영역 */
 .role-sel-card-header {
-  padding: 30px 24px 32px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -653,7 +653,7 @@
 /* 다음 버튼 영역 — mt: auto 로 카드 하단 고정 */
 .role-sel-footer {
   margin-top: auto;
-  padding: 24px 24px 32px;
+  padding: 24px;
 }
 
 
