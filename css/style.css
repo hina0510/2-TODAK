@@ -857,3 +857,11 @@
 .todak-section .fab {
   bottom: 100px;
 }
+
+#guide-modal-overlay {
+  z-index: 100;
+}
+
+#guide-detail-modal-overlay {
+  z-index: 110;
+}

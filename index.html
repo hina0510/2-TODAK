@@ -1369,7 +1369,7 @@
 
               <!-- 기록 1 -->
               <div class="card growth-record-card">
-                <div class="growth-record-date">2024.05.20</div>
+                <div class="growth-record-date">2026.06.20</div>
                 <div class="growth-record-image">
                   <img src="" alt="성장 기록 사진">
                 </div>
@@ -1385,7 +1385,7 @@
 
               <!-- 기록 2 -->
               <div class="card growth-record-card">
-                <div class="growth-record-date">2024.05.18</div>
+                <div class="growth-record-date">2026.06.18</div>
                 <div class="growth-record-image">
                   <img src="" alt="성장 기록 사진">
                 </div>
@@ -1520,7 +1520,7 @@
           <!-- 월/년도 선택 -->
           <div class="record-calendar__header">
             <button class="record-calendar__month-btn">
-              2024년 5월
+              2026년 6월
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -1812,27 +1812,27 @@
         <div class="guide-cards-grid">
 
           <!-- 육아 가이드 -->
-          <div class="guide-detail-card">
+          <div class="guide-detail-card" data-guide-type="parenting">
             <div class="guide-detail-card__icon">🍼</div>
             <h3 class="guide-detail-card__title">육아 가이드</h3>
             <p class="guide-detail-card__desc">초보 맘들을 위한 실전 육아 스킬</p>
           </div>
 
           <!-- 예방접종 -->
-          <div class="guide-detail-card">
+          <div class="guide-detail-card" data-guide-type="vaccination">
             <div class="guide-detail-card__icon">💉</div>
             <h3 class="guide-detail-card__title">예방접종</h3>
             <p class="guide-detail-card__desc">놓치기 쉬운 우리 아이 접종 일정</p>
           </div>
 
           <!-- 정부 지원금 (큰 카드) -->
-          <div class="guide-detail-card guide-detail-card--large">
+          <div class="guide-detail-card guide-detail-card--large" data-guide-type="support">
             <div class="guide-detail-card__image-section">
               <div class="guide-detail-card__image">💰</div>
             </div>
             <div class="guide-detail-card__text-section">
               <h3 class="guide-detail-card__title">정부 지원금</h3>
-              <p class="guide-detail-card__desc">2024년 새로워진 부모 금혜와 아동수당 정보를 확인하세요.</p>
+              <p class="guide-detail-card__desc">2026년 새로워진 부모 급여와 아동수당 정보를 확인하세요.</p>
             </div>
           </div>
         </div>
@@ -1845,26 +1845,39 @@
           </div>
 
           <!-- 가이드 카드 1 -->
-          <div class="guide-popular-card">
+          <div class="guide-popular-card" data-guide-type="sleep">
             <div class="guide-popular-card__image">👨‍👩‍👧</div>
+
             <div class="guide-popular-card__content">
               <div class="guide-popular-card__badge">PARENTING TIP</div>
-              <h4 class="guide-popular-card__title">밤에 잠들정하는 아이 달래기</h4>
-              <p class="guide-popular-card__meta">⏱ 5분 읽기</p>
+
+                <h4 class="guide-popular-card__title">
+                    밤에 잠들지 않는 아이 달래기
+                </h4>
+
+                <p class="guide-popular-card__meta">
+                    ⏱ 5분 읽기
+                </p>
             </div>
           </div>
 
           <!-- 가이드 카드 2 -->
-          <div class="guide-popular-card">
+          <div class="guide-popular-card" data-guide-type="babyfood">
             <div class="guide-popular-card__image">🥗</div>
+
             <div class="guide-popular-card__content">
               <div class="guide-popular-card__badge">NUTRITION</div>
-              <h4 class="guide-popular-card__title">초기 이유식 시작 가이드라인</h4>
-              <p class="guide-popular-card__meta">⏱ 8분 읽기</p>
+
+                <h4 class="guide-popular-card__title">
+                    초기 이유식 시작 가이드라인
+                </h4>
+
+                <p class="guide-popular-card__meta">
+                    ⏱ 8분 읽기
+                </p>
+              </div>
             </div>
           </div>
-
-        </div>
 
         <!-- 하단 여백 -->
         <div style="height: 20px;"></div>
@@ -1916,6 +1929,28 @@
         </div>
       </div>
       <!-- /#guide-modal-overlay -->
+
+      <!-- 가이드 상세 모달 -->
+      <div class="modal-overlay modal-overlay--center" id="guide-detail-modal-overlay">
+        <div class="modal modal--guide-detail" role="dialog" aria-modal="true" aria-labelledby="guide-detail-modal-title">
+
+          <!-- 모달 헤더 -->
+          <div class="modal__header modal__header--guide-detail">
+            <h2 class="modal__title" id="guide-detail-modal-title"></h2>
+            <button type="button" class="modal__close-btn" aria-label="닫기">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- 모달 본문 -->
+          <div class="modal__body modal__body--guide-detail" id="guide-detail-modal-body">
+          </div>
+
+        </div>
+      </div>
+      <!-- /#guide-detail-modal-overlay -->
 
       <!-- 하단 네비게이션 -->
       <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">

@@ -1099,7 +1099,7 @@ document.addEventListener("click", function (e) {
       }
 
       var monthBtn = document.querySelector(".record-calendar__month-btn");
-      var monthText = monthBtn?.textContent || "2024년 5월";
+      var monthText = monthBtn?.textContent || "2026년 6월";
       var monthMatch = monthText.match(/(\d{4})년\s*(\d{1,2})월/);
 
       if (!monthMatch) {
@@ -2516,9 +2516,9 @@ function attachMissionCheckboxEvents() {
       var missionId = checkbox.dataset.missionId;
       var today = new Date().toISOString().split("T")[0];
 
+      if (!item || !missionId) return;
+
       if (checkbox.checked) {
-        icon.classList.add("completed");
-        icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white"/></svg>';
         item.classList.add("completed");
 
         if (supabase && _currentChild) {
@@ -2532,14 +2532,11 @@ function attachMissionCheckboxEvents() {
 
           if (error) {
             checkbox.checked = false;
-            icon.classList.remove("completed");
-            icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/><circle cx="5" cy="12" r="1" fill="currentColor"/></svg>';
             item.classList.remove("completed");
+            console.error("[미션 완료 저장 오류]", error);
           }
         }
       } else {
-        icon.classList.remove("completed");
-        icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/><circle cx="5" cy="12" r="1" fill="currentColor"/></svg>';
         item.classList.remove("completed");
 
         if (supabase) {
@@ -2548,10 +2545,14 @@ function attachMissionCheckboxEvents() {
           });
 
           if (completion) {
-            await supabase
+            var { error: deleteError } = await supabase
               .from("mission_completions")
               .delete()
               .eq("id", completion.id);
+
+            if (deleteError) {
+              console.error("[미션 완료 삭제 오류]", deleteError);
+            }
           }
         }
       }
@@ -2703,6 +2704,8 @@ function initGuideSection() {
   } else {
     initGuideSection_Pregnancy();
   }
+
+  setupGuideDetailModal();
 }
 
 function initGuideSection_Pregnancy() {
@@ -2896,6 +2899,7 @@ function showGuideModal(guideId) {
 
         // 모달 닫기 기능 설정
         setupGuideModalClose();
+        setupGuideDetailModal();
       })
       .catch(function (error) {
         console.error("[가이드] guide_contents 조회 예외:", error);
@@ -2907,6 +2911,7 @@ function showGuideModal(guideId) {
 
         // 모달 닫기 기능 설정
         setupGuideModalClose();
+        setupGuideDetailModal();
       });
   } else {
     console.error("[가이드] Supabase 클라이언트가 초기화되지 않았습니다.");
@@ -2982,7 +2987,7 @@ function displayGuideModalError() {
   var modalBody = document.querySelector(".modal__body--guide");
   if (!modalBody) return;
 
-  var sections = modalBody.querySelectorAll(".guide-modal__section");
+  var sections = modalBody.querySelectorAll(".guide-detail-section");
   var emptyMessage = modalBody.querySelector(".guide-modal__empty-message");
 
   // 모든 section 숨김
@@ -3043,6 +3048,305 @@ function closeGuideModal() {
 
   modalOverlay.classList.remove("active");
   document.body.style.overflow = "";
+}
+
+/* ---------- 가이드 상세 모달 함수 ---------- */
+var guideDetailData = {
+  birthReady: {
+    title: "출산 준비",
+    sections: [
+      {
+        title: "병원 가방 리스트",
+        content: "출산 예정일이 가까워지면 산모수첩, 신분증, 세면도구, 여벌 속옷, 수유 브라 등을 미리 준비해주세요."
+      },
+      {
+        title: "출산 전 확인할 것",
+        content: "진통이 시작되었을 때 연락할 병원, 보호자 연락처, 이동 방법 등을 미리 확인해두세요."
+      },
+      {
+        title: "마음가짐",
+        content: "출산은 엄마와 아기가 함께 시작하는 새로운 여정입니다. 불안한 마음이 드는 것은 자연스러운 일이니 스스로를 믿고 차분하게 준비해보세요."
+      }
+    ]
+  },
+  parenting: {
+    title: "육아 가이드",
+    sections: [
+      {
+        title: "신생아 기본 케어",
+        content: "신생아의 피부는 매우 예민하므로 부드러운 제품을 사용하세요. 목욕 후에는 보습제를 발라 피부가 건조해지지 않도록 관리해주세요. 목욕은 짧게, 따뜻한 물로 하는 것이 좋습니다."
+      },
+      {
+        title: "수유 및 이유식",
+        content: "시간보다 아이의 배고픔 신호를 먼저 살피고, 수유 후에는 트림을 충분히 시켜주세요. 생후 6개월까지는 모유나 분유만 먹이고, 6개월 이후부터 이유식을 시작하세요. 아기의 반응을 관찰하면서 천천히 진행합니다."
+      },
+      {
+        title: "아기 수면 습관",
+        content: "일정한 수면 시간을 정해두고 루틴을 만드는 것이 중요합니다. 낮에는 밝게, 밤에는 어둡게 유지해 아이가 천천히 낮과 밤을 구분할 수 있도록 도와주세요."
+      },
+      {
+        title: "예방 접종 일정",
+        content: "정기적인 예방 접종은 아기의 건강을 지키는 가장 좋은 방법입니다. 병원에서 권장하는 일정을 따르세요."
+      }
+    ]
+  },
+  vaccination: {
+    title: "예방접종",
+    sections: [
+      {
+        title: "신생아 기본 접종",
+        content: "생후 24시간 내: B형 간염 1차, BCG. 생후 1-2주: B형 간염 2차"
+      },
+      {
+        title: "2-6개월 접종",
+        content: "생후 2개월: 다다백신(DTP), 소아마비, 로타바이러스. 생후 4개월: 다다백신 2차, 소아마비 2차. 생후 6개월: 다다백신 3차"
+      },
+      {
+        title: "12-15개월 접종",
+        content: "생후 12개월: 홍역, 볼거리, 풍진(MMR). 생후 15개월: 다다백신 추가"
+      },
+      {
+        title: "접종 후 주의사항",
+        content: "접종 후 발열, 부종, 발진 등이 있을 수 있습니다. 대부분 일시적이나 계속되면 병원에 가세요."
+      }
+    ]
+  },
+  support: {
+    title: "정부 지원금",
+    sections: [
+      {
+        title: "부모급여",
+        content: "2026년에도 영아기 가정의 양육 부담을 줄이기 위해 부모급여가 지원됩니다. 아이의 월령에 따라 지급 금액이 달라질 수 있으니, 복지로 또는 주민센터에서 현재 기준을 확인해보세요."
+      },
+      {
+        title: "아동수당",
+        content: "아동수당은 아이의 건강한 성장과 양육비 부담 완화를 위해 매월 지급되는 지원금입니다. 출생신고 후 신청할 수 있으며, 지급 대상과 기간은 정부 정책에 따라 달라질 수 있습니다."
+      },
+      {
+        title: "신청 방법",
+        content: "정부 지원금은 복지로 온라인 신청 또는 거주지 주민센터 방문을 통해 신청할 수 있습니다. 출생신고 후 가능한 빨리 신청하면 지급 누락을 줄일 수 있어요."
+      },
+      {
+        title: "확인할 것",
+        content: "지원금은 아이의 나이, 출생일, 가구 상황, 정책 변경에 따라 달라질 수 있습니다. 신청 전 최신 기준과 지급일, 중복 지원 가능 여부를 꼭 확인해주세요."
+      }
+    ]
+  },
+  sleep: {
+    title: "밤에 잠들지 않는 아이 달래기",
+    sections: [
+        {
+            title: "잠들기 전 루틴 만들기",
+            content:
+                "매일 같은 시간에 목욕, 책 읽기, 자장가처럼 일정한 순서를 반복하면 아이가 자연스럽게 잠잘 시간임을 인식하게 됩니다."
+        },
+        {
+            title: "수면 환경 조성",
+            content:
+                "방은 어둡고 조용하게 유지하고, 실내 온도는 20~22℃ 정도가 적당합니다. 너무 밝은 조명이나 TV 소리는 숙면을 방해할 수 있어요."
+        },
+        {
+            title: "바로 안아주기보다 기다리기",
+            content:
+                "잠시 뒤척이는 것은 자연스러운 과정입니다. 바로 안아주기보다 1~2분 정도 지켜본 후 달래주면 스스로 잠드는 습관을 기르는 데 도움이 됩니다."
+        },
+        {
+            title: "엄마도 충분한 휴식",
+            content:
+                "아이가 잠든 시간에는 엄마도 함께 쉬어야 합니다. 충분한 휴식은 육아 스트레스를 줄이고 아이를 더 안정적으로 돌볼 수 있게 도와줍니다."
+        }
+    ]
+  },
+  babyfood: {
+    title: "초기 이유식 시작 가이드라인",
+    sections: [
+        {
+            title: "언제 시작할까요?",
+            content:
+                "생후 약 6개월 전후, 목을 잘 가누고 음식에 관심을 보이기 시작하면 이유식을 시작할 수 있습니다."
+        },
+        {
+            title: "처음에는 한 가지 식재료",
+            content:
+                "쌀미음처럼 소화가 쉬운 음식부터 시작하고 새로운 식재료는 2~3일 간격으로 하나씩 추가하여 알레르기 반응을 확인하세요."
+        },
+        {
+            title: "양보다 경험이 중요",
+            content:
+                "초기 이유식은 많이 먹이는 것이 목적이 아니라 음식의 맛과 질감을 경험하는 시기입니다. 아이가 거부해도 천천히 적응할 시간을 주세요."
+        },
+        {
+            title: "주의사항",
+            content:
+                "꿀, 생우유, 견과류 등은 시기에 따라 제한이 필요합니다. 월령에 맞는 식단을 참고하고 이상 증상이 있으면 전문가와 상담하세요."
+        }
+    ]
+  }
+};
+
+function setupGuideDetailModal() {
+  var detailModalOverlay = document.getElementById("guide-detail-modal-overlay");
+  if (!detailModalOverlay) return;
+
+  setupGuideMainDetailSectionModal();
+  setupGuideCardDetailModal();
+  setupGuidePopularCardModal();
+  setupGuideDetailModalClose();
+}
+
+function setupGuideMainDetailSectionModal() {
+  var guideDetailSection = document.querySelector(
+    "#guide-section > .guide-content .guide-detail-section"
+  );
+
+  if (!guideDetailSection) return;
+
+  if (!guideDetailSection.hasAttribute("data-main-detail-listener-attached")) {
+    guideDetailSection.setAttribute("data-main-detail-listener-attached", "true");
+
+    guideDetailSection.addEventListener("click", function () {
+      renderGuideDetailModal("birthReady");
+      showGuideDetailModal();
+    });
+
+    guideDetailSection.style.cursor = "pointer";
+  }
+}
+
+function setupGuideCardDetailModal() {
+  var guideDetailCards = document.querySelectorAll(
+    "#guide-section .guide-cards-grid .guide-detail-card[data-guide-type]"
+  );
+
+  guideDetailCards.forEach(function (card) {
+    if (!card.hasAttribute("data-card-detail-listener-attached")) {
+      card.setAttribute("data-card-detail-listener-attached", "true");
+
+      card.addEventListener("click", function () {
+        var guideType = card.getAttribute("data-guide-type");
+        renderGuideDetailModal(guideType);
+        showGuideDetailModal();
+      });
+
+      card.style.cursor = "pointer";
+    }
+  });
+}
+
+
+
+function renderGuideDetailModal(guideType) {
+  var data = guideDetailData[guideType];
+  if (!data) return;
+
+  var modalTitle = document.getElementById("guide-detail-modal-title");
+  var modalBody = document.getElementById("guide-detail-modal-body");
+
+  if (modalTitle) {
+    modalTitle.textContent = data.title;
+  }
+
+  if (modalBody) {
+    modalBody.innerHTML = "";
+
+    data.sections.forEach(function (section, index) {
+      var sectionDiv = document.createElement("div");
+      var bgClass = index % 2 === 0 ? "guide-detail-section--purple" : "guide-detail-section--pink";
+      sectionDiv.className = "guide-detail-section " + bgClass;
+
+      var titleDiv = document.createElement("h4");
+      titleDiv.className = "guide-detail-title";
+      titleDiv.textContent = section.title;
+
+      var contentDiv = document.createElement("div");
+      contentDiv.className = "guide-detail-content";
+      contentDiv.textContent = section.content;
+
+      sectionDiv.appendChild(titleDiv);
+      sectionDiv.appendChild(contentDiv);
+      modalBody.appendChild(sectionDiv);
+    });
+  }
+}
+
+function showGuideDetailModal() {
+  var detailModalOverlay = document.getElementById("guide-detail-modal-overlay");
+  if (!detailModalOverlay) {
+    console.log("상세 모달 없음");
+    return;
+  }
+
+  console.log("상세 모달 열림");
+  detailModalOverlay.classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closeGuideDetailModal() {
+  var detailModalOverlay = document.getElementById("guide-detail-modal-overlay");
+  if (!detailModalOverlay) return;
+
+  detailModalOverlay.classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+function setupGuideDetailModalClose() {
+  var detailModalOverlay = document.getElementById("guide-detail-modal-overlay");
+  if (!detailModalOverlay) return;
+
+  var closeBtn = detailModalOverlay.querySelector(".modal__close-btn");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", function () {
+      closeGuideDetailModal();
+    });
+  }
+
+  detailModalOverlay.addEventListener("click", function (e) {
+    if (e.target === detailModalOverlay) {
+      closeGuideDetailModal();
+    }
+  });
+
+  if (!window._guideDetailModalEscListener) {
+    window._guideDetailModalEscListener = true;
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        var overlay = document.getElementById("guide-detail-modal-overlay");
+        if (overlay && overlay.classList.contains("active")) {
+          closeGuideDetailModal();
+        }
+      }
+    });
+  }
+}
+
+function setupGuidePopularCardModal() {
+
+    var cards = document.querySelectorAll(
+        ".guide-popular-card[data-guide-type]"
+    );
+
+    cards.forEach(function(card){
+
+        if(!card.hasAttribute("data-popular-listener")){
+
+            card.setAttribute("data-popular-listener","true");
+
+            card.addEventListener("click",function(){
+
+                renderGuideDetailModal(
+                    card.dataset.guideType
+                );
+
+                showGuideDetailModal();
+
+            });
+
+            card.style.cursor="pointer";
+
+        }
+
+    });
+
 }
 
 /* ---------- 로그인 폼 ---------- */
