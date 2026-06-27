@@ -160,6 +160,13 @@ document.addEventListener("click", function (e) {
       showSection("login-section");
     });
   }
+  /* 뒤로가기 */
+  var backBtn = document.getElementById("onboarding-back");
+  if (backBtn) {
+    backBtn.addEventListener("click", function () {
+      showSection("login-section");
+    });
+  }
 
   /* 다음 — 선택 역할을 회원가입 폼에 반영 후 signup-section 이동 */
   var nextBtn = document.getElementById("role-sel-next");
@@ -1989,9 +1996,14 @@ document.addEventListener(
 
       var childId = insertedChild[0].id;
 
+      var { data: existingUser } = await supabase
+        .from("users")
+        .select("name")
+        .eq("id", userId)
+        .single();
+
       var userData = {
         id: userId,
-        name: _pendingName || userEmail,
         email: userEmail,
         role: _todakRole,
         child_id: childId,
@@ -2782,7 +2794,10 @@ function initGuideSection_Pregnancy() {
       card.dataset.guideId = guide.id;
 
       card.addEventListener("click", function () {
-        showGuideModal(guide.id);
+        card.addEventListener("click", function () {
+        var stepTitle = card.querySelector(".guide-step-number")?.textContent.trim();
+        showGuideModal(guide.id, stepTitle);
+      });
       });
     }
   });
@@ -2849,7 +2864,7 @@ function showGuideDetail(guideId, stageName, description) {
 }
 
 /* ---------- 가이드 모달 함수 ---------- */
-function showGuideModal(guideId) {
+function showGuideModal(guideId, stepTitle) {
   var modalOverlay = document.getElementById("guide-modal-overlay");
   if (!modalOverlay) return;
 
@@ -2865,8 +2880,9 @@ function showGuideModal(guideId) {
 
   // 모달 헤더 제목 설정
   var modalTitle = document.getElementById("guide-modal-title");
-  if (modalTitle && guide.stage_name) {
-    modalTitle.textContent = guide.stage_name;
+
+  if (modalTitle) {
+    modalTitle.textContent = stepTitle;
   }
 
   // guide_contents 조회 (Supabase에서 guide_id로 조회, display_order 기준 정렬)
@@ -2941,7 +2957,7 @@ function displayGuideModalContents(contents) {
   if (emptyMessage) {
     emptyMessage.style.display = "none";
   }
-
+  
   // display_order 1, 2, 3에 해당하는 contents를 찾아서 section에 매핑
   contents.forEach(function (content) {
     var orderIndex = content.display_order - 1; // display_order 1 → index 0, 2 → 1, 3 → 2
@@ -3074,15 +3090,15 @@ var guideDetailData = {
     sections: [
       {
         title: "신생아 기본 케어",
-        content: "신생아의 피부는 매우 예민하므로 부드러운 제품을 사용하세요. 목욕 후에는 보습제를 발라 피부가 건조해지지 않도록 관리해주세요. 목욕은 짧게, 따뜻한 물로 하는 것이 좋습니다."
+        content: "신생아의 피부는 매우 예민하므로 목욕은 짧게, 따뜻한 물로 하는 것이 좋습니다. 목욕 후 로션을 발라 건조해지지 않게 관리해주세요."
       },
       {
         title: "수유 및 이유식",
-        content: "시간보다 아이의 배고픔 신호를 먼저 살피고, 수유 후에는 트림을 충분히 시켜주세요. 생후 6개월까지는 모유나 분유만 먹이고, 6개월 이후부터 이유식을 시작하세요. 아기의 반응을 관찰하면서 천천히 진행합니다."
+        content: "생후 6개월까지는 모유나 분유만 먹이고, 6개월 이후부터 아기의 반응을 관찰하면서 천천히 이유식을 시작하세요."
       },
       {
         title: "아기 수면 습관",
-        content: "일정한 수면 시간을 정해두고 루틴을 만드는 것이 중요합니다. 낮에는 밝게, 밤에는 어둡게 유지해 아이가 천천히 낮과 밤을 구분할 수 있도록 도와주세요."
+        content: "일정한 수면 시간을 정해두고 루틴을 만드는 것이 중요합니다. 낮과 밤을 구분할 수 있도록 도와주세요."
       },
       {
         title: "예방 접종 일정",
@@ -3715,7 +3731,14 @@ async function loadMypageUserInfo() {
       .eq("id", user.id)
       .single();
 
-    var userName = userData?.name || "사용자";
+    if (userErr) {
+      console.error("[마이페이지] users 조회 오류:", userErr);
+    }
+
+    console.log("[마이페이지] auth user:", user);
+    console.log("[마이페이지] users data:", userData);
+
+    var userName = userData && userData.name ? userData.name : "사용자";
     var defaultAvatar = userData?.role === "guardian" ? "image/man.png" : "image/woman.png";
     var avatarUrl = getProfileImageUrl(userData?.profile_image, defaultAvatar);
 
@@ -3751,6 +3774,7 @@ async function loadMypageUserInfo() {
     // 가족 목록 로드
     await loadMypageFamilyInfo(user.id, userData?.child_id, userData?.role);
   } catch (err) {
+    console.error("[마이페이지] 사용자 정보 로드 오류:", err);
   }
 }
 
