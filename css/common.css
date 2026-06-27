@@ -3994,3 +3994,193 @@ input[type="password"] {
 #profile-image-select-btn {
   margin-top: 12px;
 }
+
+/* ----------------------------------------
+   Guide Modal (가이드 상세 모달)
+   ---------------------------------------- */
+
+.modal-overlay--guide {
+  align-items: center;
+  padding: 16px;
+  background-color: rgba(246, 239, 232, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.modal--guide {
+  max-width: 420px;
+  border-radius: 32px;
+  padding: 0;
+  transform: scale(0.95) translateY(20px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-card-rose);
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+  overflow: visible;
+}
+
+.modal-overlay--guide.active .modal--guide {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.modal__header--guide {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto;
+  gap: 8px 12px;
+  padding: 24px 24px 17px;
+  border-bottom: 1px solid rgba(220, 191, 199, 0.2);
+  position: relative;
+}
+
+.modal__header--guide .modal__title {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: var(--font-size-modal-title);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  text-align: center;
+  letter-spacing: -0.5px;
+  width: 100%;
+}
+
+.modal__header--guide .modal__close-btn {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0 !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  align-self: center;
+  justify-self: center;
+}
+
+.modal__body--guide {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.modal__body--guide::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal__body--guide::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal__body--guide::-webkit-scrollbar-thumb {
+  background: var(--color-primary-magenta);
+  border-radius: 3px;
+  opacity: 0.6;
+}
+
+.modal__body--guide::-webkit-scrollbar-thumb:hover {
+  opacity: 1;
+}
+
+.guide-modal__week {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.guide-modal__week-label {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-magenta);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.guide-modal__week-number {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-navy);
+}
+
+.guide-modal__guide-title {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-navy);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.guide-modal__description {
+  font-size: var(--font-size-body);
+  margin: 0;
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+}
+
+.guide-modal__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: rgba(217, 79, 138, 0.08);
+}
+
+.guide-modal__section-title {
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-navy);
+  margin: 0;
+}
+
+.guide-modal__section-content {
+  font-size: var(--font-size-body);
+  margin: 0;
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+}
+
+.guide-modal__empty-message {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 20px 0;
+  margin: 0;
+}
+
+/* 출산 준비 가이드 모달 */
+.guide-detail-section {
+  padding: 18px 16px;
+  border-radius: 18px;
+  margin-bottom: 14px;
+}
+
+.guide-detail-section--purple {
+  background: var(--color-primary-light-purple);
+}
+
+.guide-detail-section--pink {
+  background: var(--color-primary-light-pink);
+}
+
+.guide-detail-title {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-navy);
+}
+
+.guide-detail-section p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #444;
+  word-break: keep-all;
+}
+
+.guide-detail-section p + p {
+  margin-top: 8px;
+}

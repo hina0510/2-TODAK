@@ -2779,7 +2779,7 @@ function initGuideSection_Pregnancy() {
       card.dataset.guideId = guide.id;
 
       card.addEventListener("click", function () {
-        showGuideDetail(guide.id, guide.stage_name, guide.description);
+        showGuideModal(guide.id);
       });
     }
   });
@@ -2843,6 +2843,206 @@ function showGuideDetail(guideId, stageName, description) {
   if (content) content.innerHTML = "<p>" + description + "</p>";
 
   modal.classList.add("active");
+}
+
+/* ---------- 가이드 모달 함수 ---------- */
+function showGuideModal(guideId) {
+  var modalOverlay = document.getElementById("guide-modal-overlay");
+  if (!modalOverlay) return;
+
+  // _weeklyGuides에서 가이드 찾기
+  var guide = _weeklyGuides.find(function (g) {
+    return g.id === guideId;
+  });
+
+  if (!guide) {
+    console.error("[가이드] 가이드를 찾을 수 없습니다:", guideId);
+    return;
+  }
+
+  // 모달 헤더 제목 설정
+  var modalTitle = document.getElementById("guide-modal-title");
+  if (modalTitle && guide.stage_name) {
+    modalTitle.textContent = guide.stage_name;
+  }
+
+  // guide_contents 조회 (Supabase에서 guide_id로 조회, display_order 기준 정렬)
+  if (window.supabase) {
+    window.supabase
+      .from("guide_contents")
+      .select("*")
+      .eq("guide_id", guideId)
+      .order("display_order", { ascending: true })
+      .then(function (response) {
+        if (response.error) {
+          console.error("[가이드] guide_contents 조회 오류:", response.error);
+          displayGuideModalError();
+          return;
+        }
+
+        var contents = response.data || [];
+
+        if (contents.length === 0) {
+          // 데이터가 없는 경우
+          displayGuideModalEmpty();
+        } else {
+          // 데이터가 있는 경우: section들에 매핑
+          displayGuideModalContents(contents);
+        }
+
+        // 모달 열기 (body 스크롤 제한)
+        modalOverlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        // 모달 닫기 기능 설정
+        setupGuideModalClose();
+      })
+      .catch(function (error) {
+        console.error("[가이드] guide_contents 조회 예외:", error);
+        displayGuideModalError();
+
+        // 모달 열기 (body 스크롤 제한)
+        modalOverlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        // 모달 닫기 기능 설정
+        setupGuideModalClose();
+      });
+  } else {
+    console.error("[가이드] Supabase 클라이언트가 초기화되지 않았습니다.");
+    displayGuideModalError();
+
+    // 모달 열기 (body 스크롤 제한)
+    modalOverlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+
+    // 모달 닫기 기능 설정
+    setupGuideModalClose();
+  }
+}
+
+/* 가이드 모달 콘텐츠 표시 */
+function displayGuideModalContents(contents) {
+  var modalBody = document.querySelector(".modal__body--guide");
+  if (!modalBody) return;
+
+  var sections = modalBody.querySelectorAll(".guide-modal__section");
+  var emptyMessage = modalBody.querySelector(".guide-modal__empty-message");
+
+  // 초기 상태: 모든 section 숨김, 빈 메시지도 숨김
+  sections.forEach(function (section) {
+    section.style.display = "none";
+  });
+  if (emptyMessage) {
+    emptyMessage.style.display = "none";
+  }
+
+  // display_order 1, 2, 3에 해당하는 contents를 찾아서 section에 매핑
+  contents.forEach(function (content) {
+    var orderIndex = content.display_order - 1; // display_order 1 → index 0, 2 → 1, 3 → 2
+
+    if (orderIndex >= 0 && orderIndex < sections.length) {
+      var section = sections[orderIndex];
+      var titleElement = section.querySelector(".guide-modal__guide-title");
+      var descriptionElement = section.querySelector(".guide-modal__description");
+
+      if (titleElement) {
+        titleElement.textContent = content.section_title || "";
+      }
+      if (descriptionElement) {
+        descriptionElement.textContent = content.section_content || "";
+      }
+
+      section.style.display = "flex";
+    }
+  });
+}
+
+/* 가이드 모달 빈 상태 표시 */
+function displayGuideModalEmpty() {
+  var modalBody = document.querySelector(".modal__body--guide");
+  if (!modalBody) return;
+
+  var sections = modalBody.querySelectorAll(".guide-modal__section");
+  var emptyMessage = modalBody.querySelector(".guide-modal__empty-message");
+
+  // 모든 section 숨김
+  sections.forEach(function (section) {
+    section.style.display = "none";
+  });
+
+  // 빈 메시지 표시
+  if (emptyMessage) {
+    emptyMessage.style.display = "block";
+  }
+}
+
+/* 가이드 모달 오류 상태 표시 */
+function displayGuideModalError() {
+  var modalBody = document.querySelector(".modal__body--guide");
+  if (!modalBody) return;
+
+  var sections = modalBody.querySelectorAll(".guide-modal__section");
+  var emptyMessage = modalBody.querySelector(".guide-modal__empty-message");
+
+  // 모든 section 숨김
+  sections.forEach(function (section) {
+    section.style.display = "none";
+  });
+
+  // 빈 메시지 표시
+  if (emptyMessage) {
+    emptyMessage.style.display = "block";
+  }
+}
+
+/* 가이드 모달 닫기 기능 설정 */
+function setupGuideModalClose() {
+  var modalOverlay = document.getElementById("guide-modal-overlay");
+  if (!modalOverlay) return;
+
+  var closeBtn = modalOverlay.querySelector(".modal__close-btn");
+  var modal = modalOverlay.querySelector(".modal--guide");
+
+  // X 버튼 클릭
+  if (closeBtn && !closeBtn.hasAttribute("data-guide-listener-attached")) {
+    closeBtn.setAttribute("data-guide-listener-attached", "true");
+    closeBtn.addEventListener("click", function () {
+      closeGuideModal();
+    });
+  }
+
+  // 배경 클릭
+  if (modalOverlay && !modalOverlay.hasAttribute("data-guide-bg-listener-attached")) {
+    modalOverlay.setAttribute("data-guide-bg-listener-attached", "true");
+    modalOverlay.addEventListener("click", function (e) {
+      if (e.target === modalOverlay) {
+        closeGuideModal();
+      }
+    });
+  }
+
+  // ESC 키
+  if (!window._guideModalEscListener) {
+    window._guideModalEscListener = true;
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        var overlay = document.getElementById("guide-modal-overlay");
+        if (overlay && overlay.classList.contains("active")) {
+          closeGuideModal();
+        }
+      }
+    });
+  }
+}
+
+/* 가이드 모달 닫기 */
+function closeGuideModal() {
+  var modalOverlay = document.getElementById("guide-modal-overlay");
+  if (!modalOverlay) return;
+
+  modalOverlay.classList.remove("active");
+  document.body.style.overflow = "";
 }
 
 /* ---------- 로그인 폼 ---------- */

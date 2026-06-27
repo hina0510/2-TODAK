@@ -1871,6 +1871,52 @@
 
       </main>
 
+      <!-- 가이드 상세 모달 -->
+      <div class="modal-overlay modal-overlay--guide" id="guide-modal-overlay">
+        <div class="modal modal--guide" role="dialog" aria-modal="true" aria-labelledby="guide-modal-title">
+
+          <!-- 모달 헤더 -->
+          <div class="modal__header modal__header--guide">
+            <h2 class="modal__title" id="guide-modal-title"></h2>
+            <button type="button" class="modal__close-btn" aria-label="닫기">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- 모달 본문 -->
+          <div class="modal__body modal__body--guide">
+
+            <!-- Section 1 -->
+            <div class="guide-modal__section">
+              <h4 class="guide-modal__guide-title"></h4>
+              <p class="guide-modal__description"></p>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="guide-modal__section">
+              <h4 class="guide-modal__guide-title"></h4>
+              <p class="guide-modal__description"></p>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="guide-modal__section">
+              <h4 class="guide-modal__guide-title"></h4>
+              <p class="guide-modal__description"></p>
+            </div>
+
+            <!-- 가이드 내용 없음 메시지 (기본 숨김) -->
+            <p class="guide-modal__empty-message" style="display: none;">
+              아직 준비된 가이드 내용이 없습니다.
+            </p>
+
+          </div>
+
+        </div>
+      </div>
+      <!-- /#guide-modal-overlay -->
+
       <!-- 하단 네비게이션 -->
       <nav class="bottom-nav" role="navigation" aria-label="메인 네비게이션">
         <button type="button" class="bottom-nav__item" data-goto="home-section">
