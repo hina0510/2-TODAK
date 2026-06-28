@@ -93,20 +93,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  
   flex: 1;
   padding: 8px 0;
   color: var(--color-text-warm);
   transition: color 0.2s ease;
 }
+nav .bottom-nav__item:nth-child(1){gap: 8px;}
+nav .bottom-nav__item:nth-child(2){margin-top: 5px;gap: 8px;}
+nav .bottom-nav__item:nth-child(3){margin-top: 6px;gap: 12px;}
+nav .bottom-nav__item:nth-child(4){margin-top: 6px; gap: 10px;}
+nav .bottom-nav__item:nth-child(5){gap: 4px;}
 
 .bottom-nav__item.active {
   color: var(--color-primary-blue);
-}
-
-.bottom-nav__icon {
-  width: 24px;
-  height: 24px;
 }
 
 .bottom-nav__label {
@@ -2142,6 +2142,9 @@ input[type="password"] {
 .guide-week-card__avatar-emoji {
   display: block;
 }
+.guide-week-card__avatar-emoji img{
+  border-radius: 50%;
+}
 
 /* 시기별 가이드 섹션 */
 .guide-period-section {
@@ -2309,12 +2312,15 @@ input[type="password"] {
 .guide-detail-image {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #F5C6D9 0%, #E8B4D0 100%);
-  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 60px;
+}
+.guide-detail-image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
 }
 
 /* 상세 가이드 카드 그리드 */
@@ -2343,9 +2349,9 @@ input[type="password"] {
   transform: scale(0.97);
 }
 
-.guide-detail-card__icon {
-  font-size: 36px;
-  display: block;
+.guide-detail-card__icon{
+  display: flex;
+  width: 36px;
   height: 36px;
 }
 
@@ -2372,10 +2378,6 @@ input[type="password"] {
   text-align: left;
   padding: 0;
   overflow: hidden;
-}
-
-.guide-detail-card--large .guide-detail-card__icon {
-  display: none;
 }
 
 .guide-detail-card__image-section {
@@ -2455,16 +2457,11 @@ input[type="password"] {
   transform: scale(0.98);
 }
 
-.guide-popular-card__image {
+.guide-popular-card img{
   flex-shrink: 0;
   width: 80px;
   height: 80px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #F5C6D9 0%, #E8B4D0 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
 }
 
 .guide-popular-card__content {

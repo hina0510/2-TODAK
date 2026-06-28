@@ -468,7 +468,7 @@
   margin-top: 16px;
   font-family: 'Nanum Square', 'NanumSquare', sans-serif;
   font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-primary-magenta);
   text-align: center;
 }

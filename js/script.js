@@ -278,14 +278,17 @@ document.addEventListener("click", function (e) {
 
     section.classList.toggle("guardian-mode", !isMom);
 
-    roleMomBtn.classList.toggle("selected", isMom);
-    roleMomBtn.setAttribute("aria-pressed", String(isMom));
+    if (roleMomBtn) {
+      roleMomBtn.classList.toggle("selected", isMom);
+      roleMomBtn.setAttribute("aria-pressed", String(isMom));
+    }
 
-    roleGuardianBtn.classList.toggle("selected", !isMom);
-    roleGuardianBtn.setAttribute("aria-pressed", String(!isMom));
+    if (roleGuardianBtn) {
+      roleGuardianBtn.classList.toggle("selected", !isMom);
+      roleGuardianBtn.setAttribute("aria-pressed", String(!isMom));
+    }
 
     if (isMom) {
-      // 엄마 선택 시 초대코드 상태 초기화
       _guardianChildId = null;
       var momCodeInput = document.getElementById("onboarding-mom-code");
       if (momCodeInput) {
@@ -294,7 +297,6 @@ document.addEventListener("click", function (e) {
         if (errorMsg) errorMsg.style.display = "none";
       }
     } else {
-      // 보호자 선택 시 검증 버튼 설정
       setTimeout(setupInviteCodeValidation, 0);
     }
   }
@@ -475,16 +477,19 @@ document.addEventListener("click", function (e) {
       document.getElementById("character-image").src = data.characterImage;
 
       // Side Cards
-      document.getElementById("left-card-title").textContent =
-        data.leftCardTitle;
+      // document.getElementById("left-card-title").textContent =
+      //   data.leftCardTitle;
       document.getElementById("left-card-value").textContent =
-        data.leftCardValue;
-      document.getElementById("left-card-desc").textContent = data.leftCardDesc;
+        _currentChild?.height != null
+        ? _currentChild.height + "cm"
+        : "-cm";;
 
-      document.getElementById("right-card-title").textContent =
-        data.rightCardTitle;
+      // document.getElementById("right-card-title").textContent =
+      //   data.rightCardTitle;
       document.getElementById("right-card-value").textContent =
-        data.rightCardValue;
+        _currentChild?.weight != null
+        ? _currentChild.weight + "kg"
+        : "-kg";;
 
       // Stage Info Card
 
@@ -530,11 +535,12 @@ document.addEventListener("click", function (e) {
 
     // Birth 탭 (출산 토글 버튼) 클릭 → 모달 열기
     function openBirthModal() {
+      if (!birthModal) return;
       birthModal.classList.add("active");
     }
 
-    // 모달 닫기
     function closeBirthModal() {
+      if (!birthModal) return;
       birthModal.classList.remove("active");
     }
 
@@ -1964,21 +1970,27 @@ document.addEventListener(
       };
 
       if (birthStatus === "pregnant") {
-        childData.due_date = document.getElementById(
-          "onboarding-due-date",
-        ).value || null;
+        childData.due_date =
+          document.getElementById("onboarding-due-date").value || null;
+
+        childData.height = null;
+        childData.weight = null;
       } else {
-        childData.birth_date = document.getElementById(
-          "onboarding-birth-date",
-        ).value || null;
+        childData.birth_date =
+          document.getElementById("onboarding-birth-date").value || null;
+
         var heightInput = document.getElementById("onboarding-height");
         var weightInput = document.getElementById("onboarding-weight");
-        childData.height = heightInput && heightInput.value
-          ? parseFloat(heightInput.value)
-          : null;
-        childData.weight = weightInput && weightInput.value
-          ? parseFloat(weightInput.value)
-          : null;
+
+        childData.height =
+          heightInput && heightInput.value.trim() !== ""
+            ? Number(heightInput.value)
+            : null;
+
+        childData.weight =
+          weightInput && weightInput.value.trim() !== ""
+            ? Number(weightInput.value)
+            : null;
       }
 
       var { data: insertedChild, error: childInsertErr } = await supabase
@@ -1996,22 +2008,13 @@ document.addEventListener(
 
       var childId = insertedChild[0].id;
 
-      var { data: existingUser } = await supabase
-        .from("users")
-        .select("name")
-        .eq("id", userId)
-        .single();
-
-      var userData = {
-        id: userId,
-        email: userEmail,
-        role: _todakRole,
-        child_id: childId,
-      };
-
       var { error: userErr } = await supabase
         .from("users")
-        .upsert([userData]);
+        .update({
+          child_id: childId,
+        })
+        .eq("id", userId);
+
       if (userErr) {
         throw userErr;
       }
@@ -2201,10 +2204,21 @@ function updateHomeDisplay() {
 
   if (_isBirthMode) {
     if (headerLabel) headerLabel.textContent = "아이의 나이";
-    if (rightCardValue) rightCardValue.textContent = _currentChild.baby_name;
+    if (leftCardValue) {
+      leftCardValue.textContent =
+        _currentChild?.height != null
+          ? _currentChild.height + "cm"
+          : "-cm";
+    }
+
+    if (rightCardValue) {
+      rightCardValue.textContent =
+        _currentChild?.weight != null
+          ? _currentChild.weight + "kg"
+          : "-kg";
+    }
   } else {
     if (headerLabel) headerLabel.textContent = "아이와 함께하는 날";
-    if (rightCardValue) rightCardValue.textContent = _currentChild.baby_name;
   }
 
   if (headerTitle) {
@@ -2213,7 +2227,6 @@ function updateHomeDisplay() {
 
   var dday = calculateDday();
   if (headerDday) headerDday.textContent = dday;
-  if (leftCardValue) leftCardValue.textContent = getWeekNumber();
   if (stageInfoText) {
     if (_isBirthMode) {
       var daysAfterBirth = calculateDaysAfterBirth();
