@@ -1380,7 +1380,9 @@ document.addEventListener("click", function (e) {
         recordDate,
       });
 
-      if (!height && !weight) {
+      var isBirth = _currentChild && _currentChild.birth_status === "birth";
+
+      if (isBirth && height === null && weight === null) {
         showToast("키 또는 몸무게를 입력해주세요.");
         return;
       }
