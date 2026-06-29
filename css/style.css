@@ -5,6 +5,130 @@
 
 
 /* ==========================================
+   SPLASH SCREEN
+   ========================================== */
+
+.splash-section {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-beige);
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.splash-section.splash-section--fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 배경 블러 원형 */
+.splash-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.splash-bg__blob {
+  position: absolute;
+  border-radius: 9999px;
+  opacity: 0.4;
+}
+
+.splash-bg__blob--pink {
+  width: 300px;
+  height: 300px;
+  background-color: #ffd9e3;
+  filter: blur(40px);
+  top: -88px;
+  right: -39px;
+}
+
+.splash-bg__blob--blue {
+  width: 400px;
+  height: 400px;
+  background-color: #d7e2ff;
+  filter: blur(40px);
+  bottom: -88px;
+  left: -39px;
+}
+
+.splash-bg__blob--lavender {
+  width: 150px;
+  height: 150px;
+  background-color: #eaddff;
+  filter: blur(40px);
+  top: 354px;
+  left: 78px;
+}
+
+/* 중앙 콘텐츠 */
+.splash-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 로고 래퍼 */
+.splash-logo-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+}
+
+/* 로고 뒤 글로우 */
+.splash-logo-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: rgba(168, 39, 99, 0.05);
+  filter: blur(20px);
+}
+
+.splash-logo-img {
+  position: relative;
+  width: 166px;
+  height: 145px;
+  object-fit: contain;
+}
+
+/* TODAK 브랜드 텍스트 */
+.splash-brand {
+  position: relative;
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+  line-height: 1;
+}
+
+.splash-brand__to {
+  color: #2f4b7c;
+}
+
+.splash-brand__dak {
+  color: #d94f8a;
+}
+
+/* 슬로건 */
+.splash-slogan {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.45px;
+  color: #1a3558;
+  opacity: 0.8;
+}
+
+
+/* ==========================================
    SPA 섹션 공통
    ========================================== */
 

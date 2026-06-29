@@ -2409,7 +2409,6 @@ input[type="password"] {
 
 .guide-detail-card--large .guide-detail-card__desc {
   text-align: left;
-  font-size: var(--font-size-small);
 }
 
 /* 인기 가이드 섹션 */

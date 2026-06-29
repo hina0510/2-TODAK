@@ -3441,33 +3441,51 @@ function setupGuidePopularCardModal() {
   });
 })();
 
-/* ---------- 세션 유지 ---------- */
+/* ---------- 스플래시 → 세션 유지 ---------- */
 (async function () {
+  /* 스플래시를 최소 1.8초 유지 */
+  var splashEl = document.getElementById("splash-section");
+
+  var splashMinDelay = new Promise(function (resolve) {
+    setTimeout(resolve, 1800);
+  });
+
+  /* 세션 확인과 스플래시 딜레이를 병렬 실행 */
+  var nextSection = "login-section";
   try {
-    if (!supabase || !supabase.auth) {
-      showSection("login-section");
-      return;
-    }
-    var {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (session) {
-      /* 아이 정보 확인 */
-      var hasChildInfo = await checkChildInfo();
+    if (supabase && supabase.auth) {
+      var {
+        data: { session },
+      } = await Promise.race([
+        supabase.auth.getSession(),
+        new Promise(function (_, reject) { setTimeout(function () { reject(new Error("timeout")); }, 5000); })
+      ]).catch(function () { return { data: { session: null } }; });
 
-      if (!hasChildInfo) {
-        showSection("onboarding-section");
-        return;
+      if (session) {
+        var hasChildInfo = await checkChildInfo();
+        if (!hasChildInfo) {
+          nextSection = "onboarding-section";
+        } else {
+          await loadHomeData();
+          setupTabsAfterLogin();
+          nextSection = "home-section";
+        }
       }
-
-      await loadHomeData();
-      setupTabsAfterLogin();
-      showSection("home-section");
-    } else {
-      showSection("login-section");
     }
   } catch (_) {
-    showSection("login-section");
+    nextSection = "login-section";
+  }
+
+  /* 최소 딜레이 충족 후 페이드아웃 → 섹션 전환 */
+  await splashMinDelay;
+
+  if (splashEl) {
+    splashEl.classList.add("splash-section--fade-out");
+    setTimeout(function () {
+      showSection(nextSection);
+    }, 500);
+  } else {
+    showSection(nextSection);
   }
 })();
 

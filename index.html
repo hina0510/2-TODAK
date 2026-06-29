@@ -30,9 +30,45 @@
   <div id="app">
 
     <!-- =====================================================
+         SPLASH SECTION
+         ===================================================== -->
+    <section id="splash-section" class="section splash-section">
+
+      <!-- 배경 블러 원형 요소 -->
+      <div class="splash-bg" aria-hidden="true">
+        <div class="splash-bg__blob splash-bg__blob--pink"></div>
+        <div class="splash-bg__blob splash-bg__blob--blue"></div>
+        <div class="splash-bg__blob splash-bg__blob--lavender"></div>
+      </div>
+
+      <!-- 중앙 콘텐츠 -->
+      <div class="splash-content">
+        <!-- 로고 영역 -->
+        <div class="splash-logo-wrap">
+          <div class="splash-logo-glow" aria-hidden="true"></div>
+          <img
+            src="image/logo.png"
+            alt="TODAK 로고"
+            class="splash-logo-img"
+          >
+          <!-- TODAK 텍스트 -->
+          <p class="splash-brand" aria-label="TODAK">
+            <span class="splash-brand__to">TO</span><span class="splash-brand__dak">DAK</span>
+          </p>
+        </div>
+
+        <!-- 슬로건 -->
+        <p class="splash-slogan">부모와 아이를 토닥</p>
+      </div>
+
+    </section>
+    <!-- /#splash-section -->
+
+
+    <!-- =====================================================
          LOGIN SECTION
          ===================================================== -->
-    <section id="login-section" class="section">
+    <section id="login-section" class="section hidden">
 
       <!-- 상단 헤더 (로고) -->
       <header class="login-header">
@@ -919,7 +955,6 @@
 
             <!-- 모달 푸터 (기록하기 버튼) -->
             <div class="modal__footer growth-stage-footer">
-              <button type="button" class="btn btn--primary w-full">기록하기</button>
             </div>
 
           </div>
@@ -1789,7 +1824,7 @@
             <div class="guide-detail-text">
               <div class="guide-detail-dday">D-100</div>
               <h2 class="guide-detail-title">출산 준비</h2>
-              <p class="guide-detail-desc">병원 가방 리스트부터 마음 가짐까지</p>
+              <p class="guide-detail-desc">병원 가방 리스트부터<br>마음 가짐까지</p>
             </div>
             <div class="guide-detail-image-wrapper">
               <div class="guide-detail-image">
@@ -1808,7 +1843,7 @@
               <img src="image/guide_care.png" alt="육아">
             </div>
             <h3 class="guide-detail-card__title">육아 가이드</h3>
-            <p class="guide-detail-card__desc">초보 맘들을 위한 실전 육아 스킬</p>
+            <p class="guide-detail-card__desc">초보 맘들을 위한<br>실전 육아 스킬</p>
           </div>
 
           <!-- 예방접종 -->
@@ -1817,7 +1852,7 @@
               <img src="image/guide_cure.png" alt="예방접종">
             </div>
             <h3 class="guide-detail-card__title">예방접종</h3>
-            <p class="guide-detail-card__desc">놓치기 쉬운 우리 아이 접종 일정</p>
+            <p class="guide-detail-card__desc">놓치기 쉬운 우리 아이<br>접종 일정</p>
           </div>
 
           <!-- 정부 지원금 (큰 카드) -->
@@ -1829,7 +1864,7 @@
             </div>
             <div class="guide-detail-card__text-section">
               <h3 class="guide-detail-card__title">정부 지원금</h3>
-              <p class="guide-detail-card__desc">2026년 새로워진 부모 급여와 아동수당 정보를 확인하세요.</p>
+              <p class="guide-detail-card__desc">2026년 새로워진 부모 급여와<br>아동수당 정보를 확인하세요.</p>
             </div>
           </div>
         </div>
