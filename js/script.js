@@ -1584,7 +1584,7 @@ var birthStagesData = [
     dayRange: "0~100일",
     minDay: 0,
     maxDay: 100,
-    stage: "신생아 적응기",
+    stage: "신생아기",
     characterImage: "image/baby1.png",
     description: "세상에 적응하며 수면, 수유, 울음 패턴이 만들어지는 시기입니다.",
     babyStatus: "시각과 청각이 조금씩 발달하고, 엄마 아빠의 목소리에 반응하기 시작해요.",
@@ -1594,7 +1594,7 @@ var birthStagesData = [
     dayRange: "101일~1년",
     minDay: 101,
     maxDay: 365,
-    stage: "감각 발달기",
+    stage: "영아기",
     characterImage: "image/baby2.png",
     description: "뒤집기, 앉기, 기기처럼 움직임이 많아지고 감정 표현이 풍부해지는 시기입니다.",
     babyStatus: "손으로 물건을 잡고, 낯가림이나 애착 표현이 나타날 수 있어요.",
@@ -1604,7 +1604,7 @@ var birthStagesData = [
     dayRange: "1년~2년",
     minDay: 366,
     maxDay: 730,
-    stage: "자립 시작기",
+    stage: "유아기",
     characterImage: "image/baby3.png",
     description: "걷기와 말하기가 시작되며 스스로 해보려는 욕구가 커지는 시기입니다.",
     babyStatus: "간단한 말을 이해하고 따라 하며, 걷기와 탐색 활동이 활발해져요.",
@@ -2384,9 +2384,9 @@ function getStageInfo() {
   var week = parseInt(getWeekNumber());
 
   if (_isBirthMode) {
-    if (week <= 6) return "신생아기";
-    if (week <= 9) return "4~6개월";
-    return "7~9개월";
+    if (week <= 99) return "신생아기";
+    if (week <= 365) return "영아기";
+    return "유아기";
   } else {
     if (week <= 11) return "초기 적응기";
     if (week <= 19) return "안정기";
