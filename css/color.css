@@ -3,40 +3,45 @@
    CSS 변수(Custom Properties)로 정의
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap');
+
+
+
+
+
+
 :root {
   /* ----------------------------------------
      Primary Colors (브랜드 컬러)
      ---------------------------------------- */
 
   /* Navy - 신뢰, 안정, 보호 */
-  --color-primary-navy: #2F4B7C;
-  --color-primary-navy-light: #3D5F99;
-  --color-primary-navy-dark: #1E3360;
+  --color-primary-navy: #1A3558;
+  --color-primary-light-purple: #F4F0FD;
+  --color-primary-light-blue: #E9EDF2;
+  --color-primary-blue: #074EAA;
 
   /* Magenta - 사랑, 공감, 따뜻함 */
   --color-primary-magenta: #D94F8A;
-  --color-primary-magenta-light: #E87AAF;
-  --color-primary-magenta-dark: #B83A72;
+  --color-primary-pink: #FFDAE4;
+  --color-primary-light-pink: #FDEFF4;
 
   /* Lavender - 소중한 아이, 새 생명, 성장 */
+  --color-primary-light-lavender: #efe3f8;
   --color-primary-lavender: #E3C3FF;
-  --color-primary-lavender-light: #F0DAFF;
-  --color-primary-lavender-dark: #C9A0F0;
+  --color-primary-lavender-dark: #C893F5;
 
   /* ----------------------------------------
      Neutral Colors (중립 컬러)
      ---------------------------------------- */
 
-  --color-neutral-gray: #8A8F98;
-  --color-neutral-gray-light: #B0B5BC;
-  --color-neutral-gray-dark: #5F6470;
-
+   --color-neutral-gray: #8A8F98;
+   --color-neutral-light-gray: #F1F3F7;
   /* 텍스트 컬러 */
-  --color-text-primary: #1A1A2E;
-  --color-text-secondary: #8A8F98;
-  --color-text-placeholder: #B0B5BC;
-  --color-text-white: #FFFFFF;
-  --color-text-navy: #2F4B7C;
+   --color-text-warm: #564147;           /* 따뜻한 갈색 보조 텍스트 */
+   --color-text-primary: #1A1A2E;
+   --color-text-secondary: #DEE3EC;
+   --color-text-white: #FFFFFF;
 
   /* ----------------------------------------
      Background Colors (배경 컬러)
@@ -44,27 +49,9 @@
 
   --color-bg-beige: #F6EFE8;
   --color-bg-white: #FFFFFF;
-  --color-bg-navy: #2F4B7C;
-  --color-bg-input: #F0EBE5;
-  --color-bg-card: #FFFFFF;
+  --color-bg-yellow: #ffee00;
+  --color-bg-input: #F8F9FF;
   --color-bg-overlay: rgba(0, 0, 0, 0.5);
-
-  /* ----------------------------------------
-     Border Colors (보더 컬러)
-     ---------------------------------------- */
-
-  --color-border-light: #E8E2DB;
-  --color-border-input: #D0C8C0;
-  --color-border-navy: #2F4B7C;
-
-  /* ----------------------------------------
-     Status Colors (상태 컬러)
-     ---------------------------------------- */
-
-  --color-success: #4CAF50;
-  --color-error: #E53E3E;
-  --color-warning: #F6AD55;
-  --color-info: #4299E1;
 
   /* ----------------------------------------
      Shadow (그림자)
@@ -111,11 +98,10 @@
      Onboarding / Form 전용 토큰
      ---------------------------------------- */
 
-  --color-text-warm: #564147;           /* 따뜻한 갈색 보조 텍스트 */
-  --color-text-dark: #171c23;           /* 거의 검정 */
-  --color-border-rose: #dcbfc7;         /* 핑크 보더 */
-  --color-bg-radio-active: #fdeff4;     /* 선택된 버튼 라디오 배경 */
-  --color-bg-input-card: #f8f9ff;       /* 모달 내 인풋 배경 */
   --font-size-modal-title: 22px;        /* 모달 타이틀 */
   --shadow-card-rose: 0px 16px 32px -4px rgba(168, 39, 99, 0.12); /* 카드 그림자 */
+
+  /* Typography — 누락 토큰 보완 */
+  --font-size-display: 32px;              /* 브랜드 로고 텍스트 */
+  --font-weight-extrabold: 800;           /* 브랜드 로고 굵기 */
 }
